@@ -40,10 +40,14 @@ jobs:
 
       - name: Copy files to root
         run: |
+          rm -rf deploy
           mkdir -p deploy
-          cp -r dist/npe-guide/browser/* deploy/
-          cp -r dist/npe-guide/browser/.[!.]* deploy/ 2>/dev/null || true
+          shopt -s dotglob nullglob
+          cp -a dist/npe-guide/browser/. deploy/
+          echo "Files in deploy directory:"
           ls -la deploy/
+          echo "Checking index.html exists:"
+          test -f deploy/index.html && echo "✓ index.html found" || echo "✗ index.html NOT found"
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
