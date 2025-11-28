@@ -26,15 +26,21 @@
             ],
             "styles": [
               "src/styles.css"
+            ],
+            "allowedCommonJsDependencies": [
+              "babylonjs",
+              "babylonjs-node-particle-editor"
             ]
           },
           "configurations": {
             "production": {
+              "outputPath": "dist/npe-guide/browser",
+              "baseHref": "/",
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "18MB",
+                  "maximumError": "20MB"
                 },
                 {
                   "type": "anyComponentStyle",

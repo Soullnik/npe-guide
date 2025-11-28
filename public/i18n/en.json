@@ -1,0 +1,1161 @@
+{
+  "ui": {
+    "product": "Node Particle Editor",
+    "heroTitle": "Complete Guide",
+    "heroSubtitle": "Learn to create stunning particle effects from beginner to expert",
+    "language": "Language",
+    "menu": "Menu",
+    "lessonList": "Lessons",
+    "editorLabel": "Editor Preview",
+    "noLesson": "Select a lesson to begin",
+    "loadExample": "Load example",
+    "previousLesson": "Previous",
+    "nextLesson": "Next",
+    "viewDocumentation": "View Documentation",
+    "particlesDocumentation": "Particles Documentation"
+  },
+  "lessons": {
+    "lesson1": {
+      "title": "Lesson 1: First Emission",
+      "summary": "Create your first particle system with basic blocks",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to create a simple particle system using the Node Particle Editor. We'll start with the fundamental blocks: SystemBlock, UpdatePositionBlock, and CreateParticleBlock.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Create a SystemBlock - this is the root of your particle system",
+        "Add an UpdatePositionBlock to handle particle movement",
+        "Connect a CreateParticleBlock with a BoxShapeBlock to emit particles from a box shape",
+        "Use ParticleInputBlock to get the current position and scaled direction",
+        "Add a ParticleMathBlock to combine position and direction",
+        "Connect the result to UpdatePositionBlock's position input",
+        "Add a ParticleTextureSourceBlock to provide a texture for the particles"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "SystemBlock",
+          "description": "The root block of any particle system. It manages the overall system properties and connects to all particle-related blocks.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Particle System'",
+              "description": "The display name of the particle system"
+            }
+          ]
+        },
+        {
+          "name": "UpdatePositionBlock",
+          "description": "Updates the position of particles each frame. This block is essential for any particle movement.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update position'",
+              "description": "The display name of the block"
+            }
+          ]
+        },
+        {
+          "name": "CreateParticleBlock",
+          "description": "Creates new particles. This block is responsible for particle emission.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Create particle'",
+              "description": "The display name of the block"
+            }
+          ]
+        },
+        {
+          "name": "BoxShapeBlock",
+          "description": "Defines a box-shaped emitter. Particles will be created within this box volume.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Box emitter'",
+              "description": "The display name of the emitter"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock",
+          "description": "Retrieves contextual particle data such as position, velocity, or age. In this lesson, we use it to get the current position and scaled direction.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Position / ScaledDirection",
+              "description": "The type of contextual data to retrieve"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock",
+          "description": "Performs mathematical operations on particle data. We use it to add position and direction vectors.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Add",
+              "description": "The mathematical operation to perform (Add, Subtract, Multiply, Divide, etc.)"
+            }
+          ]
+        },
+        {
+          "name": "ParticleTextureSourceBlock",
+          "description": "Provides a texture for particles. This determines how particles look when rendered.",
+          "properties": [
+            {
+              "name": "url",
+              "value": "Tools.GetAssetUrl('https://assets.babylonjs.com/core/textures/flare.png')",
+              "description": "The URL of the texture image to use"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "The code creates a NodeParticleSystemSet and builds a graph of connected blocks. Each block has a specific function, and they're connected using the connectTo() method.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try changing the BoxShapeBlock to a different shape",
+        "Experiment with different texture URLs",
+        "Modify the math operation to see how it affects particle movement",
+        "Add more particles by adjusting the CreateParticleBlock settings"
+      ]
+    },
+    "lesson2": {
+      "title": "Lesson 2: Particle Properties",
+      "summary": "Learn to combine and control multiple particle properties (color, size, scale) together",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to combine multiple particle properties (color, size, and scale) to create complex effects. We'll use UpdateColorBlock, UpdateSizeBlock, and UpdateScaleBlock together, showing how to combine them with mathematical operations. You'll see how properties can interact with each other and how to create non-uniform scaling effects.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with the basic particle system from Lesson 1",
+        "Get the particle's Age and Lifetime using ParticleInputBlock",
+        "Calculate the age ratio (Age / Lifetime) to get a value from 0 to 1",
+        "Create a complex color gradient using ParticleConverterBlock with multiple components",
+        "Combine age ratio with inverted ratio to create color transitions (red increases, green/blue fade)",
+        "Add UpdateSizeBlock with growth calculation: size grows from base to base * (1 + growth * ageRatio)",
+        "Add UpdateScaleBlock with non-uniform scaling: X scales down while Y scales up",
+        "Chain all update blocks together: UpdatePosition → UpdateColor → UpdateSize → UpdateScale",
+        "Observe how all properties work together to create a cohesive effect"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "UpdateColorBlock",
+          "description": "Updates the color of particles each frame. You can connect a color value to create fading, color transitions, or other color effects.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update color'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "color",
+              "value": "Color4 input",
+              "description": "The color to apply to the particle. Can be connected from ParticleInputBlock (InitialColor, Color) or Color4 input block."
+            }
+          ]
+        },
+        {
+          "name": "UpdateSizeBlock",
+          "description": "Updates the size of particles. Useful for creating particles that grow or shrink over time.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update size'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "size",
+              "value": "Float input",
+              "description": "The size value to apply. Can be a constant or calculated using math operations."
+            }
+          ]
+        },
+        {
+          "name": "UpdateScaleBlock",
+          "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update scale'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "scale",
+              "value": "Float or Vector2 input",
+              "description": "The scale value. Can be a single float or Vector2 for different X/Y scaling."
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Age)",
+          "description": "Retrieves the current age of a particle. Age starts at 0 when the particle is created and increases until it reaches the lifetime value.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Age",
+              "description": "The type of contextual data - Age in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Lifetime)",
+          "description": "Retrieves the total lifetime of a particle. This is the maximum age a particle can reach before it dies.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Lifetime",
+              "description": "The type of contextual data - Lifetime in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (InitialColor)",
+          "description": "Retrieves the initial color of a particle when it was created. Useful for creating color transitions.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.InitialColor",
+              "description": "The type of contextual data - InitialColor in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Divide)",
+          "description": "Divides two values. In this lesson, we use it to calculate the age ratio (Age / Lifetime), which gives us a value from 0 to 1 representing how far through its life the particle is.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Divide",
+              "description": "The mathematical operation - Divide"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Multiply)",
+          "description": "Multiplies two values. Used to calculate final size by multiplying base size with a multiplier.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Multiply",
+              "description": "The mathematical operation - Multiply"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Add)",
+          "description": "Adds two values. Used to create size multiplier that increases from 1.0 to 2.0 based on age.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Add",
+              "description": "The mathematical operation - Add"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates how to combine multiple particle properties together. The key concept is that properties can be calculated using the same age ratio, but with different formulas. For color, we use ageRatio directly for red, and (1 - ageRatio) for green/blue. For size, we calculate: baseSize * (1 + growthMultiplier * ageRatio), creating growth. For scale, we use different formulas for X and Y: scaleX = baseX * (1 - ageRatio), scaleY = baseY * (1 + ageRatio). This creates non-uniform scaling where particles become wider but shorter over time. By combining all these properties, we create rich, dynamic effects.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different color combinations using the converter block",
+        "Experiment with different growth formulas for size",
+        "Create uniform scaling (X and Y scale the same)",
+        "Combine size growth with color transitions for more dramatic effects",
+        "Try using different math operations (Multiply, Add, Subtract) to create unique property combinations"
+      ]
+    },
+    "lesson3": {
+      "title": "Lesson 3: Different Emitter Shapes",
+      "summary": "Explore various emitter shapes: cone, sphere, box, and more",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn about different emitter shapes available in the Node Particle Editor. Each shape creates particles from a different volume, giving you control over where particles spawn. We'll focus on ConeShapeBlock, which creates directional effects like fire or fountains, and understand its properties like radius, angle, radiusRange, and heightRange.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system setup",
+        "Replace BoxShapeBlock with SphereShapeBlock",
+        "Connect a ParticleInputBlock to set the sphere radius",
+        "Connect another ParticleInputBlock to set the radius range (0 = center only, 1 = full sphere)",
+        "Add direction randomizer to control particle emission direction",
+        "Experiment with different radius values to see how it affects particle distribution",
+        "Try other shapes: ConeShapeBlock, CylinderShapeBlock, or PointShapeBlock"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "SphereShapeBlock",
+          "description": "Emits particles from a sphere shape. Particles spawn within the sphere volume, with control over radius and distribution.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Sphere emitter'",
+              "description": "The display name of the emitter"
+            },
+            {
+              "name": "radius",
+              "value": "Float input (default: 1.0)",
+              "description": "The radius of the sphere. Larger values create a bigger emission area."
+            },
+            {
+              "name": "radiusRange",
+              "value": "Float input (default: 1.0, range: 0-1)",
+              "description": "Controls where particles spawn within the sphere. 0 = center only, 1 = anywhere in the sphere."
+            },
+            {
+              "name": "directionRandomizer",
+              "value": "Float input (default: 0, range: 0-1)",
+              "description": "Controls the randomness of particle direction. 0 = uniform direction, 1 = completely random."
+            }
+          ]
+        },
+        {
+          "name": "BoxShapeBlock",
+          "description": "Emits particles from a box/cube shape. Particles spawn within the box volume defined by width, height, and depth.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Box emitter'",
+              "description": "The display name of the emitter"
+            }
+          ]
+        },
+        {
+          "name": "ConeShapeBlock",
+          "description": "Emits particles from a cone shape. Useful for creating directional effects like fire, smoke, or fountains.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Cone emitter'",
+              "description": "The display name of the emitter"
+            },
+            {
+              "name": "radius",
+              "value": "Float input",
+              "description": "The base radius of the cone"
+            },
+            {
+              "name": "angle",
+              "value": "Float input",
+              "description": "The angle of the cone in radians"
+            }
+          ]
+        },
+        {
+          "name": "CylinderShapeBlock",
+          "description": "Emits particles from a cylinder shape. Particles spawn within the cylindrical volume.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Cylinder emitter'",
+              "description": "The display name of the emitter"
+            },
+            {
+              "name": "radius",
+              "value": "Float input",
+              "description": "The radius of the cylinder"
+            },
+            {
+              "name": "height",
+              "value": "Float input",
+              "description": "The height of the cylinder"
+            }
+          ]
+        },
+        {
+          "name": "PointShapeBlock",
+          "description": "Emits particles from a single point. All particles spawn from the same location, useful for concentrated effects.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Point emitter'",
+              "description": "The display name of the emitter"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "Different emitter shapes give you control over the spatial distribution of particles. SphereShapeBlock creates particles within a spherical volume, while BoxShapeBlock uses a rectangular volume. Each shape has specific properties like radius, height, or angle that control the emission area. The radiusRange property in SphereShapeBlock is particularly useful - it lets you control whether particles spawn only at the center (0) or throughout the entire volume (1).",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try changing the sphere radius to see how it affects particle distribution",
+        "Experiment with radiusRange values between 0 and 1",
+        "Replace SphereShapeBlock with ConeShapeBlock and adjust the angle",
+        "Create a particle system using CylinderShapeBlock",
+        "Compare the visual difference between PointShapeBlock and SphereShapeBlock with radiusRange = 0"
+      ]
+    },
+    "lesson4": {
+      "title": "Lesson 4: Basic Forces and Physics",
+      "summary": "Learn to apply forces like gravity to particles using UpdateDirectionBlock",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to apply forces to particles, such as gravity. We'll use UpdateDirectionBlock to modify particle direction over time, and combine it with delta time to create realistic physics-based movement.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Add an UpdateDirectionBlock to modify particle direction",
+        "Get the current direction using ParticleInputBlock with Direction contextual value",
+        "Get delta time using ParticleInputBlock with Delta system source",
+        "Create a gravity vector using ParticleConverterBlock (0, -9.8, 0 for downward gravity)",
+        "Multiply gravity by delta time to get gravity acceleration per frame",
+        "Add the gravity delta to the current direction using ParticleMathBlock",
+        "Connect the result to UpdateDirectionBlock's direction input",
+        "Chain UpdateDirection → UpdatePosition → UpdateColor → UpdateSize"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "UpdateDirectionBlock",
+          "description": "Updates the direction of particles each frame. This is essential for applying forces like gravity, wind, or other directional effects.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update direction'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "direction",
+              "value": "Vector3 input",
+              "description": "The new direction vector to apply to the particle. Can be calculated from current direction plus forces."
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Direction)",
+          "description": "Retrieves the current direction of a particle. Direction represents the velocity vector of the particle.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Direction",
+              "description": "The type of contextual data - Direction in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Delta Time)",
+          "description": "Retrieves the delta time from the system. Delta time is the time elapsed since the last frame, essential for frame-rate independent physics calculations.",
+          "properties": [
+            {
+              "name": "systemSource",
+              "value": "NodeParticleSystemSources.Delta",
+              "description": "The system source - Delta for delta time"
+            }
+          ]
+        },
+        {
+          "name": "ParticleConverterBlock",
+          "description": "Creates Vector3 from individual X, Y, Z float values. Used to construct the gravity vector (0, -9.8, 0).",
+          "properties": [
+            {
+              "name": "xIn, yIn, zIn",
+              "value": "Float inputs",
+              "description": "Individual float inputs for X, Y, Z components"
+            },
+            {
+              "name": "xyzOut",
+              "value": "Vector3 output",
+              "description": "The combined Vector3 output"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Multiply)",
+          "description": "Multiplies two values. Used to multiply gravity by delta time, ensuring physics calculations are frame-rate independent.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Multiply",
+              "description": "The mathematical operation - Multiply"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Add)",
+          "description": "Adds two Vector3 values. Used to add gravity acceleration to the current direction vector.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Add",
+              "description": "The mathematical operation - Add"
+            }
+          ]
+        },
+        {
+          "name": "PointShapeBlock",
+          "description": "Emits particles from a single point. Used in this lesson to create particles that fall due to gravity.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Point emitter'",
+              "description": "The display name of the emitter"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates how to apply forces to particles. The key concept is that forces modify direction over time. We multiply the force (gravity) by delta time to ensure the effect is consistent regardless of frame rate. The formula is: newDirection = currentDirection + (force * deltaTime). This creates realistic physics-based movement where particles accelerate downward due to gravity.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try changing the gravity Y value to see how it affects particle fall speed",
+        "Create upward gravity by setting gravity Y to a positive value",
+        "Add horizontal forces by modifying gravity X or Z",
+        "Experiment with different gravity magnitudes",
+        "Try combining multiple forces by adding more math operations"
+      ]
+    },
+    "lesson5": {
+      "title": "Lesson 5: Advanced Color Management",
+      "summary": "Learn to create smooth color transitions and gradients using ParticleLerpBlock",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to create smooth color transitions over a particle's lifetime. We'll use ParticleLerpBlock to interpolate between two colors based on the particle's age, creating beautiful fading effects and color animations.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using BoxShapeBlock",
+        "Add UpdateColorBlock to modify particle color",
+        "Get the particle's age and lifetime using ParticleInputBlock",
+        "Calculate the age ratio (age / lifetime) to get a value from 0 to 1",
+        "Create a start color using ParticleConverterBlock (e.g., bright red)",
+        "Create an end color using ParticleConverterBlock (e.g., blue with transparency)",
+        "Use ParticleLerpBlock to interpolate between start and end colors",
+        "Connect the age ratio to ParticleLerpBlock's gradient input",
+        "Connect the lerped color to UpdateColorBlock's color input"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "ParticleLerpBlock",
+          "description": "Linearly interpolates (lerps) between two values based on a gradient factor (0 to 1). Works with Float, Vector2, Vector3, and Color4 types. Perfect for creating smooth transitions.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Color Lerp'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "left",
+              "value": "Color4 input",
+              "description": "The starting value (when gradient = 0)"
+            },
+            {
+              "name": "right",
+              "value": "Color4 input",
+              "description": "The ending value (when gradient = 1)"
+            },
+            {
+              "name": "gradient",
+              "value": "Float input (0 to 1)",
+              "description": "The interpolation factor. 0 = left value, 1 = right value, 0.5 = halfway between"
+            }
+          ]
+        },
+        {
+          "name": "ParticleConverterBlock (Color4)",
+          "description": "Creates a Color4 from individual R, G, B, A float values. Used to define custom colors for the start and end of color transitions.",
+          "properties": [
+            {
+              "name": "xIn, yIn, zIn, wIn",
+              "value": "Float inputs",
+              "description": "Individual float inputs for R, G, B, A components (xIn = R, yIn = G, zIn = B, wIn = A)"
+            },
+            {
+              "name": "colorOut",
+              "value": "Color4 output",
+              "description": "The combined Color4 output"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Age)",
+          "description": "Retrieves the current age of a particle. Age increases from 0 to lifetime as the particle lives.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Age",
+              "description": "The type of contextual data - Age in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Lifetime)",
+          "description": "Retrieves the total lifetime of a particle. This is the maximum age a particle can reach before it dies.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Lifetime",
+              "description": "The type of contextual data - Lifetime in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Divide)",
+          "description": "Divides two values. Used to calculate age ratio: age / lifetime, which gives a value from 0 (birth) to 1 (death).",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Divide",
+              "description": "The mathematical operation - Divide"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates color interpolation using linear interpolation (lerp). The formula is: result = (1 - gradient) * left + gradient * right. When gradient = 0, we get the left color (start). When gradient = 1, we get the right color (end). By using age / lifetime as the gradient, particles smoothly transition from their start color to their end color over their lifetime. This technique is essential for creating fading effects, color animations, and smooth visual transitions.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different color combinations (e.g., yellow to purple, green to cyan)",
+        "Create a color transition that fades to transparent (set end alpha to 0)",
+        "Experiment with non-linear transitions by modifying the age ratio with math operations",
+        "Try creating a color cycle by using multiple ParticleLerpBlocks",
+        "Combine color transitions with size changes for more dynamic effects"
+      ]
+    },
+    "lesson6": {
+      "title": "Lesson 6: Movement and Physics",
+      "summary": "Learn to combine speed control and drag effects to create realistic particle physics",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to combine speed control and drag effects to create realistic particle physics. You'll use ParticleLerpBlock to create speed transitions (fast to slow), and combine it with drag calculations to simulate air resistance. By combining both effects, you create particles that start fast, slow down over time, and experience drag - creating more natural, physics-based movement.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Get the particle's direction and direction scale using ParticleInputBlock",
+        "Get the particle's age and lifetime to create time-based physics",
+        "Calculate the age ratio (age / lifetime) to get a value from 0 to 1",
+        "PART 1 - Speed Control: Use ParticleLerpBlock to interpolate between start speed (2.0) and end speed (0.5)",
+        "PART 2 - Drag Effect: Use ParticleLerpBlock to interpolate drag from 0.0 to 0.6",
+        "Calculate drag factor: (1 - drag) to reduce speed",
+        "Combine both effects: speedLerp * (1 - dragLerp)",
+        "Multiply the base direction scale by the combined factor",
+        "Calculate the scaled direction and add it to position"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "ParticleInputBlock (DirectionScale)",
+          "description": "Retrieves the direction scale of a particle. DirectionScale is a multiplier that determines how far a particle moves each frame. It's multiplied by the direction vector to get the actual movement distance.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.DirectionScale",
+              "description": "The type of contextual data - DirectionScale in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Direction)",
+          "description": "Retrieves the current direction vector of a particle. Direction represents the velocity vector, and when multiplied by DirectionScale, gives the actual movement per frame.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Direction",
+              "description": "The type of contextual data - Direction in this case"
+            }
+          ]
+        },
+        {
+          "name": "ParticleLerpBlock (Speed)",
+          "description": "Interpolates between two speed values based on age ratio. Used to create smooth speed transitions (e.g., fast to slow, slow to fast).",
+          "properties": [
+            {
+              "name": "left",
+              "value": "Float input (start speed)",
+              "description": "The starting speed value (when gradient = 0)"
+            },
+            {
+              "name": "right",
+              "value": "Float input (end speed)",
+              "description": "The ending speed value (when gradient = 1)"
+            },
+            {
+              "name": "gradient",
+              "value": "Float input (age ratio)",
+              "description": "The interpolation factor based on particle age"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Multiply)",
+          "description": "Multiplies two values. Used to multiply direction scale by speed multiplier, and to multiply direction by the modified scale to get the final movement vector.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Multiply",
+              "description": "The mathematical operation - Multiply"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates combining speed control and drag effects. The key concept is combining multiple physics effects: speedLerp controls the base speed transition (fast to slow), while dragLerp simulates air resistance (increasing over time). The combined formula is: finalScale = directionScale * speedLerp * (1 - dragLerp). This creates particles that start fast (speedLerp = 2.0, drag = 0), gradually slow down (speedLerp decreases to 0.5), and experience increasing drag (drag increases to 0.6). The result is realistic physics where particles decelerate both from speed reduction and air resistance.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try reversing the speed transition (start slow, end fast)",
+        "Create particles that speed up in the middle of their lifetime",
+        "Experiment with different speed ranges (e.g., 0.1 to 3.0)",
+        "Combine speed control with color transitions for more dynamic effects",
+        "Try using non-linear speed curves by modifying the age ratio with math operations"
+      ]
+    },
+    "lesson7": {
+      "title": "Lesson 7: Noise and Randomness",
+      "summary": "Learn to add randomness to particle properties using ParticleRandomBlock",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to add randomness and variation to your particle systems using ParticleRandomBlock. Randomness is essential for creating organic, natural-looking effects. You'll learn how to randomize colors, sizes, and other properties, and understand the different lock modes that control when random values are generated.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Add UpdateColorBlock to modify particle color",
+        "Create two color inputs: minColor (blue) and maxColor (orange)",
+        "Use ParticleRandomBlock to generate a random color between min and max",
+        "Set lockMode to OncePerParticle so each particle gets a fixed random color for its lifetime",
+        "Connect the random color to UpdateColorBlock",
+        "Add UpdateSizeBlock to modify particle size",
+        "Create minSize and maxSize inputs",
+        "Use another ParticleRandomBlock to randomize size with OncePerParticle lock mode",
+        "Connect the random size to UpdateSizeBlock"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "ParticleRandomBlock",
+          "description": "Generates random values between a minimum and maximum. Supports Float, Vector2, Vector3, and Color4 types. Essential for adding variation to particle systems.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Random Color' or 'Random Size'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "min",
+              "value": "Input (same type as max)",
+              "description": "The minimum value for random generation"
+            },
+            {
+              "name": "max",
+              "value": "Input (same type as min)",
+              "description": "The maximum value for random generation"
+            },
+            {
+              "name": "lockMode",
+              "value": "ParticleRandomBlockLocks enum",
+              "description": "Controls when the random value is generated: None (every frame), PerParticle (once per particle per frame), PerSystem (once per system), OncePerParticle (once when particle is created)"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Color4)",
+          "description": "Provides a Color4 value. Used to define the min and max colors for random color generation.",
+          "properties": [
+            {
+              "name": "value",
+              "value": "Color4",
+              "description": "The color value (e.g., new Color4(0.2, 0.5, 1.0, 1.0) for blue)"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates the use of ParticleRandomBlock to add randomness to particle properties. The key concept is the lockMode property, which determines when random values are generated. OncePerParticle ensures each particle gets a random value when it's created, and that value remains constant throughout the particle's lifetime. This is perfect for properties like color and size, where you want variation between particles but consistency for each individual particle. The formula for random generation is: randomValue = min + Math.random() * (max - min).",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different lockMode values (PerParticle, PerSystem) and observe the differences",
+        "Randomize particle direction using Vector3 random values",
+        "Create a particle system with random colors across the full spectrum",
+        "Combine random size with age-based size changes",
+        "Experiment with random Vector2 values for particle scale"
+      ]
+    },
+    "lesson8": {
+      "title": "Lesson 8: Attractors",
+      "summary": "Learn to create particle attractors that pull particles toward specific points in space",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to use UpdateAttractorBlock to create attractors that pull particles toward specific points in space. Attractors are useful for creating effects like particles being pulled toward a black hole, magnetic fields, or gravitational wells. You'll learn to set attractor position, strength, and combine attractors with other effects.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Add UpdatePositionBlock for basic movement",
+        "Add UpdateAttractorBlock after UpdatePositionBlock",
+        "Create an attractor position using ParticleConverterBlock (X, Y, Z coordinates)",
+        "Set the attractor strength (higher values = stronger pull)",
+        "Connect the attractor position to UpdateAttractorBlock's attractor input",
+        "Connect the strength value to UpdateAttractorBlock's strength input",
+        "The attractor will modify particle direction, pulling them toward the target point"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "UpdateAttractorBlock",
+          "description": "Creates an attractor effect that pulls particles toward a specific point in 3D space. The force decreases with distance squared, creating realistic physics behavior.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Attractor'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "attractor",
+              "value": "Vector3 input",
+              "description": "The position of the attractor in 3D space (X, Y, Z coordinates)"
+            },
+            {
+              "name": "strength",
+              "value": "Float input",
+              "description": "The strength of the attraction force. Higher values create stronger pull. The force is inversely proportional to distance squared."
+            }
+          ]
+        },
+        {
+          "name": "ParticleConverterBlock (Vector3)",
+          "description": "Creates a Vector3 from individual X, Y, Z float values. Used to define the attractor position.",
+          "properties": [
+            {
+              "name": "xIn, yIn, zIn",
+              "value": "Float inputs",
+              "description": "Individual float inputs for X, Y, Z components"
+            },
+            {
+              "name": "xyzOut",
+              "value": "Vector3 output",
+              "description": "The combined Vector3 output"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates attractor physics. An attractor creates a force that pulls particles toward a target point. The formula for the force is: force = (strength / distance²) * direction, where direction is the normalized vector from particle to attractor. This creates realistic behavior where particles close to the attractor experience strong pull, while distant particles experience weaker pull. Attractors are useful for creating effects like particles orbiting a center, being drawn to a target, or creating vortex-like patterns.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different attractor positions (above, below, to the side)",
+        "Experiment with different strength values (0.1 to 10.0)",
+        "Create multiple attractors by chaining multiple UpdateAttractorBlocks",
+        "Combine attractors with gravity for complex motion patterns",
+        "Try creating a repeller by using negative strength values (if supported)"
+      ]
+    },
+    "lesson9": {
+      "title": "Lesson 9: Advanced Math Operations",
+      "summary": "Learn to use multiple trigonometric and advanced math functions (Sin, Cos, Sqrt, Abs) together",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to use multiple mathematical functions together to create complex effects. You'll use ParticleTrigonometryBlock with different operations (Sin, Cos, Sqrt, Abs) and combine them to create rich, animated color effects. Each function creates a different pattern - sine waves oscillate, cosine waves are phase-shifted, square root creates smooth curves, and absolute value removes negative values.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Get the system time using ParticleInputBlock with Time system source",
+        "Scale time using ParticleMathBlock (Multiply) to control animation speed",
+        "PART 1 - Sin: Use ParticleTrigonometryBlock with Sin operation for red component",
+        "PART 2 - Cos: Use ParticleTrigonometryBlock with Cos operation for green component",
+        "PART 3 - Sqrt: Use Abs then Sqrt for blue component (smooth curve)",
+        "Normalize all values to 0-1 range: (value + 1) / 2 for Sin/Cos",
+        "Create Color4 using ParticleConverterBlock with all three components",
+        "Connect the animated color to UpdateColorBlock"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "ParticleTrigonometryBlock",
+          "description": "Performs trigonometric and advanced mathematical operations on float values. Supports Sin, Cos, Tan, Sqrt, Log, Abs, and many more operations.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Sin Time' / 'Cos Time' / 'Sqrt Time'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "operation",
+              "value": "ParticleTrigonometryBlockOperations.Sin / Cos / Sqrt / Abs",
+              "description": "The mathematical operation - Sin, Cos, Sqrt, or Abs"
+            },
+            {
+              "name": "input",
+              "value": "Float input",
+              "description": "The input value (e.g., time for sine wave)"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Time)",
+          "description": "Retrieves the system time. Time increases continuously, making it perfect for creating animated effects that change over time.",
+          "properties": [
+            {
+              "name": "systemSource",
+              "value": "NodeParticleSystemSources.Time",
+              "description": "The system source - Time for system time"
+            }
+          ]
+        },
+        {
+          "name": "ParticleMathBlock (Multiply/Add)",
+          "description": "Multiplies or adds values. Used to scale and normalize trigonometric function outputs.",
+          "properties": [
+            {
+              "name": "operation",
+              "value": "ParticleMathBlockOperations.Multiply / Add",
+              "description": "The mathematical operation - Multiply or Add"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates combining multiple mathematical functions. Each function creates a different pattern: Sin creates oscillating waves (red), Cos creates phase-shifted waves (green), and Sqrt(Abs) creates smooth curves (blue). The normalization formula (value + 1) / 2 maps functions from [-1, 1] to [0, 1] for color values. By using different functions for different color components, we create rich, animated effects where each color channel follows a different mathematical pattern. This technique is essential for creating complex, organic-looking animations.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different trigonometric functions (Tan, Asin, Acos) and observe the differences",
+        "Use different functions for different color components",
+        "Create multiple waves with different frequencies and combine them",
+        "Experiment with Sqrt, Log, Exp, and other advanced math operations",
+        "Combine trigonometric functions with age-based effects for complex animations"
+      ]
+    },
+    "lesson10": {
+      "title": "Lesson 10: Texture Animation and Sprite Sheets",
+      "summary": "Learn to create animated particle textures using sprite sheets and cell index updates",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to use SetupSpriteSheetBlock and UpdateSpriteCellIndexBlock to create animated particle textures. Sprite sheets allow you to display different frames of animation on particles, creating effects like animated flames, explosions, or other dynamic visual effects. You'll learn to calculate sprite cell indices based on particle age to create smooth animations.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Add SetupSpriteSheetBlock to configure the sprite sheet (start cell, end cell, width, height)",
+        "Set the sprite sheet properties (start: 0, end: 8, width: 64, height: 64)",
+        "Enable looping if you want the animation to repeat",
+        "Add UpdateSpriteCellIndexBlock to update the sprite cell index",
+        "Calculate sprite index from particle age: Age / Lifetime",
+        "Multiply by the number of cells (end - start + 1)",
+        "Convert the result to an integer using ParticleFloatToIntBlock",
+        "Connect the integer cell index to UpdateSpriteCellIndexBlock's cellIndex input"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "SetupSpriteSheetBlock",
+          "description": "Configures a sprite sheet for particles. Defines the start and end cell indices, cell dimensions, and animation behavior.",
+          "properties": [
+            {
+              "name": "start",
+              "value": "0",
+              "description": "The starting cell index of the sprite sheet"
+            },
+            {
+              "name": "end",
+              "value": "8",
+              "description": "The ending cell index of the sprite sheet"
+            },
+            {
+              "name": "width",
+              "value": "64",
+              "description": "The width of each sprite cell in pixels"
+            },
+            {
+              "name": "height",
+              "value": "64",
+              "description": "The height of each sprite cell in pixels"
+            },
+            {
+              "name": "loop",
+              "value": "true",
+              "description": "Whether the sprite sheet animation should loop"
+            },
+            {
+              "name": "randomStartCell",
+              "value": "false",
+              "description": "Whether particles should start at a random cell"
+            }
+          ]
+        },
+        {
+          "name": "UpdateSpriteCellIndexBlock",
+          "description": "Updates the sprite cell index of a particle. The cell index determines which frame of the sprite sheet is displayed.",
+          "properties": [
+            {
+              "name": "cellIndex",
+              "value": "Int input",
+              "description": "The cell index to display (0-based, from start to end)"
+            }
+          ]
+        },
+        {
+          "name": "ParticleFloatToIntBlock",
+          "description": "Converts a float value to an integer. Required for sprite cell indices, which must be integers.",
+          "properties": [
+            {
+              "name": "input",
+              "value": "Float input",
+              "description": "The float value to convert"
+            },
+            {
+              "name": "output",
+              "value": "Int output",
+              "description": "The integer result"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates sprite sheet animation. A sprite sheet is a texture containing multiple frames of animation arranged in a grid. By updating the cell index based on particle age, we create smooth animations. The formula is: cellIndex = floor((Age / Lifetime) * cellCount), where cellCount = end - start + 1. This maps the particle's lifetime (0 to 1) to the sprite sheet cells (0 to cellCount-1). Sprite sheets are essential for creating animated effects like flames, smoke, explosions, and other dynamic visual elements.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different sprite sheet configurations (different cell counts, sizes)",
+        "Experiment with randomStartCell to create varied animations",
+        "Create sprite animations that speed up or slow down based on particle properties",
+        "Combine sprite animation with color changes for more dynamic effects",
+        "Try creating a sprite sheet with your own texture and test different cell arrangements"
+      ]
+    },
+    "lesson11": {
+      "title": "Lesson 11: Conditional Logic",
+      "summary": "Learn to use ParticleConditionBlock to create conditional effects based on particle properties",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to use ParticleConditionBlock to create conditional logic in your particle systems. Conditional blocks allow you to make decisions based on particle properties - for example, changing color when a particle reaches a certain age, or applying different effects based on speed. You'll learn to use comparison operations (GreaterThan, LessThan, Equal, etc.) and combine conditions with other blocks.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Get the particle's Age and Lifetime using ParticleInputBlock",
+        "Calculate the age ratio (Age / Lifetime) to get a value from 0 to 1",
+        "Create a threshold value (0.5) using ParticleInputBlock",
+        "Create a ParticleConditionBlock with GreaterThan test",
+        "Connect ageRatio to the left input and threshold to the right input",
+        "Create two colors: Color1 (red) and Color2 (blue)",
+        "Connect Color1 to condition.ifTrue and Color2 to condition.ifFalse",
+        "Use the condition output to control particle color and size",
+        "Observe how particles change color and size when they pass the threshold"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "ParticleConditionBlock",
+          "description": "Evaluates a condition and returns one value if true, another if false. Supports various comparison operations like Equal, NotEqual, LessThan, GreaterThan, etc.",
+          "properties": [
+            {
+              "name": "test",
+              "value": "ParticleConditionBlockTests.GreaterThan",
+              "description": "The comparison operation to perform"
+            },
+            {
+              "name": "left",
+              "value": "Float input",
+              "description": "The left operand (e.g., ageRatio)"
+            },
+            {
+              "name": "right",
+              "value": "Float input",
+              "description": "The right operand (e.g., threshold)"
+            },
+            {
+              "name": "ifTrue",
+              "value": "AutoDetect input",
+              "description": "The value to return if condition is true (e.g., Color1)"
+            },
+            {
+              "name": "ifFalse",
+              "value": "AutoDetect input",
+              "description": "The value to return if condition is false (e.g., Color2)"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Age/Lifetime)",
+          "description": "Retrieves particle age and lifetime for conditional logic. Age ratio (Age / Lifetime) gives a normalized value from 0 to 1.",
+          "properties": [
+            {
+              "name": "contextualValue",
+              "value": "NodeParticleContextualSources.Age / Lifetime",
+              "description": "The contextual source - Age or Lifetime"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates conditional logic using ParticleConditionBlock. The condition block evaluates a comparison (e.g., ageRatio > 0.5) and returns one value if true, another if false. This allows you to create effects that change based on particle state. For example, particles can change color when they reach half their lifetime, or apply different effects based on speed, position, or other properties. Conditional logic is essential for creating complex, state-based particle behaviors.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different comparison operations (LessThan, Equal, NotEqual)",
+        "Create multiple conditions and combine them using And/Or operations",
+        "Use conditions to trigger different effects at different particle ages",
+        "Combine conditional logic with other effects like size or scale changes",
+        "Experiment with different threshold values to see how they affect particle behavior"
+      ]
+    },
+    "lesson12": {
+      "title": "Lesson 12: Angle and Rotation",
+      "summary": "Learn to control particle rotation using UpdateAngleBlock and AlignAngleBlock",
+      "introTitle": "Introduction",
+      "intro": "In this lesson, you'll learn how to control particle rotation and angle. You'll use UpdateAngleBlock to set particle rotation based on calculations (like time-based rotation), and learn about AlignAngleBlock which automatically aligns particles to their direction. Rotation is essential for creating effects like spinning particles, directional sprites, and animated textures.",
+      "stepsTitle": "Step-by-Step Instructions",
+      "steps": [
+        "Start with a basic particle system using PointShapeBlock",
+        "Get the system time using ParticleInputBlock with Time system source",
+        "Create a rotation speed value (rotations per second)",
+        "Calculate rotation angle: time * rotationSpeed",
+        "Add UpdateAngleBlock to update particle angle",
+        "Connect the rotation angle to UpdateAngleBlock's angle input",
+        "Optionally use AlignAngleBlock to align particles to their direction",
+        "Observe how particles rotate continuously based on time"
+      ],
+      "blocksTitle": "Blocks Used in This Lesson",
+      "blocks": [
+        {
+          "name": "UpdateAngleBlock",
+          "description": "Updates the rotation angle of particles. The angle is specified in radians and determines how particles are rotated.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Update Angle'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "angle",
+              "value": "Float input",
+              "description": "The rotation angle in radians"
+            }
+          ]
+        },
+        {
+          "name": "AlignAngleBlock",
+          "description": "Automatically aligns particle angle to its direction vector. Useful for creating particles that face their movement direction.",
+          "properties": [
+            {
+              "name": "name",
+              "value": "'Align Angle'",
+              "description": "The display name of the block"
+            },
+            {
+              "name": "alignment",
+              "value": "Float (default: Math.PI / 2)",
+              "description": "The alignment offset in radians"
+            }
+          ]
+        },
+        {
+          "name": "ParticleInputBlock (Time)",
+          "description": "Retrieves the system time for time-based rotation calculations.",
+          "properties": [
+            {
+              "name": "systemSource",
+              "value": "NodeParticleSystemSources.Time",
+              "description": "The system source - Time for system time"
+            }
+          ]
+        }
+      ],
+      "properties": "Properties",
+      "codeTitle": "Code Explanation",
+      "codeCopy": "This lesson demonstrates particle rotation control. UpdateAngleBlock allows you to set particle rotation based on calculations - in this case, time-based rotation where angle = time * rotationSpeed. This creates continuous rotation. AlignAngleBlock automatically calculates the angle needed to align particles with their direction vector, which is useful for directional sprites. Rotation is specified in radians (2π = 360 degrees), and can be combined with other effects like color changes or size variations.",
+      "homeworkTitle": "Practice Exercises",
+      "homework": [
+        "Try different rotation speeds and observe the effect",
+        "Combine rotation with age-based effects (rotate faster as particles age)",
+        "Use AlignAngleBlock to make particles face their movement direction",
+        "Combine rotation with color changes for more dynamic effects",
+        "Experiment with rotation based on particle properties (speed, age, etc.)"
+      ]
+    }
+  }
+}

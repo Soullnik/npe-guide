@@ -1,3 +1,105 @@
-/* You can add global styles to this file, and also import other style files */
+@import 'tailwindcss';
 
-@import "tailwindcss";
+@layer base {
+  :root {
+    color: #f8fafc;
+    background-color: #050816;
+  }
+
+  body {
+    @apply min-h-screen bg-[#050816] text-slate-50 antialiased;
+  }
+}
+
+.npe-runtime-canvas {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.npe-right-panel #propertyTab .textInputLine .value input {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+.npe-right-panel #propertyTab .listLine .options select {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+.npe-right-panel #propertyTab .textInputArea textarea {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+.npe-right-panel #propertyTab .sliderLine .floatLine .short input[type='number'] {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+.npe-right-panel #propertyTab .floatLine .value input[type='number'] {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+.npe-right-panel #propertyTab .checkBoxLine .checkBox {
+  padding: 2px 5px;
+}
+
+.numeric > input {
+  color: black !important;
+  padding: 2px 5px;
+}
+
+/* Lesson menu overlay animation */
+.lesson-menu-overlay {
+  animation: slideInFromLeft 0.3s ease-out;
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Custom Scrollbar Styles */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.3) rgba(15, 23, 42, 0.5);
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.3);
+  border-radius: 4px;
+  border: 1px solid rgba(15, 23, 42, 0.5);
+  transition: background 0.2s ease;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(96, 165, 250, 0.5);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background: rgba(96, 165, 250, 0.7);
+}
+
+*::-webkit-scrollbar-corner {
+  background: rgba(15, 23, 42, 0.5);
+}
