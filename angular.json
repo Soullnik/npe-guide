@@ -38,7 +38,7 @@
           },
           "configurations": {
             "production": {
-              "outputPath": "dist/npe-guide/browser",
+              "outputPath": "dist/npe-guide",
               "baseHref": "/",
               "budgets": [
                 {
