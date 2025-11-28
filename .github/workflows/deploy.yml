@@ -9,6 +9,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -16,6 +18,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -34,12 +38,11 @@ jobs:
             npm run build:gh-pages
           fi
 
-      - name: Prepare deployment files
+      - name: Copy files to root
         run: |
-          rm -rf deploy
           mkdir -p deploy
-          shopt -s dotglob
           cp -r dist/npe-guide/browser/* deploy/
+          cp -r dist/npe-guide/browser/.[!.]* deploy/ 2>/dev/null || true
           ls -la deploy/
 
       - name: Deploy to gh-pages
@@ -48,5 +51,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./deploy
           keep_files: false
+          force_orphan: true
           cname: false
 
