@@ -34,10 +34,16 @@ jobs:
             npm run build:gh-pages
           fi
 
+      - name: Prepare deployment files
+        run: |
+          mkdir -p deploy
+          cp -r dist/npe-guide/browser/* deploy/
+          cp -r dist/npe-guide/browser/.* deploy/ 2>/dev/null || true
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist/npe-guide/browser
+          publish_dir: ./deploy
           cname: false
 
