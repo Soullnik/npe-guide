@@ -12,7 +12,9 @@
     "previousLesson": "Previous",
     "nextLesson": "Next",
     "viewDocumentation": "View Documentation",
-    "particlesDocumentation": "Particles Documentation"
+    "particlesDocumentation": "Particles Documentation",
+    "mobileNotSupported": "Desktop Only",
+    "mobileMessage": "This application is optimized for desktop devices. Please open it on a desktop or laptop computer for the best experience."
   },
   "lessons": {
     "lesson1": {
