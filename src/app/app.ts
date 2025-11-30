@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, computed, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { LessonContentComponent } from './lesson-content/lesson-content.component';
 import { NpePreviewComponent } from './npe-preview/npe-preview.component';
@@ -12,14 +12,16 @@ import type { LessonDefinition } from './lessons/lesson-definition';
   imports: [CommonModule, TranslatePipe, LessonContentComponent, NpePreviewComponent],
   templateUrl: './app.html',
 })
-export class App {
+export class App implements OnInit {
   private readonly translate = inject(TranslateService);
+  private readonly platformId = inject(PLATFORM_ID);
   protected readonly lessons = LESSONS;
 
   protected readonly drawerOpen = signal(false);
   protected readonly activeLessonId = signal(this.lessons[0]?.id ?? '');
   protected readonly currentLang = signal<'en' | 'ru'>('en');
   protected readonly lessonLoadToken = signal(0);
+  protected readonly isMobile = signal(false);
 
   protected readonly activeLesson = computed<LessonDefinition | null>(() => {
     return this.lessons.find((lesson) => lesson.id === this.activeLessonId()) ?? null;
@@ -40,6 +42,26 @@ export class App {
   constructor() {
     this.translate.addLangs(['en', 'ru']);
     this.translate.use(this.currentLang());
+  }
+
+  ngOnInit(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      this.checkMobileDevice();
+      window.addEventListener('resize', () => this.checkMobileDevice());
+    }
+  }
+
+  private checkMobileDevice(): void {
+    if (!isPlatformBrowser(this.platformId)) {
+      return;
+    }
+
+    const isMobileWidth = window.innerWidth < 1024;
+    const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+
+    this.isMobile.set(isMobileWidth || isMobileUserAgent);
   }
 
   protected selectLesson(id: string): void {

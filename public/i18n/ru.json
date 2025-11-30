@@ -12,7 +12,9 @@
     "previousLesson": "Предыдущий",
     "nextLesson": "Следующий",
     "viewDocumentation": "Посмотреть Документацию",
-    "particlesDocumentation": "Документация по Частицам"
+    "particlesDocumentation": "Документация по Частицам",
+    "mobileNotSupported": "Только для Десктопа",
+    "mobileMessage": "Это приложение оптимизировано для десктопных устройств. Пожалуйста, откройте его на настольном компьютере или ноутбуке для лучшего опыта."
   },
   "lessons": {
     "lesson1": {
