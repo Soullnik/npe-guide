@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, effect, inject, input, signal } from '@angular/core';
+import { Component, DestroyRef, effect, inject, input, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 import { LessonTranslationService } from '../services/lesson-translation.service';
 
 interface BlockInfo {
@@ -171,10 +172,10 @@ interface BlockInfo {
     }
   `,
 })
-export class LessonContentComponent implements OnDestroy {
+export class LessonContentComponent {
   private readonly translate = inject(TranslateService);
   private readonly lessonTranslationService = inject(LessonTranslationService);
-  private readonly langSub: Subscription;
+  private readonly destroyRef = inject(DestroyRef);
   private readonly openBlocks = signal<Set<string>>(new Set());
 
   readonly lessonKey = input<string | null>(null);
@@ -186,9 +187,11 @@ export class LessonContentComponent implements OnDestroy {
   protected readonly commonMistakes = signal<Array<{ mistake: string; explanation: string; solution: string }>>([]);
 
   constructor() {
-    this.langSub = this.translate.onLangChange.subscribe(() => {
-      this.loadLessonTranslation().then(() => this.refreshData());
-    });
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.loadLessonTranslation().then(() => this.refreshData());
+      });
     effect(() => {
       const key = this.lessonKey();
       const category = this.category();
@@ -314,9 +317,5 @@ export class LessonContentComponent implements OnDestroy {
       this.objectives.set(Array.isArray(objectivesValue) ? objectivesValue : []);
       this.commonMistakes.set(Array.isArray(commonMistakesValue) ? commonMistakesValue : []);
     });
-  }
-
-  ngOnDestroy(): void {
-    this.langSub.unsubscribe();
   }
 }

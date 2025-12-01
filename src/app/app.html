@@ -7,6 +7,11 @@
     </div>
   </div>
 } @else {
-  <router-outlet></router-outlet>
+  <div class="flex h-screen flex-col overflow-hidden bg-gradient-to-b from-[#050816] via-[#0b1120] to-[#11192f] text-slate-50">
+    <app-header></app-header>
+    <main class="flex-1 overflow-y-auto">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
 }
 

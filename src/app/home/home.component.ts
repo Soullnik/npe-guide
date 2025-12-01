@@ -12,53 +12,51 @@ import { LessonTranslationService } from '../services/lesson-translation.service
   standalone: true,
   imports: [CommonModule, RouterModule, TranslatePipe],
   template: `
-    <div class="h-screen min-h-0 w-full bg-gradient-to-b from-[#050816] via-[#0b1120] to-[#11192f] px-6 py-8 text-slate-50 lg:px-12">
-      <div class="flex h-full min-h-0 flex-col gap-6">
-        <header class="flex flex-wrap items-start justify-between gap-6">
-          <div>
-            <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.product' | translate }}</p>
-            <h1 class="text-3xl font-semibold text-white lg:text-4xl">{{ 'ui.heroTitle' | translate }}</h1>
-            <p class="mt-3 max-w-2xl text-sm text-white/70 lg:text-base">{{ 'ui.heroSubtitle' | translate }}</p>
-            <a
-              href="https://doc.babylonjs.com/features/featuresDeepDive/particles"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="mt-3 inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors underline"
-            >
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-              </svg>
-              {{ 'ui.particlesDocumentation' | translate }}
-            </a>
-          </div>
-          <div class="flex flex-col items-end gap-2">
-            <label class="text-xs uppercase tracking-widest text-white/60">{{ 'ui.language' | translate }}</label>
-            <div class="inline-flex rounded-full border border-white/15 bg-white/5 p-1 text-sm font-semibold shadow">
-              <button
-                type="button"
-                class="rounded-full px-4 py-1 transition hover:bg-white/10"
-                [class.bg-white]="currentLang() === 'en'"
-                [class.text-slate-900]="currentLang() === 'en'"
-                (click)="setLanguage('en')"
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                class="rounded-full px-4 py-1 transition hover:bg-white/10"
-                [class.bg-white]="currentLang() === 'ru'"
-                [class.text-slate-900]="currentLang() === 'ru'"
-                (click)="setLanguage('ru')"
-              >
-                RU
-              </button>
+    <div class="w-full px-4 py-6 lg:px-6">
+      <section class="mx-auto max-w-7xl space-y-8">
+        <!-- Hero Section -->
+        <div class="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-xl lg:p-12">
+          <div class="mx-auto max-w-4xl text-center">
+            <h1 class="mb-4 text-4xl font-bold text-white lg:text-5xl">
+              {{ 'ui.heroTitle' | translate }}
+            </h1>
+            <p class="mx-auto mb-8 text-lg leading-relaxed text-white/70 lg:text-xl lg:max-w-3xl">
+              {{ 'ui.homeDescription' | translate }}
+            </p>
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+              <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-400/30 bg-blue-400/10">
+                  <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-base font-semibold text-white">{{ 'ui.homeFeatures' | translate }}</h3>
+                <p class="text-center text-sm text-white/60">{{ 'ui.homeFeaturesDesc' | translate }}</p>
+              </div>
+              <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-400/30 bg-blue-400/10">
+                  <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                  </svg>
+                </div>
+                <h3 class="text-base font-semibold text-white">{{ 'ui.homeStructured' | translate }}</h3>
+                <p class="text-center text-sm text-white/60">{{ 'ui.homeStructuredDesc' | translate }}</p>
+              </div>
+              <div class="flex flex-col items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-6 backdrop-blur-sm">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full border border-blue-400/30 bg-blue-400/10">
+                  <svg class="h-6 w-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-base font-semibold text-white">{{ 'ui.homeSelfPaced' | translate }}</h3>
+                <p class="text-center text-sm text-white/60">{{ 'ui.homeSelfPacedDesc' | translate }}</p>
+              </div>
             </div>
           </div>
-        </header>
+        </div>
 
-        <main class="flex-1 overflow-y-auto">
-          <section class="space-y-8">
-            @if (translationsLoaded()) {
+        <!-- Topics Section -->
+        @if (translationsLoaded()) {
               @for (topic of topics(); track topic.id) {
                 <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
                     <div class="mb-4 flex items-center justify-between">
@@ -103,17 +101,14 @@ import { LessonTranslationService } from '../services/lesson-translation.service
               </div>
             }
           </section>
-        </main>
-      </div>
     </div>
   `,
 })
 export class HomeComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly lessonTranslationService = inject(LessonTranslationService);
-  protected readonly languageService = inject(LanguageService);
+  private readonly languageService = inject(LanguageService);
   protected readonly topics = computed(() => TOPICS);
-  protected readonly currentLang = this.languageService.currentLang;
   protected readonly translationsLoaded = signal(false);
 
   ngOnInit(): void {
@@ -137,12 +132,6 @@ export class HomeComponent implements OnInit {
         this.translationsLoaded.set(true); // Show content anyway
       },
     });
-  }
-
-  protected setLanguage(lang: 'en' | 'ru'): void {
-    this.languageService.setLanguage(lang);
-    this.translationsLoaded.set(false);
-    this.loadAllLessonTranslations();
   }
 
   protected getTopicTitle(topicId: number): string {

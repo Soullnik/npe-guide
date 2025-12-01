@@ -2,11 +2,12 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { Component, inject, OnInit, PLATFORM_ID, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { HeaderComponent } from './header/header.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, TranslatePipe],
+  imports: [CommonModule, RouterOutlet, TranslatePipe, HeaderComponent],
   templateUrl: './app.html',
 })
 export class App implements OnInit {

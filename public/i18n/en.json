@@ -26,7 +26,14 @@
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced"
-    }
+    },
+    "homeDescription": "Welcome to the comprehensive learning platform for Babylon.js Node Particle Editor. Master the art of creating stunning particle effects through interactive lessons, hands-on examples, and step-by-step tutorials.",
+    "homeFeatures": "Interactive Learning",
+    "homeFeaturesDesc": "Learn by doing with live editor previews and hands-on examples",
+    "homeStructured": "Structured Curriculum",
+    "homeStructuredDesc": "Progressive lessons from basics to advanced techniques",
+    "homeSelfPaced": "Self-Paced",
+    "homeSelfPacedDesc": "Learn at your own speed with detailed explanations and solutions"
   },
   "topics": {
     "topic1": {

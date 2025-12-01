@@ -2,12 +2,13 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  DestroyRef,
   ElementRef,
   EventEmitter,
+  inject,
   Inject,
   Input,
   OnChanges,
-  OnDestroy,
   Output,
   PLATFORM_ID,
   SimpleChanges,
@@ -57,7 +58,7 @@ import 'babylonjs';
     </div>
   `,
 })
-export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges {
+export class NpePreviewComponent implements AfterViewInit, OnChanges {
   @Input() lesson: LessonDefinition | null = null;
   @Input() loadToken = 0;
   @Output() showingSolutionChange = new EventEmitter<boolean>();
@@ -74,8 +75,18 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly showingSolution = signal(false);
+  private readonly destroyRef = inject(DestroyRef);
 
-  constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
+  constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {
+    // Register cleanup function
+    this.destroyRef.onDestroy(() => {
+      if (this.resizeHandler) {
+        window.removeEventListener('resize', this.resizeHandler);
+      }
+      this.scene?.dispose();
+      this.engine?.dispose();
+    });
+  }
 
   ngAfterViewInit(): void {
     if (!this.isBrowser()) {
@@ -180,13 +191,6 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
     }
   }
 
-  ngOnDestroy(): void {
-    if (this.resizeHandler) {
-      window.removeEventListener('resize', this.resizeHandler);
-    }
-    this.scene?.dispose();
-    this.engine?.dispose();
-  }
 
   private initializeEditor(): void {
     if (!this.scene || !this.hostRef || !this.isBrowser()) {

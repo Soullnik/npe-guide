@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, effect, inject, OnDestroy, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { firstValueFrom, Subscription } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
+import { HeaderComponent } from '../../header/header.component';
 import { LessonContentComponent } from '../../lesson-content/lesson-content.component';
 import { NpePreviewComponent } from '../../npe-preview/npe-preview.component';
-import { LanguageService } from '../../services/language.service';
 import { LessonTranslationService } from '../../services/lesson-translation.service';
 import type { LessonDefinition } from '../lesson-definition';
 import { getLessonByTopicAndNumber, getTopicById, TOPICS } from '../topics';
@@ -22,56 +23,9 @@ interface BlockInfo {
   standalone: true,
   imports: [CommonModule, RouterModule, TranslatePipe, LessonContentComponent, NpePreviewComponent],
   template: `
-    <div class="h-screen min-h-0 w-full bg-gradient-to-b from-[#050816] via-[#0b1120] to-[#11192f] px-6 py-8 text-slate-50 lg:px-12">
-      <div class="flex h-full min-h-0 flex-col gap-6">
-        <header class="flex flex-wrap items-start justify-between gap-6">
-          <div class="flex items-start gap-4">
-            <div>
-              <a [routerLink]="['/']" class="mb-2 inline-block text-xs text-blue-400 hover:text-blue-300 transition-colors">
-                ← {{ 'ui.backToHome' | translate }}
-              </a>
-              <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.product' | translate }}</p>
-              <h1 class="text-3xl font-semibold text-white lg:text-4xl">{{ 'ui.heroTitle' | translate }}</h1>
-              <p class="mt-3 max-w-2xl text-sm text-white/70 lg:text-base">{{ 'ui.heroSubtitle' | translate }}</p>
-              <a
-                href="https://doc.babylonjs.com/features/featuresDeepDive/particles"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="mt-3 inline-flex items-center gap-2 text-sm text-blue-400 hover:text-blue-300 transition-colors underline"
-              >
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                </svg>
-                {{ 'ui.particlesDocumentation' | translate }}
-              </a>
-            </div>
-          </div>
-          <div class="flex flex-col items-end gap-2">
-            <label class="text-xs uppercase tracking-widest text-white/60">{{ 'ui.language' | translate }}</label>
-            <div class="inline-flex rounded-full border border-white/15 bg-white/5 p-1 text-sm font-semibold shadow">
-              <button
-                type="button"
-                class="rounded-full px-4 py-1 transition hover:bg-white/10"
-                [class.bg-white]="currentLang() === 'en'"
-                [class.text-slate-900]="currentLang() === 'en'"
-                (click)="setLanguage('en')"
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                class="rounded-full px-4 py-1 transition hover:bg-white/10"
-                [class.bg-white]="currentLang() === 'ru'"
-                [class.text-slate-900]="currentLang() === 'ru'"
-                (click)="setLanguage('ru')"
-              >
-                RU
-              </button>
-            </div>
-          </div>
-        </header>
-        <main class="grid flex-1 min-h-0 grid-cols-1 gap-6 lg:grid-cols-[30%_70%]">
-          <section class="relative flex min-h-0 flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+    <div class="flex h-full min-h-0 w-full flex-col gap-6 px-4 py-6 lg:px-6">
+      <main class="grid w-full flex-1 min-h-0 grid-cols-1 gap-6 lg:grid-cols-[1fr_3fr]">
+          <section class="relative flex min-h-0 min-w-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div class="flex items-center justify-between">
               <h2 class="text-xl font-semibold text-white">
                 @if (currentLesson()) {
@@ -188,7 +142,7 @@ interface BlockInfo {
             }
           </section>
 
-          <section class="flex min-h-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <section class="flex min-h-0 min-w-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div class="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.editorLabel' | translate }}</p>
@@ -214,20 +168,17 @@ interface BlockInfo {
             </div>
           </section>
         </main>
-      </div>
     </div>
   `,
 })
-export class LessonComponent implements OnDestroy {
+export class LessonComponent {
   private readonly translate = inject(TranslateService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly lessonTranslationService = inject(LessonTranslationService);
-  protected readonly languageService = inject(LanguageService);
-  private readonly langSub: Subscription;
+  private readonly destroyRef = inject(DestroyRef);
 
   protected readonly drawerOpen = signal(false);
-  protected readonly currentLang = this.languageService.currentLang;
   protected readonly lessonLoadToken = signal(0);
   protected readonly topicId = signal<number | null>(null);
   protected readonly lessonNumber = signal<number | null>(null);
@@ -305,12 +256,16 @@ export class LessonComponent implements OnDestroy {
   });
 
   constructor() {
-    this.langSub = this.translate.onLangChange.subscribe(() => {
-      this.translationLoaded.set(false);
-      this.loadAllLessonTranslations();
-    });
+    this.translate.onLangChange
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.translationLoaded.set(false);
+        this.loadAllLessonTranslations();
+      });
 
-    this.route.paramMap.subscribe((params) => {
+    this.route.paramMap
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((params) => {
       const topicIdParam = params.get('topicId');
       const lessonNumberParam = params.get('lessonNumber');
       
@@ -420,11 +375,6 @@ export class LessonComponent implements OnDestroy {
     }
   }
 
-  protected setLanguage(lang: 'en' | 'ru'): void {
-    this.languageService.setLanguage(lang);
-    this.translationLoaded.set(false);
-    this.loadAllLessonTranslations();
-  }
 
   protected toggleSolution(): void {
     const lesson = this.currentLesson();
@@ -437,10 +387,6 @@ export class LessonComponent implements OnDestroy {
 
   protected getTopicTitle(topicId: number): string {
     return this.translate.instant(`topics.topic${topicId}.title`);
-  }
-
-  ngOnDestroy(): void {
-    this.langSub.unsubscribe();
   }
 }
 
