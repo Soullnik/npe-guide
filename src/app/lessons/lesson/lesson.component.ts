@@ -164,7 +164,7 @@ interface BlockInfo {
                 <div class="mt-4 flex flex-1 flex-col gap-3 overflow-y-auto pr-2">
                   @if (currentTopic()) {
                     <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
-                      {{ currentTopic()!.title }}
+                      {{ getTopicTitle(currentTopic()!.id) }}
                     </div>
                     @for (lesson of currentTopicLessons(); track lesson.id) {
                       <button
@@ -433,6 +433,10 @@ export class LessonComponent implements OnDestroy {
     }
     this.showingSolution.update((value) => !value);
     this.lessonLoadToken.update((value) => value + 1);
+  }
+
+  protected getTopicTitle(topicId: number): string {
+    return this.translate.instant(`topics.topic${topicId}.title`);
   }
 
   ngOnDestroy(): void {
