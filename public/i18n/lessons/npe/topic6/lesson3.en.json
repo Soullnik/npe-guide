@@ -1,0 +1,61 @@
+{
+  "title": "6.3: Performance Optimization",
+  "summary": "Learn best practices for optimizing particle system performance",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn best practices for optimizing particle system performance. You'll create a complete, optimized particle system from scratch that demonstrates efficient block usage, minimal calculations, and performance-focused design patterns.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock with simple, constant values",
+    "Use a smaller base size (0.2) for better performance",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdatePositionBlock with efficient position calculation",
+    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
+    "Add UpdateColorBlock using InitialColor contextual value (no recalculation needed)",
+    "Add UpdateSizeBlock with constant size (no per-frame calculations)",
+    "Chain the blocks efficiently: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Add a ParticleTextureSourceBlock with an efficient texture",
+    "Observe the optimized system running smoothly"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "Performance Best Practices",
+      "description": "This lesson focuses on optimization techniques rather than new blocks. Key principles: use contextual values when possible, minimize per-frame calculations, use constant values where appropriate, and keep block chains simple.",
+      "properties": []
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "Performance optimization in particle systems involves minimizing computational overhead. Use contextual values (like InitialColor) instead of recalculating, use constant values for properties that don't change, minimize the number of math operations per frame, and keep block chains as simple as possible. Smaller particle sizes and efficient textures also help performance.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand performance optimization principles",
+    "Learn to use contextual values efficiently",
+    "Minimize per-frame calculations",
+    "Design efficient block chains",
+    "Apply optimization techniques to real systems"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Over-calculating values every frame",
+      "explanation": "Recalculating values that don't change (like initial color) every frame wastes performance. Use contextual values or constant inputs instead.",
+      "solution": "Use InitialColor, InitialSize, and other contextual values when you need the original particle property. Only recalculate when values actually change."
+    },
+    {
+      "mistake": "Creating unnecessarily complex block chains",
+      "explanation": "Complex chains with many math operations per frame can slow down performance, especially with many particles.",
+      "solution": "Simplify block chains where possible. Combine calculations, use contextual values, and avoid redundant operations."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Optimize an existing particle system by simplifying calculations",
+    "Compare performance between optimized and unoptimized systems",
+    "Experiment with different particle sizes to find the performance sweet spot",
+    "Use contextual values to replace unnecessary calculations",
+    "Create a high-performance particle system with thousands of particles"
+  ]
+}
+

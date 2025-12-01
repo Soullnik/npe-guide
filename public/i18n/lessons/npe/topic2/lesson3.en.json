@@ -1,0 +1,73 @@
+{
+  "title": "2.3: Mesh Shape Emitters",
+  "summary": "Learn to emit particles from 3D mesh surfaces using MeshShapeBlock",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to use MeshShapeBlock to emit particles from the surface of 3D meshes. This is powerful for creating effects that follow the shape of objects, such as sparks from a sword, smoke from a character, or particles that appear to come from a specific object in your scene. You'll create a complete particle system from scratch that demonstrates mesh-based emission.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a MeshShapeBlock to emit particles from mesh surface",
+    "Note: In a real scenario, you would reference an actual mesh from your scene",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
+    "Add an UpdateColorBlock and connect InitialColor contextual value to it",
+    "Add an UpdateSizeBlock with a constant size value",
+    "Chain the blocks: CreateParticle → MeshShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Observe how particles are emitted from the mesh surface"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "MeshShapeBlock",
+      "description": "Emits particles from the surface of a 3D mesh. Particles spawn on the mesh surface, following its shape. This is useful for creating effects that are tied to specific objects in your scene.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Mesh emitter'",
+          "description": "The display name of the emitter"
+        },
+        {
+          "name": "mesh",
+          "value": "Mesh reference",
+          "description": "Reference to the 3D mesh from which particles will be emitted. The mesh must exist in the scene."
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "MeshShapeBlock allows you to emit particles from the surface of any 3D mesh in your scene. This creates a strong visual connection between the particles and the object, making it perfect for effects like sparks from metal, smoke from engines, or magical auras around characters. The particles spawn on the mesh surface, following its geometry, which creates natural-looking effects that adapt to the object's shape.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand MeshShapeBlock and its use cases",
+    "Learn how to reference meshes from the scene",
+    "Create particle effects tied to 3D objects",
+    "Understand the difference between mesh emission and other shape emitters",
+    "Apply mesh-based emission to real-world scenarios"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Not referencing a valid mesh",
+      "explanation": "MeshShapeBlock requires a valid mesh reference. If the mesh doesn't exist or isn't properly referenced, particles won't emit correctly.",
+      "solution": "Ensure the mesh exists in the scene before using MeshShapeBlock. Reference it correctly using the mesh's name or direct reference."
+    },
+    {
+      "mistake": "Using mesh emission for effects that don't need object attachment",
+      "explanation": "Mesh emission is more complex than other shapes. If you don't need particles tied to a specific object, use simpler shapes like PointShapeBlock or SphereShapeBlock.",
+      "solution": "Use MeshShapeBlock only when you need particles to follow an object's shape. For general effects, use Point, Sphere, Cone, or Box shapes."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Create particles that emit from a character model",
+    "Try emitting particles from different parts of a mesh",
+    "Combine mesh emission with other effects (color changes, size variations)",
+    "Experiment with animated meshes to see how particles follow movement",
+    "Create a particle trail effect using mesh emission"
+  ]
+}
+

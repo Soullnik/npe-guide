@@ -1,0 +1,97 @@
+{
+  "title": "3.3: Attractors",
+  "summary": "Learn to create particle attractors that pull particles toward specific points in space",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to use UpdateAttractorBlock to create attractors that pull particles toward specific points in space. Attractors are useful for creating effects like particles being pulled toward a black hole, magnetic fields, or gravitational wells. You'll learn to set attractor position, strength, and combine attractors with other effects.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add UpdateAttractorBlock to modify particle direction (must come before UpdatePositionBlock)",
+    "Create an attractor position using ParticleConverterBlock (X, Y, Z coordinates)",
+    "Set the attractor strength (higher values = stronger pull)",
+    "Connect the attractor position to UpdateAttractorBlock's attractor input",
+    "Connect the strength value to UpdateAttractorBlock's strength input",
+    "Add UpdatePositionBlock after UpdateAttractorBlock for basic movement",
+    "The attractor modifies particle direction first, then position is updated based on the modified direction"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateAttractorBlock",
+      "description": "Creates an attractor effect that pulls particles toward a specific point in 3D space. The force decreases with distance squared, creating realistic physics behavior.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Attractor'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "attractor",
+          "value": "Vector3 input",
+          "description": "The position of the attractor in 3D space (X, Y, Z coordinates)"
+        },
+        {
+          "name": "strength",
+          "value": "Float input",
+          "description": "The strength of the attraction force. Higher values create stronger pull. The force is inversely proportional to distance squared."
+        }
+      ]
+    },
+    {
+      "name": "ParticleConverterBlock (Vector3)",
+      "description": "Creates a Vector3 from individual X, Y, Z float values. Used to define the attractor position.",
+      "properties": [
+        {
+          "name": "xIn, yIn, zIn",
+          "value": "Float inputs",
+          "description": "Individual float inputs for X, Y, Z components"
+        },
+        {
+          "name": "xyzOut",
+          "value": "Vector3 output",
+          "description": "The combined Vector3 output"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates attractor physics. An attractor creates a force that pulls particles toward a target point. The formula for the force is: force = (strength / distance²) * direction, where direction is the normalized vector from particle to attractor. This creates realistic behavior where particles close to the attractor experience strong pull, while distant particles experience weaker pull. Attractors are useful for creating effects like particles orbiting a center, being drawn to a target, or creating vortex-like patterns.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand how UpdateAttractorBlock creates attractive forces",
+    "Set attractor position using Vector3 coordinates",
+    "Control attractor strength to adjust pull intensity",
+    "Understand inverse square law for distance-based force",
+    "Combine attractors with other physics effects"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Using wrong coordinate system for attractor position",
+      "explanation": "Attractor position uses 3D coordinates (X, Y, Z). Using 2D coordinates or wrong axis orientation places the attractor in the wrong location.",
+      "solution": "Use ParticleConverterBlock with xIn, yIn, zIn to create Vector3 for attractor position. Remember: Y is typically up in 3D space, X is right, Z is forward/backward."
+    },
+    {
+      "mistake": "Using strength values that are too high or too low",
+      "explanation": "Strength values that are too high cause particles to snap instantly to the attractor. Values that are too low create barely noticeable effects.",
+      "solution": "Start with moderate strength values (0.5 to 2.0) and adjust based on desired effect. Higher values for strong pull, lower values for subtle attraction."
+    },
+    {
+      "mistake": "Placing UpdateAttractorBlock in wrong position in the chain",
+      "explanation": "UpdateAttractorBlock modifies particle direction, so it should come before UpdatePositionBlock. Placing it after position updates won't affect movement correctly.",
+      "solution": "Chain blocks in order: UpdateAttractorBlock → UpdatePositionBlock → UpdateColorBlock → SystemBlock. Attractor modifies direction, then position uses that direction."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different attractor positions (above, below, to the side)",
+    "Experiment with different strength values (0.1 to 10.0)",
+    "Create multiple attractors by chaining multiple UpdateAttractorBlocks",
+    "Combine attractors with gravity for complex motion patterns",
+    "Try creating a repeller by using negative strength values (if supported)"
+  ]
+}

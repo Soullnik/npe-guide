@@ -1,0 +1,149 @@
+{
+  "title": "2.1: Emitter Shapes",
+  "summary": "Explore various emitter shapes: cone, sphere, box, and more",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn about different emitter shapes available in the Node Particle Editor. Each shape creates particles from a different volume, giving you control over where particles spawn. We'll focus on ConeShapeBlock, which creates directional effects like fire or fountains, and understand its properties like radius, angle, radiusRange, and heightRange.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Use ConeShapeBlock to emit particles in a cone pattern",
+    "Connect a ParticleInputBlock to set the cone radius (base width of the cone)",
+    "Connect another ParticleInputBlock to set the cone angle (opening angle in radians)",
+    "Connect ParticleInputBlock to set radiusRange for random variation in radius",
+    "Connect ParticleInputBlock to set heightRange for random variation in height",
+    "Experiment with different radius and angle values to see how they affect particle distribution",
+    "Note: Other shapes like SphereShapeBlock, CylinderShapeBlock, and PointShapeBlock are also available"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "SphereShapeBlock",
+      "description": "Emits particles from a sphere shape. Particles spawn within the sphere volume, with control over radius and distribution.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Sphere emitter'",
+          "description": "The display name of the emitter"
+        },
+        {
+          "name": "radius",
+          "value": "Float input (default: 1.0)",
+          "description": "The radius of the sphere. Larger values create a bigger emission area."
+        },
+        {
+          "name": "radiusRange",
+          "value": "Float input (default: 1.0, range: 0-1)",
+          "description": "Controls where particles spawn within the sphere. 0 = center only, 1 = anywhere in the sphere."
+        },
+        {
+          "name": "directionRandomizer",
+          "value": "Float input (default: 0, range: 0-1)",
+          "description": "Controls the randomness of particle direction. 0 = uniform direction, 1 = completely random."
+        }
+      ]
+    },
+    {
+      "name": "BoxShapeBlock",
+      "description": "Emits particles from a box/cube shape. Particles spawn within the box volume defined by width, height, and depth.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Box emitter'",
+          "description": "The display name of the emitter"
+        }
+      ]
+    },
+    {
+      "name": "ConeShapeBlock",
+      "description": "Emits particles from a cone shape. Useful for creating directional effects like fire, smoke, or fountains.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Cone emitter'",
+          "description": "The display name of the emitter"
+        },
+        {
+          "name": "radius",
+          "value": "Float input",
+          "description": "The base radius of the cone"
+        },
+        {
+          "name": "angle",
+          "value": "Float input",
+          "description": "The angle of the cone in radians"
+        }
+      ]
+    },
+    {
+      "name": "CylinderShapeBlock",
+      "description": "Emits particles from a cylinder shape. Particles spawn within the cylindrical volume.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Cylinder emitter'",
+          "description": "The display name of the emitter"
+        },
+        {
+          "name": "radius",
+          "value": "Float input",
+          "description": "The radius of the cylinder"
+        },
+        {
+          "name": "height",
+          "value": "Float input",
+          "description": "The height of the cylinder"
+        }
+      ]
+    },
+    {
+      "name": "PointShapeBlock",
+      "description": "Emits particles from a single point. All particles spawn from the same location, useful for concentrated effects.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Point emitter'",
+          "description": "The display name of the emitter"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "Different emitter shapes give you control over the spatial distribution of particles. SphereShapeBlock creates particles within a spherical volume, while BoxShapeBlock uses a rectangular volume. Each shape has specific properties like radius, height, or angle that control the emission area. The radiusRange property in SphereShapeBlock is particularly useful - it lets you control whether particles spawn only at the center (0) or throughout the entire volume (1).",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand different emitter shapes and their properties",
+    "Learn how to control particle spawn distribution with radiusRange",
+    "Use directionRandomizer to control emission direction",
+    "Understand when to use each shape type (Point, Box, Sphere, Cone, Cylinder)",
+    "Configure shape properties like radius, angle, and height"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Not understanding radiusRange behavior",
+      "explanation": "radiusRange controls where particles spawn within a shape. 0 means particles spawn only at the center, 1 means anywhere in the volume. Using wrong values creates unexpected distributions.",
+      "solution": "Use radiusRange = 0 for concentrated emission (center only), radiusRange = 1 for full volume emission. For sphere shapes, this is particularly important for controlling particle spread."
+    },
+    {
+      "mistake": "Using wrong shape for the desired effect",
+      "explanation": "Each shape has specific use cases. Using BoxShapeBlock for a fountain effect or ConeShapeBlock for uniform distribution won't give the desired result.",
+      "solution": "Use PointShapeBlock for concentrated effects, SphereShapeBlock for radial effects, ConeShapeBlock for directional effects (fire, fountains), BoxShapeBlock for rectangular areas, CylinderShapeBlock for cylindrical volumes."
+    },
+    {
+      "mistake": "Not setting shape properties correctly",
+      "explanation": "Shapes have properties like radius, angle, height that must be set correctly. Using default values or wrong types causes incorrect emission.",
+      "solution": "Always set shape properties explicitly. For ConeShapeBlock, set both radius and angle. For SphereShapeBlock, set radius and radiusRange. Check the shape's required properties in documentation."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try changing the sphere radius to see how it affects particle distribution",
+    "Experiment with radiusRange values between 0 and 1",
+    "Replace SphereShapeBlock with ConeShapeBlock and adjust the angle",
+    "Create a particle system using CylinderShapeBlock",
+    "Compare the visual difference between PointShapeBlock and SphereShapeBlock with radiusRange = 0"
+  ]
+}

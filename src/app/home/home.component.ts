@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { forkJoin } from 'rxjs';
-import { LESSONS } from '../lessons/lesson-data';
+import { TOPICS } from '../lessons/topics';
+import { LanguageService } from '../services/language.service';
 import { LessonTranslationService } from '../services/lesson-translation.service';
 
 @Component({
@@ -56,24 +57,43 @@ import { LessonTranslationService } from '../services/lesson-translation.service
         </header>
 
         <main class="flex-1 overflow-y-auto">
-          <section class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
-            <h2 class="mb-6 text-2xl font-semibold text-white">{{ 'ui.lessonList' | translate }}</h2>
+          <section class="space-y-8">
             @if (translationsLoaded()) {
-              <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-                @for (lesson of lessons; track lesson.id) {
-                  <a
-                    [routerLink]="['/lessons', lesson.id]"
-                    class="group rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-white/30 hover:bg-white/10"
-                  >
-                    <span class="block text-base font-semibold text-white group-hover:text-blue-300">
-                      {{ ('lessons.' + lesson.translationKey + '.title') | translate }}
-                    </span>
-                    <span class="mt-1 block text-sm text-white/70">
-                      {{ ('lessons.' + lesson.translationKey + '.summary') | translate }}
-                    </span>
-                  </a>
-                }
-              </div>
+              @for (topic of topics(); track topic.id) {
+                <div class="rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+                    <div class="mb-4 flex items-center justify-between">
+                      <div>
+                        <h2 class="text-2xl font-semibold text-white">
+                          {{ 'ui.topic' | translate }} {{ topic.id }}: {{ getTopicTitle(topic.id) }}
+                        </h2>
+                        <p class="mt-1 text-sm text-white/60">{{ getTopicDescription(topic.id) }}</p>
+                      </div>
+                      <span
+                        class="rounded-full border border-white/15 px-3 py-1 text-xs font-semibold capitalize text-white/80"
+                        [class.bg-green-500/20]="topic.difficulty === 'beginner'"
+                        [class.bg-yellow-500/20]="topic.difficulty === 'intermediate'"
+                        [class.bg-red-500/20]="topic.difficulty === 'advanced'"
+                      >
+                        {{ getDifficultyLabel(topic.difficulty) }}
+                      </span>
+                    </div>
+                  <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    @for (lesson of topic.lessons; track lesson.id) {
+                      <a
+                        [routerLink]="['/lessons/topic', lesson.topicId, 'lesson', lesson.lessonNumber]"
+                        class="group rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-white/30 hover:bg-white/10"
+                      >
+                        <span class="mt-1 block text-base font-semibold text-white group-hover:text-blue-300">
+                          {{ ('lessons.' + lesson.translationKey + '.title') | translate }}
+                        </span>
+                        <span class="mt-1 block text-sm text-white/70">
+                          {{ ('lessons.' + lesson.translationKey + '.summary') | translate }}
+                        </span>
+                      </a>
+                    }
+                  </div>
+                </div>
+              }
             } @else {
               <div class="flex items-center justify-center py-12">
                 <div class="flex flex-col items-center gap-3">
@@ -91,22 +111,20 @@ import { LessonTranslationService } from '../services/lesson-translation.service
 export class HomeComponent implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly lessonTranslationService = inject(LessonTranslationService);
-  protected readonly lessons = LESSONS;
-  protected readonly currentLang = signal<'en' | 'ru'>('en');
+  protected readonly languageService = inject(LanguageService);
+  protected readonly topics = computed(() => TOPICS);
+  protected readonly currentLang = this.languageService.currentLang;
   protected readonly translationsLoaded = signal(false);
-
-  constructor() {
-    this.translate.addLangs(['en', 'ru']);
-    this.translate.use(this.currentLang());
-  }
 
   ngOnInit(): void {
     this.loadAllLessonTranslations();
   }
 
   private loadAllLessonTranslations(): void {
-    const lang = this.currentLang();
-    const loadPromises = this.lessons.map((lesson) =>
+    const lang = this.languageService.getLanguage();
+    // Load translations for all lessons from all topics
+    const allLessons = TOPICS.flatMap((topic) => topic.lessons);
+    const loadPromises = allLessons.map((lesson) =>
       this.lessonTranslationService.loadLessonTranslation(lesson.category, lesson.translationKey, lang)
     );
 
@@ -122,10 +140,21 @@ export class HomeComponent implements OnInit {
   }
 
   protected setLanguage(lang: 'en' | 'ru'): void {
-    this.currentLang.set(lang);
-    this.translate.use(lang);
+    this.languageService.setLanguage(lang);
     this.translationsLoaded.set(false);
     this.loadAllLessonTranslations();
+  }
+
+  protected getTopicTitle(topicId: number): string {
+    return this.translate.instant(`topics.topic${topicId}.title`);
+  }
+
+  protected getTopicDescription(topicId: number): string {
+    return this.translate.instant(`topics.topic${topicId}.description`);
+  }
+
+  protected getDifficultyLabel(difficulty: string): string {
+    return this.translate.instant(`ui.difficulty.${difficulty}`);
   }
 }
 

@@ -1,0 +1,89 @@
+{
+  "title": "2.4: Multiple Emitters",
+  "summary": "Learn to create multiple particle systems with different emitters in a single set",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to create multiple particle systems within a single NodeParticleSystemSet. Each system can have its own emitter shape, color, and behavior, allowing you to create complex, layered effects. You'll create a complete setup with two different particle systems - one using a Point emitter and another using a Sphere emitter.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create the first SystemBlock for the Point Particle System",
+    "Create a CreateParticleBlock with initial color (e.g., red) and size",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add UpdatePositionBlock, UpdateColorBlock, and UpdateSizeBlock",
+    "Connect all blocks and add a texture for the first system",
+    "Create a second SystemBlock for the Sphere Particle System",
+    "Create another CreateParticleBlock with different color (e.g., blue) and size",
+    "Add a SphereShapeBlock with a radius input",
+    "Add UpdatePositionBlock, UpdateColorBlock, and UpdateSizeBlock for the second system",
+    "Connect all blocks and add a texture for the second system",
+    "Add both SystemBlocks to the set's systemBlocks array",
+    "Observe how both systems run simultaneously, creating layered effects"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "SystemBlock (Multiple)",
+      "description": "You can have multiple SystemBlocks in a single NodeParticleSystemSet. Each SystemBlock represents a separate particle system that runs independently. This allows you to create complex, multi-layered effects.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Point Particle System' or 'Sphere Particle System'",
+          "description": "The display name of each particle system"
+        }
+      ]
+    },
+    {
+      "name": "PointShapeBlock",
+      "description": "First emitter: Emits particles from a single point. Used in the first particle system.",
+      "properties": []
+    },
+    {
+      "name": "SphereShapeBlock",
+      "description": "Second emitter: Emits particles from a sphere. Used in the second particle system with a radius input.",
+      "properties": [
+        {
+          "name": "radius",
+          "value": "Float input (e.g., 2.0)",
+          "description": "The radius of the sphere emitter"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "Multiple particle systems in one set allow you to create complex, layered effects. Each SystemBlock runs independently, so you can have different colors, sizes, shapes, and behaviors all happening simultaneously. This is perfect for effects like fire with smoke (two systems), magical auras with particles (multiple systems), or any scenario where you need different particle behaviors in the same scene.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand how to create multiple SystemBlocks in one set",
+    "Learn to organize multiple particle systems",
+    "Create layered effects with different emitters",
+    "Combine different particle behaviors in one scene",
+    "Understand when to use multiple systems vs. one complex system"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Forgetting to add all SystemBlocks to systemBlocks array",
+      "explanation": "Each SystemBlock must be added to the set's systemBlocks array. If you create a SystemBlock but don't add it, it won't run.",
+      "solution": "Always add all SystemBlocks to set.systemBlocks.push(systemBlock1, systemBlock2, ...). Every SystemBlock you create must be in this array."
+    },
+    {
+      "mistake": "Using the same variable names for different systems",
+      "explanation": "If you reuse variable names (like 'updatePosition' for both systems), the second system will overwrite the first, causing errors.",
+      "solution": "Use unique names for each system's blocks: updatePosition1, updatePosition2, or updatePositionPoint, updatePositionSphere."
+    },
+    {
+      "mistake": "Not understanding that systems run independently",
+      "explanation": "Each SystemBlock is completely independent. They don't share particles, properties, or state. This is by design for flexibility.",
+      "solution": "Design each system to be self-contained. If you need systems to interact, you'll need to use scene-level logic or combine them into one system."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Create three different particle systems with different colors",
+    "Try combining Point, Sphere, and Cone emitters in one set",
+    "Create a fire effect with two systems: flames (orange) and smoke (gray)",
+    "Experiment with different sizes and behaviors for each system",
+    "Create a layered magical effect with multiple systems"
+  ]
+}
+

@@ -5,9 +5,10 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { LessonContentComponent } from '../../lesson-content/lesson-content.component';
 import { NpePreviewComponent } from '../../npe-preview/npe-preview.component';
+import { LanguageService } from '../../services/language.service';
 import { LessonTranslationService } from '../../services/lesson-translation.service';
-import { LESSONS } from '../lesson-data';
 import type { LessonDefinition } from '../lesson-definition';
+import { getLessonByTopicAndNumber, getTopicById, TOPICS } from '../topics';
 
 interface BlockInfo {
   name: string;
@@ -119,7 +120,15 @@ interface BlockInfo {
                   (click)="navigateToPreviousLesson()"
                   [disabled]="!hasPreviousLesson()"
                 >
-                  ← {{ 'ui.previousLesson' | translate }}
+                  ← @if (hasPreviousLesson()) {
+                    @if (currentLessonIndex() > 0) {
+                      {{ 'ui.previousLesson' | translate }}
+                    } @else {
+                      {{ 'ui.previousTopic' | translate }}
+                    }
+                  } @else {
+                    {{ 'ui.previousLesson' | translate }}
+                  }
                 </button>
                 <button
                   type="button"
@@ -127,7 +136,13 @@ interface BlockInfo {
                   (click)="navigateToNextLesson()"
                   [disabled]="!hasNextLesson()"
                 >
-                  {{ 'ui.nextLesson' | translate }} →
+                  @if (hasNextLesson()) {
+                    @if (currentLessonIndex() < currentTopicLessons().length - 1) {
+                      {{ 'ui.nextLesson' | translate }}
+                    } @else {
+                      {{ 'ui.nextTopic' | translate }}
+                    }
+                  } →
                 </button>
               </div>
             </div>
@@ -147,21 +162,26 @@ interface BlockInfo {
                   </button>
                 </div>
                 <div class="mt-4 flex flex-1 flex-col gap-3 overflow-y-auto pr-2">
-                  @for (lesson of lessons; track lesson.id) {
-                    <button
-                      type="button"
-                      class="rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-white/30"
-                      [class.bg-white/20]="lesson.id === currentLesson()?.id"
-                      [class.border-white/30]="lesson.id === currentLesson()?.id"
-                      (click)="navigateToLesson(lesson.id)"
-                    >
-                      <span class="block text-base font-semibold text-white">
-                        {{ ('lessons.' + lesson.translationKey + '.title') | translate }}
-                      </span>
-                      <span class="mt-1 block text-sm text-white/70">
-                        {{ ('lessons.' + lesson.translationKey + '.summary') | translate }}
-                      </span>
-                    </button>
+                  @if (currentTopic()) {
+                    <div class="mb-2 text-xs font-semibold uppercase tracking-wider text-white/60">
+                      {{ currentTopic()!.title }}
+                    </div>
+                    @for (lesson of currentTopicLessons(); track lesson.id) {
+                      <button
+                        type="button"
+                        class="rounded-xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-white/30"
+                        [class.bg-white/20]="lesson.id === currentLesson()?.id"
+                        [class.border-white/30]="lesson.id === currentLesson()?.id"
+                        (click)="navigateToLesson(lesson.topicId, lesson.lessonNumber)"
+                      >
+                        <span class="block text-base font-semibold text-white">
+                          {{ ('lessons.' + lesson.translationKey + '.title') | translate }}
+                        </span>
+                        <span class="mt-1 block text-sm text-white/70">
+                          {{ ('lessons.' + lesson.translationKey + '.summary') | translate }}
+                        </span>
+                      </button>
+                    }
                   }
                 </div>
               </div>
@@ -203,54 +223,109 @@ export class LessonComponent implements OnDestroy {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly lessonTranslationService = inject(LessonTranslationService);
+  protected readonly languageService = inject(LanguageService);
   private readonly langSub: Subscription;
 
-  protected readonly lessons = LESSONS;
   protected readonly drawerOpen = signal(false);
-  protected readonly currentLang = signal<'en' | 'ru'>('en');
+  protected readonly currentLang = this.languageService.currentLang;
   protected readonly lessonLoadToken = signal(0);
-  protected readonly lessonId = signal<string | null>(null);
+  protected readonly topicId = signal<number | null>(null);
+  protected readonly lessonNumber = signal<number | null>(null);
   protected readonly translationLoaded = signal(false);
   protected readonly showingSolution = signal(false);
 
   protected readonly currentLesson = computed<LessonDefinition | null>(() => {
-    const id = this.lessonId();
-    if (!id) {
+    const topicId = this.topicId();
+    const lessonNumber = this.lessonNumber();
+    if (topicId === null || lessonNumber === null) {
       return null;
     }
-    return this.lessons.find((lesson) => lesson.id === id) ?? null;
+    return getLessonByTopicAndNumber(topicId, lessonNumber) ?? null;
+  });
+
+  protected readonly currentTopic = computed(() => {
+    const topicId = this.topicId();
+    if (topicId === null) {
+      return null;
+    }
+    return getTopicById(topicId) ?? null;
+  });
+
+  // Lessons from current topic only
+  protected readonly currentTopicLessons = computed(() => {
+    const topic = this.currentTopic();
+    return topic ? topic.lessons : [];
   });
 
   protected readonly currentLessonIndex = computed(() => {
     const lesson = this.currentLesson();
-    if (!lesson) {
+    const topicLessons = this.currentTopicLessons();
+    if (!lesson || topicLessons.length === 0) {
       return -1;
     }
-    return this.lessons.findIndex((l) => l.id === lesson.id);
+    return topicLessons.findIndex((l) => l.id === lesson.id);
   });
 
   protected readonly hasPreviousLesson = computed(() => {
-    return this.currentLessonIndex() > 0;
+    const currentIndex = this.currentLessonIndex();
+    const topicLessons = this.currentTopicLessons();
+    
+    // If not first lesson in topic, has previous lesson
+    if (currentIndex > 0 && currentIndex < topicLessons.length) {
+      return true;
+    }
+    
+    // If first lesson in topic, check if there's previous topic
+    const currentTopic = this.currentTopic();
+    if (!currentTopic) {
+      return false;
+    }
+    const currentTopicIndex = TOPICS.findIndex((t) => t.id === currentTopic.id);
+    return currentTopicIndex > 0; // Has previous topic if not first topic
   });
 
   protected readonly hasNextLesson = computed(() => {
-    return this.currentLessonIndex() >= 0 && this.currentLessonIndex() < this.lessons.length - 1;
+    const lesson = this.currentLesson();
+    const topicLessons = this.currentTopicLessons();
+    if (!lesson || topicLessons.length === 0) {
+      return false;
+    }
+    const currentIndex = this.currentLessonIndex();
+    // If not last lesson in topic, has next lesson
+    if (currentIndex >= 0 && currentIndex < topicLessons.length - 1) {
+      return true;
+    }
+    // If last lesson in topic, check if there's next topic
+    const currentTopic = this.currentTopic();
+    if (!currentTopic) {
+      return false;
+    }
+    const currentTopicIndex = TOPICS.findIndex((t) => t.id === currentTopic.id);
+    return currentTopicIndex >= 0 && currentTopicIndex < TOPICS.length - 1;
   });
 
   constructor() {
-    this.translate.addLangs(['en', 'ru']);
-    this.translate.use(this.currentLang());
     this.langSub = this.translate.onLangChange.subscribe(() => {
       this.translationLoaded.set(false);
       this.loadAllLessonTranslations();
     });
 
     this.route.paramMap.subscribe((params) => {
-      const id = params.get('id');
-      if (id) {
-        this.lessonId.set(id);
+      const topicIdParam = params.get('topicId');
+      const lessonNumberParam = params.get('lessonNumber');
+      
+      if (topicIdParam && lessonNumberParam) {
+        const topicId = parseInt(topicIdParam, 10);
+        const lessonNumber = parseInt(lessonNumberParam, 10);
+        
+        if (!isNaN(topicId) && !isNaN(lessonNumber)) {
+          this.topicId.set(topicId);
+          this.lessonNumber.set(lessonNumber);
+        } else {
+          this.router.navigate(['/']);
+        }
       } else {
-        // Redirect to home if no lesson ID
+        // Redirect to home if params are missing
         this.router.navigate(['/']);
       }
     });
@@ -265,14 +340,14 @@ export class LessonComponent implements OnDestroy {
   }
 
   private async loadAllLessonTranslations(): Promise<void> {
-    const lesson = this.currentLesson();
-    if (!lesson) {
+    const topicLessons = this.currentTopicLessons();
+    if (topicLessons.length === 0) {
       this.translationLoaded.set(true);
       return;
     }
 
     const lang = this.translate.currentLang || this.translate.defaultLang || 'en';
-    const loadPromises = this.lessons.map((l) =>
+    const loadPromises = topicLessons.map((l) =>
       this.lessonTranslationService.loadLessonTranslation(l.category, l.translationKey, lang)
     );
 
@@ -285,29 +360,68 @@ export class LessonComponent implements OnDestroy {
     }
   }
 
-
-  protected navigateToLesson(id: string): void {
-    this.router.navigate(['/lessons', id]);
+  protected navigateToLesson(topicId: number, lessonNumber: number): void {
+    this.router.navigate(['/lessons/topic', topicId, 'lesson', lessonNumber]);
     this.drawerOpen.set(false);
+    this.showingSolution.set(false); // Reset solution state on navigation
+    // Note: lessonLoadToken is NOT updated here - the preview component will reset
+    // automatically when the lesson input changes via ngOnChanges
   }
 
   protected navigateToPreviousLesson(): void {
     const currentIndex = this.currentLessonIndex();
-    if (currentIndex > 0) {
-      this.navigateToLesson(this.lessons[currentIndex - 1].id);
+    const topicLessons = this.currentTopicLessons();
+    const currentTopic = this.currentTopic();
+    
+    if (!currentTopic) {
+      return;
+    }
+    
+    // If not first lesson in topic, go to previous lesson
+    if (currentIndex > 0 && currentIndex < topicLessons.length) {
+      const previousLesson = topicLessons[currentIndex - 1];
+      this.navigateToLesson(previousLesson.topicId, previousLesson.lessonNumber);
+    } else {
+      // If first lesson in topic, go to last lesson of previous topic
+      const currentTopicIndex = TOPICS.findIndex((t) => t.id === currentTopic.id);
+      if (currentTopicIndex > 0) {
+        const previousTopic = TOPICS[currentTopicIndex - 1];
+        if (previousTopic.lessons.length > 0) {
+          const lastLesson = previousTopic.lessons[previousTopic.lessons.length - 1];
+          this.navigateToLesson(lastLesson.topicId, lastLesson.lessonNumber);
+        }
+      }
     }
   }
 
   protected navigateToNextLesson(): void {
     const currentIndex = this.currentLessonIndex();
-    if (currentIndex >= 0 && currentIndex < this.lessons.length - 1) {
-      this.navigateToLesson(this.lessons[currentIndex + 1].id);
+    const topicLessons = this.currentTopicLessons();
+    const currentTopic = this.currentTopic();
+    
+    if (!currentTopic) {
+      return;
+    }
+    
+    // If not last lesson in topic, go to next lesson
+    if (currentIndex >= 0 && currentIndex < topicLessons.length - 1) {
+      const nextLesson = topicLessons[currentIndex + 1];
+      this.navigateToLesson(nextLesson.topicId, nextLesson.lessonNumber);
+    } else {
+      // If last lesson in topic, go to first lesson of next topic
+      const currentTopicIndex = TOPICS.findIndex((t) => t.id === currentTopic.id);
+      if (currentTopicIndex >= 0 && currentTopicIndex < TOPICS.length - 1) {
+        const nextTopic = TOPICS[currentTopicIndex + 1];
+        if (nextTopic.lessons.length > 0) {
+          const firstLesson = nextTopic.lessons[0];
+          this.navigateToLesson(firstLesson.topicId, firstLesson.lessonNumber);
+        }
+      }
     }
   }
 
   protected setLanguage(lang: 'en' | 'ru'): void {
-    this.currentLang.set(lang);
-    this.translate.use(lang);
+    this.languageService.setLanguage(lang);
     this.translationLoaded.set(false);
     this.loadAllLessonTranslations();
   }

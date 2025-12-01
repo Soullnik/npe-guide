@@ -1,0 +1,133 @@
+{
+  "title": "1.1: First Emission",
+  "summary": "Create your first particle system with basic blocks",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to create a simple particle system using the Node Particle Editor. We'll start with the fundamental blocks: SystemBlock, UpdatePositionBlock, and CreateParticleBlock.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Connect a CreateParticleBlock with a BoxShapeBlock to emit particles from a box shape",
+    "Use ParticleInputBlock to get the current position and scaled direction",
+    "Add a ParticleMathBlock to combine position and direction",
+    "Connect the result to UpdatePositionBlock's position input",
+    "Add a ParticleTextureSourceBlock to provide a texture for the particles"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "SystemBlock",
+      "description": "The root block of any particle system. It manages the overall system properties and connects to all particle-related blocks.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Particle System'",
+          "description": "The display name of the particle system"
+        }
+      ]
+    },
+    {
+      "name": "UpdatePositionBlock",
+      "description": "Updates the position of particles each frame. This block is essential for any particle movement.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update position'",
+          "description": "The display name of the block"
+        }
+      ]
+    },
+    {
+      "name": "CreateParticleBlock",
+      "description": "Creates new particles. This block is responsible for particle emission.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Create particle'",
+          "description": "The display name of the block"
+        }
+      ]
+    },
+    {
+      "name": "BoxShapeBlock",
+      "description": "Defines a box-shaped emitter. Particles will be created within this box volume.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Box emitter'",
+          "description": "The display name of the emitter"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock",
+      "description": "Retrieves contextual particle data such as position, velocity, or age. In this lesson, we use it to get the current position and scaled direction.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Position / ScaledDirection",
+          "description": "The type of contextual data to retrieve"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock",
+      "description": "Performs mathematical operations on particle data. We use it to add position and direction vectors.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Add",
+          "description": "The mathematical operation to perform (Add, Subtract, Multiply, Divide, etc.)"
+        }
+      ]
+    },
+    {
+      "name": "ParticleTextureSourceBlock",
+      "description": "Provides a texture for particles. This determines how particles look when rendered.",
+      "properties": [
+        {
+          "name": "url",
+          "value": "Tools.GetAssetUrl('https://assets.babylonjs.com/core/textures/flare.png')",
+          "description": "The URL of the texture image to use"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "The code creates a NodeParticleSystemSet and builds a graph of connected blocks. Each block has a specific function, and they're connected using the connectTo() method.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand the basic structure of a particle system",
+    "Learn how to connect blocks using connectTo() method",
+    "Create particles using CreateParticleBlock and BoxShapeBlock",
+    "Use ParticleInputBlock to retrieve contextual particle data",
+    "Apply mathematical operations to combine position and direction",
+    "Understand the particle flow: Create → Shape → Update → System"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Forgetting to connect blocks in the correct order",
+      "explanation": "Blocks must be connected in a logical flow. The CreateParticleBlock must connect to a shape, then to update blocks, and finally to the SystemBlock.",
+      "solution": "Follow the chain: CreateParticleBlock → ShapeBlock → UpdateBlocks → SystemBlock. Each block should connect its output to the next block's input."
+    },
+    {
+      "mistake": "Using wrong contextual value in ParticleInputBlock",
+      "explanation": "ParticleInputBlock can retrieve different types of data (Position, Direction, Age, etc.). Using the wrong type will give incorrect results.",
+      "solution": "Make sure to set contextualValue correctly: NodeParticleContextualSources.Position for position, NodeParticleContextualSources.ScaledDirection for direction."
+    },
+    {
+      "mistake": "Not connecting the final result to SystemBlock",
+      "explanation": "The SystemBlock is the root of the particle system. If update blocks aren't connected to it, particles won't be updated.",
+      "solution": "Always connect the last update block (UpdatePositionBlock) to SystemBlock using systemBlock.updateBlocks.push(updateBlock)."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try changing the BoxShapeBlock to a different shape",
+    "Experiment with different texture URLs",
+    "Modify the math operation to see how it affects particle movement",
+    "Add more particles by adjusting the CreateParticleBlock settings"
+  ]
+}

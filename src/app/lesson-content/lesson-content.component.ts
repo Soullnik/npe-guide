@@ -26,6 +26,23 @@ interface BlockInfo {
           <p class="text-white/80">{{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.intro' : 'lessons.' + category() + '.' + lessonKey() + '.intro') | translate }}</p>
         </section>
 
+        <!-- Learning Objectives -->
+        @if (objectives().length > 0) {
+          <section class="rounded-xl border border-blue-500/30 bg-blue-500/10 p-4">
+            <h2 class="mb-4 text-lg font-semibold text-blue-300">
+              {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.objectivesTitle' : 'lessons.' + category() + '.' + lessonKey() + '.objectivesTitle') | translate }}
+            </h2>
+            <ul class="space-y-2">
+              @for (objective of objectives(); track $index) {
+                <li class="flex gap-2">
+                  <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-blue-400"></span>
+                  <span class="flex-1 text-white/90">{{ objective }}</span>
+                </li>
+              }
+            </ul>
+          </section>
+        }
+
         <!-- Steps -->
         <section class="rounded-xl border border-white/10 bg-white/5 p-4">
           <h2 class="mb-4 text-lg font-semibold text-white">
@@ -105,6 +122,31 @@ interface BlockInfo {
           </section>
         }
 
+        <!-- Common Mistakes -->
+        @if (commonMistakes().length > 0) {
+          <section class="rounded-xl border border-rose-500/30 bg-rose-500/10 p-4">
+            <h2 class="mb-4 text-lg font-semibold text-rose-300">
+              {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.commonMistakesTitle' : 'lessons.' + category() + '.' + lessonKey() + '.commonMistakesTitle') | translate }}
+            </h2>
+            <div class="space-y-4">
+              @for (mistake of commonMistakes(); track $index) {
+                <div class="rounded-lg border border-rose-500/20 bg-rose-500/5 p-3">
+                  <div class="flex items-start gap-2">
+                    <span class="mt-1 text-rose-400">⚠️</span>
+                    <div class="flex-1">
+                      <h3 class="font-semibold text-rose-200">{{ mistake.mistake }}</h3>
+                      <p class="mt-1 text-sm text-white/70">{{ mistake.explanation }}</p>
+                      <p class="mt-2 text-sm text-green-300">
+                        <span class="font-semibold">💡 Solution:</span> {{ mistake.solution }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </section>
+        }
+
         <!-- Homework -->
         @if (homework().length > 0) {
           <section class="rounded-xl border border-white/10 bg-white/5 p-4">
@@ -140,6 +182,8 @@ export class LessonContentComponent implements OnDestroy {
   protected readonly steps = signal<string[]>([]);
   protected readonly homework = signal<string[]>([]);
   protected readonly blocks = signal<BlockInfo[]>([]);
+  protected readonly objectives = signal<string[]>([]);
+  protected readonly commonMistakes = signal<Array<{ mistake: string; explanation: string; solution: string }>>([]);
 
   constructor() {
     this.langSub = this.translate.onLangChange.subscribe(() => {
@@ -233,23 +277,42 @@ export class LessonContentComponent implements OnDestroy {
       this.steps.set([]);
       this.homework.set([]);
       this.blocks.set([]);
+      this.objectives.set([]);
+      this.commonMistakes.set([]);
       return;
     }
 
     // Build translation keys with category support
-    const baseKey = category === 'npe' ? `lessons.${key}` : `lessons.${category}.${key}`;
+    // Support both old format (lesson1) and new format (topic1.lesson1)
+    let baseKey: string;
+    if (key.includes('.')) {
+      // New format: topic1.lesson1 -> lessons.topic1.lesson1
+      baseKey = `lessons.${key}`;
+    } else if (category === 'npe') {
+      // Old format: lesson1 -> lessons.lesson1
+      baseKey = `lessons.${key}`;
+    } else {
+      // Old format with category: lessons.category.lesson1
+      baseKey = `lessons.${category}.${key}`;
+    }
     const stepsKey = `${baseKey}.steps`;
     const homeworkKey = `${baseKey}.homework`;
     const blocksKey = `${baseKey}.blocks`;
+    const objectivesKey = `${baseKey}.objectives`;
+    const commonMistakesKey = `${baseKey}.commonMistakes`;
 
-    this.translate.get([stepsKey, homeworkKey, blocksKey]).subscribe((values) => {
+    this.translate.get([stepsKey, homeworkKey, blocksKey, objectivesKey, commonMistakesKey]).subscribe((values) => {
       const stepsValue = values[stepsKey];
       const homeworkValue = values[homeworkKey];
       const blocksValue = values[blocksKey];
+      const objectivesValue = values[objectivesKey];
+      const commonMistakesValue = values[commonMistakesKey];
 
       this.steps.set(Array.isArray(stepsValue) ? stepsValue : []);
       this.homework.set(Array.isArray(homeworkValue) ? homeworkValue : []);
       this.blocks.set(Array.isArray(blocksValue) ? blocksValue : []);
+      this.objectives.set(Array.isArray(objectivesValue) ? objectivesValue : []);
+      this.commonMistakes.set(Array.isArray(commonMistakesValue) ? commonMistakesValue : []);
     });
   }
 

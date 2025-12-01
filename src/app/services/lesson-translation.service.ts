@@ -14,6 +14,7 @@ export class LessonTranslationService {
 
   /**
    * Loads translation for a specific lesson from a separate file
+   * Supports both old format (lesson1) and new format (topic1.lesson1)
    */
   loadLessonTranslation(category: string, lessonKey: string, lang: string): Observable<boolean> {
     const cacheKey = `${category}-${lessonKey}-${lang}`;
@@ -23,9 +24,15 @@ export class LessonTranslationService {
       return of(true);
     }
 
+    // Determine file path based on lessonKey format
+    // New format: topic1.lesson1 -> topic1/lesson1
+    // Old format: lesson1 -> lesson1
+    const isNewFormat = lessonKey.includes('.');
+    const filePath = isNewFormat ? lessonKey.replace('.', '/') : lessonKey;
+
     // Try to load language-specific file first, then fallback to default
-    const url = `i18n/lessons/${category}/${lessonKey}.${lang}.json`;
-    const fallbackUrl = `i18n/lessons/${category}/${lessonKey}.json`;
+    const url = `i18n/lessons/${category}/${filePath}.${lang}.json`;
+    const fallbackUrl = `i18n/lessons/${category}/${filePath}.json`;
     
     return this.http.get<Record<string, any>>(url).pipe(
       catchError(() => this.http.get<Record<string, any>>(fallbackUrl)),
@@ -33,14 +40,25 @@ export class LessonTranslationService {
         // Build the translation object to merge
         let translationToMerge: Record<string, any>;
         
-        // Support both old structure (lessons.lesson1) and new structure (lessons.npe.lesson1)
-        if (category === 'npe') {
+        if (isNewFormat) {
+          // New format: topic1.lesson1 -> lessons.topic1.lesson1
+          const [topicKey, lessonNum] = lessonKey.split('.');
+          translationToMerge = {
+            lessons: {
+              [topicKey]: {
+                [lessonNum]: translation,
+              },
+            },
+          };
+        } else if (category === 'npe') {
+          // Old format: lesson1 -> lessons.lesson1
           translationToMerge = {
             lessons: {
               [lessonKey]: translation,
             },
           };
         } else {
+          // Old format with category: lessons.category.lesson1
           translationToMerge = {
             lessons: {
               [category]: {

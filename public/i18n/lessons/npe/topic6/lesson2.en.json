@@ -1,0 +1,76 @@
+{
+  "title": "6.2: Vector Operations",
+  "summary": "Learn advanced vector operations including length calculations and vector math",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn advanced vector operations for particle systems. You'll create a complete particle system from scratch that demonstrates vector length calculations, normalization, and how to use vector math to create sophisticated particle behaviors.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
+    "Add a ParticleVectorLengthBlock to calculate the length of the direction vector",
+    "Connect ScaledDirection to the vector input of ParticleVectorLengthBlock",
+    "Use the vector length to affect particle size (faster particles = larger)",
+    "Multiply the length by a size factor to create the size multiplier",
+    "Add UpdateColorBlock and connect InitialColor contextual value to it",
+    "Add UpdateSizeBlock and combine base size with the size multiplier",
+    "Chain the blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Observe how particle size varies based on movement speed"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "ParticleVectorLengthBlock",
+      "description": "Calculates the length (magnitude) of a vector. Useful for distance calculations, speed measurements, and vector normalization.",
+      "properties": [
+        {
+          "name": "vector",
+          "value": "Vector3 input",
+          "description": "The vector whose length will be calculated"
+        },
+        {
+          "name": "length",
+          "value": "Float output",
+          "description": "The calculated length of the vector"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "Vector operations are essential for advanced particle effects. ParticleVectorLengthBlock calculates the magnitude of a vector, which represents distance or speed. This can be used to create effects where particle properties (like size or color) change based on how fast the particle is moving. The formula for vector length is: length = sqrt(x² + y² + z²).",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand ParticleVectorLengthBlock and its uses",
+    "Calculate vector lengths for distance and speed measurements",
+    "Use vector length to affect particle properties",
+    "Combine vector operations with other calculations",
+    "Apply vector math to create sophisticated effects"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Using vector length incorrectly",
+      "explanation": "Vector length is always positive (distance). Using it directly for effects that need negative values or specific ranges can cause issues.",
+      "solution": "If you need normalized values or specific ranges, multiply or divide the length by appropriate factors. Remember: length is always >= 0."
+    },
+    {
+      "mistake": "Not understanding what vector length represents",
+      "explanation": "Vector length represents distance or magnitude, not direction. It's a scalar value, not a vector.",
+      "solution": "Use vector length for distance-based effects, speed calculations, or when you need to normalize vectors. For direction, use the vector itself."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Create particles that change color based on speed",
+    "Use vector length to create distance-based effects",
+    "Combine vector length with age-based calculations",
+    "Experiment with normalizing vectors for consistent directions",
+    "Create effects where size varies with movement speed"
+  ]
+}
+

@@ -1,0 +1,148 @@
+{
+  "title": "3.1: Basic Forces and Physics",
+  "summary": "Learn to apply forces like gravity to particles using UpdateDirectionBlock",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to apply forces to particles, such as gravity. We'll use UpdateDirectionBlock to modify particle direction over time, and combine it with delta time to create realistic physics-based movement.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdateDirectionBlock to modify particle direction",
+    "Get the current direction using ParticleInputBlock with Direction contextual value",
+    "Get delta time using ParticleInputBlock with Delta system source",
+    "Create a gravity vector using ParticleConverterBlock (0, -9.8, 0 for downward gravity)",
+    "Multiply gravity by delta time to get gravity acceleration per frame",
+    "Add the gravity delta to the current direction using ParticleMathBlock",
+    "Connect the result to UpdateDirectionBlock's direction input",
+    "Chain UpdateDirection → UpdatePosition → UpdateColor → UpdateSize"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateDirectionBlock",
+      "description": "Updates the direction of particles each frame. This is essential for applying forces like gravity, wind, or other directional effects.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update direction'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "direction",
+          "value": "Vector3 input",
+          "description": "The new direction vector to apply to the particle. Can be calculated from current direction plus forces."
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Direction)",
+      "description": "Retrieves the current direction of a particle. Direction represents the velocity vector of the particle.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Direction",
+          "description": "The type of contextual data - Direction in this case"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Delta Time)",
+      "description": "Retrieves the delta time from the system. Delta time is the time elapsed since the last frame, essential for frame-rate independent physics calculations.",
+      "properties": [
+        {
+          "name": "systemSource",
+          "value": "NodeParticleSystemSources.Delta",
+          "description": "The system source - Delta for delta time"
+        }
+      ]
+    },
+    {
+      "name": "ParticleConverterBlock",
+      "description": "Creates Vector3 from individual X, Y, Z float values. Used to construct the gravity vector (0, -9.8, 0).",
+      "properties": [
+        {
+          "name": "xIn, yIn, zIn",
+          "value": "Float inputs",
+          "description": "Individual float inputs for X, Y, Z components"
+        },
+        {
+          "name": "xyzOut",
+          "value": "Vector3 output",
+          "description": "The combined Vector3 output"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Multiply)",
+      "description": "Multiplies two values. Used to multiply gravity by delta time, ensuring physics calculations are frame-rate independent.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Multiply",
+          "description": "The mathematical operation - Multiply"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Add)",
+      "description": "Adds two Vector3 values. Used to add gravity acceleration to the current direction vector.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Add",
+          "description": "The mathematical operation - Add"
+        }
+      ]
+    },
+    {
+      "name": "PointShapeBlock",
+      "description": "Emits particles from a single point. Used in this lesson to create particles that fall due to gravity.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Point emitter'",
+          "description": "The display name of the emitter"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates how to apply forces to particles. The key concept is that forces modify direction over time. We multiply the force (gravity) by delta time to ensure the effect is consistent regardless of frame rate. The formula is: newDirection = currentDirection + (force * deltaTime). This creates realistic physics-based movement where particles accelerate downward due to gravity.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand how UpdateDirectionBlock modifies particle velocity",
+    "Apply gravity force to particles using vector math",
+    "Use delta time for frame-rate independent physics",
+    "Combine forces with current direction to create acceleration",
+    "Understand the relationship between force, direction, and position"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Forgetting to multiply force by delta time",
+      "explanation": "Without delta time, physics will be frame-rate dependent. Particles will move faster on slower computers and slower on faster computers.",
+      "solution": "Always multiply forces by delta time: force * deltaTime. This ensures consistent behavior regardless of frame rate."
+    },
+    {
+      "mistake": "Using position instead of direction for forces",
+      "explanation": "Forces modify direction (velocity), not position directly. Position is updated based on direction.",
+      "solution": "Apply forces to UpdateDirectionBlock, not UpdatePositionBlock. The chain should be: UpdateDirection → UpdatePosition."
+    },
+    {
+      "mistake": "Using wrong gravity direction",
+      "explanation": "In most 3D coordinate systems, Y is up, so downward gravity should have a negative Y value.",
+      "solution": "Use negative Y for downward gravity: (0, -9.8, 0). Positive Y creates upward force."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try changing the gravity Y value to see how it affects particle fall speed",
+    "Create upward gravity by setting gravity Y to a positive value",
+    "Add horizontal forces by modifying gravity X or Z",
+    "Experiment with different gravity magnitudes",
+    "Try combining multiple forces by adding more math operations"
+  ]
+}

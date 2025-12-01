@@ -1,0 +1,120 @@
+{
+  "title": "1.2: Basic Properties",
+  "summary": "Learn to update particle color and size with simple constant values",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to use UpdateColorBlock and UpdateSizeBlock to change particle properties. We'll start with simple constant values - no time-based calculations yet. You'll create a complete particle system from scratch with color and size updates.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color using ParticleInputBlock (e.g., orange: Color4(1, 0.5, 0, 1))",
+    "Set an initial size using ParticleInputBlock (e.g., 0.3)",
+    "Connect the color and size to CreateParticleBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Get Position and ScaledDirection using ParticleInputBlock",
+    "Add Position and ScaledDirection using ParticleMathBlock (Add operation)",
+    "Connect the result to UpdatePositionBlock's position input",
+    "Add an UpdateColorBlock after UpdatePositionBlock",
+    "Connect the InitialColor contextual value to UpdateColorBlock's color input",
+    "Add an UpdateSizeBlock after UpdateColorBlock",
+    "Connect a constant size value to UpdateSizeBlock's size input",
+    "Chain the blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture for the particles",
+    "Observe how particles now have consistent color and size throughout their lifetime"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateColorBlock",
+      "description": "Updates the color of particles each frame. In this lesson, we use it with a constant color value. In later lessons, we'll learn to change color over time.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update color'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "color",
+          "value": "Color4 input",
+          "description": "The color to apply to the particle. Can be a constant Color4 value or a contextual value like InitialColor."
+        }
+      ]
+    },
+    {
+      "name": "UpdateSizeBlock",
+      "description": "Updates the size of particles each frame. In this lesson, we use it with a constant size value. In later lessons, we'll learn to change size over time.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update size'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "size",
+          "value": "Float input",
+          "description": "The size value to apply. Can be a constant value or calculated using math operations."
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (InitialColor)",
+      "description": "Retrieves the initial color of a particle when it was created. This is a contextual value that remembers the color from CreateParticleBlock.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.InitialColor",
+          "description": "The type of contextual data - InitialColor in this case"
+        }
+      ]
+    },
+    {
+      "name": "PointShapeBlock",
+      "description": "Emits particles from a single point. Used in this lesson to create particles that move in a straight line.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Point emitter'",
+          "description": "The display name of the emitter"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson introduces UpdateColorBlock and UpdateSizeBlock. These blocks allow us to modify particle properties each frame. In this lesson, we use constant values - the color and size don't change over time. This is the foundation for more complex effects we'll learn in later lessons. The key concept is chaining update blocks: each block receives the particle from the previous block, modifies it, and passes it to the next block.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Learn to use UpdateColorBlock and UpdateSizeBlock",
+    "Understand how to chain multiple update blocks together",
+    "Use InitialColor contextual value to maintain particle color",
+    "Apply constant values to particle properties",
+    "Understand the update block chain: UpdatePosition → UpdateColor → UpdateSize"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Chaining update blocks in wrong order",
+      "explanation": "Update blocks must be chained in a specific order. UpdatePosition should come first, then UpdateColor, then UpdateSize.",
+      "solution": "Chain blocks in order: UpdatePosition → UpdateColor → UpdateSize → SystemBlock. Each block receives the particle from the previous block."
+    },
+    {
+      "mistake": "Using wrong contextual value for color",
+      "explanation": "InitialColor retrieves the color set when the particle was created. Using Position or Direction will cause errors.",
+      "solution": "Use NodeParticleContextualSources.InitialColor for UpdateColorBlock when you want to maintain the original particle color."
+    },
+    {
+      "mistake": "Not connecting update blocks to SystemBlock",
+      "explanation": "Update blocks must be added to SystemBlock's updateBlocks array, otherwise they won't be executed.",
+      "solution": "Add all update blocks to SystemBlock: systemBlock.updateBlocks.push(updatePositionBlock, updateColorBlock, updateSizeBlock)."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different color values (red, blue, green, etc.)",
+    "Experiment with different size values (0.1, 0.5, 1.0, etc.)",
+    "Try using different emitter shapes (BoxShapeBlock, ConeShapeBlock)",
+    "Combine different colors and sizes to see how they affect the visual appearance"
+  ]
+}
+

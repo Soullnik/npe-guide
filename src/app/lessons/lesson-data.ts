@@ -1,88 +1,178 @@
 import type { LessonDefinition } from './lesson-definition';
-import { createLesson01Set } from './examples/lesson01';
-import { createLesson02Set } from './examples/lesson02';
-import { createLesson03Set } from './examples/lesson03';
-import { createLesson04Set } from './examples/lesson04';
-import { createLesson05Set } from './examples/lesson05';
-import { createLesson06Set } from './examples/lesson06';
-import { createLesson07Set } from './examples/lesson07';
-import { createLesson08Set } from './examples/lesson08';
-import { createLesson09Set } from './examples/lesson09';
-import { createLesson10Set } from './examples/lesson10';
-import { createLesson11Set } from './examples/lesson11';
-import { createLesson12Set } from './examples/lesson12';
+import {
+  createTopic1Lesson1Set,
+  createTopic1Lesson2Set,
+  createTopic1Lesson3Set,
+  createTopic1Lesson4Set,
+} from './examples/topic1';
+import { createTopic2Lesson1Set, createTopic2Lesson2Set, createTopic2Lesson3Set, createTopic2Lesson4Set } from './examples/topic2';
+import { createTopic3Lesson1Set, createTopic3Lesson2Set, createTopic3Lesson3Set } from './examples/topic3';
+import { createTopic4Lesson1Set, createTopic4Lesson2Set } from './examples/topic4';
+import { createTopic5Lesson1Set, createTopic5Lesson2Set } from './examples/topic5';
+import { createTopic6Lesson1Set, createTopic6Lesson2Set, createTopic6Lesson3Set, createTopic6Lesson4Set } from './examples/topic6';
 
 export const LESSONS: LessonDefinition[] = [
+  // Topic 1: Basics
   {
-    id: 'lesson-01',
+    id: 'topic-1-lesson-1',
+    topicId: 1,
+    lessonNumber: 1,
     category: 'npe',
-    translationKey: 'lesson1',
-    createSet: createLesson01Set,
+    translationKey: 'topic1.lesson1',
+    createSet: createTopic1Lesson1Set,
   },
   {
-    id: 'lesson-02',
+    id: 'topic-1-lesson-2',
+    topicId: 1,
+    lessonNumber: 2,
     category: 'npe',
-    translationKey: 'lesson2',
-    createSet: createLesson02Set,
+    translationKey: 'topic1.lesson2',
+    createSet: createTopic1Lesson2Set,
   },
   {
-    id: 'lesson-03',
+    id: 'topic-1-lesson-3',
+    topicId: 1,
+    lessonNumber: 3,
     category: 'npe',
-    translationKey: 'lesson3',
-    createSet: createLesson03Set,
+    translationKey: 'topic1.lesson3',
+    createSet: createTopic1Lesson3Set,
   },
   {
-    id: 'lesson-04',
+    id: 'topic-1-lesson-4',
+    topicId: 1,
+    lessonNumber: 4,
     category: 'npe',
-    translationKey: 'lesson4',
-    createSet: createLesson04Set,
+    translationKey: 'topic1.lesson4',
+    createSet: createTopic1Lesson4Set,
+  },
+  // Topic 2: Emitters & Shapes
+  {
+    id: 'topic-2-lesson-1',
+    topicId: 2,
+    lessonNumber: 1,
+    category: 'npe',
+    translationKey: 'topic2.lesson1',
+    createSet: createTopic2Lesson1Set,
+  },
+  // Topic 3: Physics & Movement
+  {
+    id: 'topic-3-lesson-1',
+    topicId: 3,
+    lessonNumber: 1,
+    category: 'npe',
+    translationKey: 'topic3.lesson1',
+    createSet: createTopic3Lesson1Set,
+  },
+  // Topic 4: Color & Visual Effects
+  {
+    id: 'topic-4-lesson-1',
+    topicId: 4,
+    lessonNumber: 1,
+    category: 'npe',
+    translationKey: 'topic4.lesson1',
+    createSet: createTopic4Lesson1Set,
+  },
+  // Topic 2: Emitters & Shapes (continued)
+  {
+    id: 'topic-2-lesson-2',
+    topicId: 2,
+    lessonNumber: 2,
+    category: 'npe',
+    translationKey: 'topic2.lesson2',
+    createSet: createTopic2Lesson2Set,
   },
   {
-    id: 'lesson-05',
+    id: 'topic-2-lesson-3',
+    topicId: 2,
+    lessonNumber: 3,
     category: 'npe',
-    translationKey: 'lesson5',
-    createSet: createLesson05Set,
+    translationKey: 'topic2.lesson3',
+    createSet: createTopic2Lesson3Set,
   },
   {
-    id: 'lesson-06',
+    id: 'topic-2-lesson-4',
+    topicId: 2,
+    lessonNumber: 4,
     category: 'npe',
-    translationKey: 'lesson6',
-    createSet: createLesson06Set,
+    translationKey: 'topic2.lesson4',
+    createSet: createTopic2Lesson4Set,
+  },
+  // Topic 3: Physics & Movement (continued)
+  {
+    id: 'topic-3-lesson-2',
+    topicId: 3,
+    lessonNumber: 2,
+    category: 'npe',
+    translationKey: 'topic3.lesson2',
+    createSet: createTopic3Lesson2Set,
+  },
+  // Topic 3: Physics & Movement (continued)
+  {
+    id: 'topic-3-lesson-3',
+    topicId: 3,
+    lessonNumber: 3,
+    category: 'npe',
+    translationKey: 'topic3.lesson3',
+    createSet: createTopic3Lesson3Set,
+  },
+  // Topic 5: Math & Logic
+  {
+    id: 'topic-5-lesson-1',
+    topicId: 5,
+    lessonNumber: 1,
+    category: 'npe',
+    translationKey: 'topic5.lesson1',
+    createSet: createTopic5Lesson1Set,
+  },
+  // Topic 4: Color & Visual Effects (continued)
+  {
+    id: 'topic-4-lesson-2',
+    topicId: 4,
+    lessonNumber: 2,
+    category: 'npe',
+    translationKey: 'topic4.lesson2',
+    createSet: createTopic4Lesson2Set,
+  },
+  // Topic 5: Math & Logic (continued)
+  {
+    id: 'topic-5-lesson-2',
+    topicId: 5,
+    lessonNumber: 2,
+    category: 'npe',
+    translationKey: 'topic5.lesson2',
+    createSet: createTopic5Lesson2Set,
+  },
+  // Topic 6: Advanced Techniques
+  {
+    id: 'topic-6-lesson-1',
+    topicId: 6,
+    lessonNumber: 1,
+    category: 'npe',
+    translationKey: 'topic6.lesson1',
+    createSet: createTopic6Lesson1Set,
   },
   {
-    id: 'lesson-07',
+    id: 'topic-6-lesson-2',
+    topicId: 6,
+    lessonNumber: 2,
     category: 'npe',
-    translationKey: 'lesson7',
-    createSet: createLesson07Set,
+    translationKey: 'topic6.lesson2',
+    createSet: createTopic6Lesson2Set,
   },
   {
-    id: 'lesson-08',
+    id: 'topic-6-lesson-3',
+    topicId: 6,
+    lessonNumber: 3,
     category: 'npe',
-    translationKey: 'lesson8',
-    createSet: createLesson08Set,
+    translationKey: 'topic6.lesson3',
+    createSet: createTopic6Lesson3Set,
   },
   {
-    id: 'lesson-09',
+    id: 'topic-6-lesson-4',
+    topicId: 6,
+    lessonNumber: 4,
     category: 'npe',
-    translationKey: 'lesson9',
-    createSet: createLesson09Set,
-  },
-  {
-    id: 'lesson-10',
-    category: 'npe',
-    translationKey: 'lesson10',
-    createSet: createLesson10Set,
-  },
-  {
-    id: 'lesson-11',
-    category: 'npe',
-    translationKey: 'lesson11',
-    createSet: createLesson11Set,
-  },
-  {
-    id: 'lesson-12',
-    category: 'npe',
-    translationKey: 'lesson12',
-    createSet: createLesson12Set,
+    translationKey: 'topic6.lesson4',
+    createSet: createTopic6Lesson4Set,
   },
 ];

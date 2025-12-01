@@ -70,6 +70,7 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
   private resizeHandler = () => {};
   private nodeParticleSet: NodeParticleSystemSet | null = null;
   private savedUserState: { editorData: any; systemBlocks: any[] } | null = null;
+  private previousLessonId: string | null = null;
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly showingSolution = signal(false);
@@ -108,18 +109,74 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['lesson'] && !changes['lesson'].firstChange) {
-      // Reset when lesson changes
-      if (this.nodeParticleSet) {
-        this.nodeParticleSet.clear();
-        this.nodeParticleSet.editorData = { locations: [] };
-        this.savedUserState = null;
-        this.showingSolution.set(false);
+    if (changes['lesson']) {
+      const previousLesson = changes['lesson'].previousValue;
+      const currentLesson = changes['lesson'].currentValue;
+      
+      // Reset when lesson changes (check by ID to handle object reference issues)
+      if (!changes['lesson'].firstChange && previousLesson?.id !== currentLesson?.id) {
+        this.previousLessonId = currentLesson?.id ?? null;
+        this.resetEditor();
+      } else if (changes['lesson'].firstChange) {
+        // Initialize previousLessonId on first change
+        this.previousLessonId = currentLesson?.id ?? null;
       }
     }
 
+    // loadToken is only used for manual toggle via button, not for navigation
+    // Only toggle if lesson hasn't changed (we track this via previousLessonId)
     if (changes['loadToken'] && !changes['loadToken'].firstChange) {
-      this.toggleSolution();
+      const currentLessonId = this.lesson?.id ?? null;
+      // Only toggle if we're still on the same lesson (lesson didn't change)
+      if (currentLessonId && currentLessonId === this.previousLessonId) {
+        this.toggleSolution();
+      }
+    }
+  }
+
+  private resetEditor(): void {
+    if (!this.nodeParticleSet || !this.isBrowser()) {
+      return;
+    }
+
+    this.errorMessage.set(null);
+    this.loading.set(true);
+    this.savedUserState = null;
+    this.showingSolution.set(false);
+    this.showingSolutionChange.emit(false);
+    this.previousLessonId = this.lesson?.id ?? null;
+
+    try {
+      // Clear the particle set completely
+      this.nodeParticleSet.clear();
+      this.nodeParticleSet.editorData = { locations: [] };
+      
+      // Completely reinitialize the editor to ensure clean state
+      if (this.hostRef?.nativeElement) {
+        this.hostRef.nativeElement.innerHTML = '';
+        requestAnimationFrame(() => {
+          if (this.scene && this.hostRef && this.nodeParticleSet) {
+            try {
+              NodeParticleEditor.Show({
+                nodeParticleSet: this.nodeParticleSet,
+                hostScene: this.scene,
+                hostElement: this.hostRef.nativeElement,
+              });
+              this.loading.set(false);
+            } catch (error) {
+              console.error('Failed to reset editor', error);
+              this.errorMessage.set('Failed to reset the editor.');
+              this.loading.set(false);
+            }
+          }
+        });
+      } else {
+        this.loading.set(false);
+      }
+    } catch (error) {
+      console.error('Failed to reset editor', error);
+      this.errorMessage.set('Failed to reset the editor.');
+      this.loading.set(false);
     }
   }
 
