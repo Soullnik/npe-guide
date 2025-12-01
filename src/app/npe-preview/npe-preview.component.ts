@@ -15,14 +15,10 @@ import {
   ViewChild,
   signal,
 } from '@angular/core';
-import * as BABYLON from 'babylonjs';
 import { Engine, NodeParticleSystemSet, Scene } from 'babylonjs';
 import { NodeParticleEditor } from 'babylonjs-node-particle-editor';
 import type { LessonDefinition } from '../lessons/lesson-definition';
 import { TranslatePipe } from '@ngx-translate/core';
-import 'babylonjs';
-
-(globalThis as any).BABYLON = BABYLON;
 
 @Component({
   selector: 'app-npe-preview',
