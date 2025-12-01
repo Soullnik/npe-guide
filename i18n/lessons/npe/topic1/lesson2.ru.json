@@ -1,0 +1,120 @@
+{
+  "title": "1.2: Базовые Свойства",
+  "summary": "Научитесь обновлять цвет и размер частиц с помощью простых постоянных значений",
+  "introTitle": "Введение",
+  "intro": "В этом уроке вы научитесь использовать UpdateColorBlock и UpdateSizeBlock для изменения свойств частиц. Мы начнем с простых постоянных значений - пока без временных расчетов. Вы создадите полную систему частиц с нуля с обновлениями цвета и размера.",
+  "stepsTitle": "Пошаговые Инструкции",
+  "steps": [
+    "Создайте SystemBlock - это корень вашей системы частиц",
+    "Создайте CreateParticleBlock для эмиссии частиц",
+    "Установите начальный цвет используя ParticleInputBlock (например, оранжевый: Color4(1, 0.5, 0, 1))",
+    "Установите начальный размер используя ParticleInputBlock (например, 0.3)",
+    "Подключите цвет и размер к CreateParticleBlock",
+    "Добавьте PointShapeBlock для эмиссии частиц из одной точки",
+    "Добавьте UpdatePositionBlock для обработки движения частиц",
+    "Получите Position и ScaledDirection используя ParticleInputBlock",
+    "Сложите Position и ScaledDirection используя ParticleMathBlock (операция Add)",
+    "Подключите результат к входу position блока UpdatePositionBlock",
+    "Добавьте UpdateColorBlock после UpdatePositionBlock",
+    "Подключите контекстное значение InitialColor к входу color блока UpdateColorBlock",
+    "Добавьте UpdateSizeBlock после UpdateColorBlock",
+    "Подключите постоянное значение размера к входу size блока UpdateSizeBlock",
+    "Соедините блоки: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Добавьте ParticleTextureSourceBlock для предоставления текстуры частицам",
+    "Наблюдайте, как частицы теперь имеют постоянный цвет и размер на протяжении всей жизни"
+  ],
+  "blocksTitle": "Блоки, Используемые в Этом Уроке",
+  "blocks": [
+    {
+      "name": "UpdateColorBlock",
+      "description": "Обновляет цвет частиц каждый кадр. В этом уроке мы используем его с постоянным значением цвета. В следующих уроках мы научимся изменять цвет со временем.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update color'",
+          "description": "Отображаемое имя блока"
+        },
+        {
+          "name": "color",
+          "value": "Color4 input",
+          "description": "Цвет для применения к частице. Может быть постоянным значением Color4 или контекстным значением, таким как InitialColor."
+        }
+      ]
+    },
+    {
+      "name": "UpdateSizeBlock",
+      "description": "Обновляет размер частиц каждый кадр. В этом уроке мы используем его с постоянным значением размера. В следующих уроках мы научимся изменять размер со временем.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update size'",
+          "description": "Отображаемое имя блока"
+        },
+        {
+          "name": "size",
+          "value": "Float input",
+          "description": "Значение размера для применения. Может быть постоянным значением или вычисленным с помощью математических операций."
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (InitialColor)",
+      "description": "Получает начальный цвет частицы при ее создании. Это контекстное значение, которое запоминает цвет из CreateParticleBlock.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.InitialColor",
+          "description": "Тип контекстных данных - InitialColor в данном случае"
+        }
+      ]
+    },
+    {
+      "name": "PointShapeBlock",
+      "description": "Испускает частицы из одной точки. Используется в этом уроке для создания частиц, движущихся по прямой линии.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Point emitter'",
+          "description": "Отображаемое имя эмиттера"
+        }
+      ]
+    }
+  ],
+  "properties": "Свойства",
+  "codeTitle": "Объяснение Кода",
+  "codeCopy": "Этот урок знакомит с UpdateColorBlock и UpdateSizeBlock. Эти блоки позволяют нам изменять свойства частиц каждый кадр. В этом уроке мы используем постоянные значения - цвет и размер не изменяются со временем. Это основа для более сложных эффектов, которые мы изучим в следующих уроках. Ключевая концепция - цепочка блоков обновления: каждый блок получает частицу от предыдущего блока, изменяет ее и передает следующему блоку.",
+  "objectivesTitle": "Цели Обучения",
+  "objectives": [
+    "Научиться использовать UpdateColorBlock и UpdateSizeBlock",
+    "Понять, как цепочка нескольких блоков обновления работает вместе",
+    "Использовать контекстное значение InitialColor для поддержания цвета частицы",
+    "Применять постоянные значения к свойствам частиц",
+    "Понять цепочку блоков обновления: UpdatePosition → UpdateColor → UpdateSize"
+  ],
+  "commonMistakesTitle": "Частые Ошибки",
+  "commonMistakes": [
+    {
+      "mistake": "Цепочка блоков обновления в неправильном порядке",
+      "explanation": "Блоки обновления должны быть соединены в определенном порядке. UpdatePosition должен идти первым, затем UpdateColor, затем UpdateSize.",
+      "solution": "Соединяйте блоки в порядке: UpdatePosition → UpdateColor → UpdateSize → SystemBlock. Каждый блок получает частицу от предыдущего блока."
+    },
+    {
+      "mistake": "Использование неправильного контекстного значения для цвета",
+      "explanation": "InitialColor получает цвет, установленный при создании частицы. Использование Position или Direction вызовет ошибки.",
+      "solution": "Используйте NodeParticleContextualSources.InitialColor для UpdateColorBlock, когда хотите сохранить оригинальный цвет частицы."
+    },
+    {
+      "mistake": "Не соединение блоков обновления с SystemBlock",
+      "explanation": "Блоки обновления должны быть добавлены в массив updateBlocks SystemBlock, иначе они не будут выполняться.",
+      "solution": "Добавьте все блоки обновления в SystemBlock: systemBlock.updateBlocks.push(updatePositionBlock, updateColorBlock, updateSizeBlock)."
+    }
+  ],
+  "homeworkTitle": "Практические Упражнения",
+  "homework": [
+    "Попробуйте разные значения цвета (красный, синий, зеленый и т.д.)",
+    "Экспериментируйте с разными значениями размера (0.1, 0.5, 1.0 и т.д.)",
+    "Попробуйте использовать разные формы эмиттеров (BoxShapeBlock, ConeShapeBlock)",
+    "Комбинируйте разные цвета и размеры, чтобы увидеть, как они влияют на визуальный вид"
+  ]
+}
+

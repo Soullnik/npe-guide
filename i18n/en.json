@@ -10,7 +10,9 @@
     "noLesson": "Select a lesson to begin",
     "loadExample": "Load example",
     "previousLesson": "Previous",
+    "previousTopic": "Previous Topic",
     "nextLesson": "Next",
+    "nextTopic": "Next Topic",
     "viewDocumentation": "View Documentation",
     "particlesDocumentation": "Particles Documentation",
     "mobileNotSupported": "Desktop Only",
@@ -18,6 +20,38 @@
     "backToHome": "Back to Home",
     "loading": "Loading...",
     "showSolution": "Show Solution",
-    "hideSolution": "Hide Solution"
+    "hideSolution": "Hide Solution",
+    "topic": "Topic",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
+  },
+  "topics": {
+    "topic1": {
+      "title": "Basics",
+      "description": "Fundamental concepts of particle creation and basic properties"
+    },
+    "topic2": {
+      "title": "Emitters & Shapes",
+      "description": "Different ways to create and position particles"
+    },
+    "topic3": {
+      "title": "Physics & Movement",
+      "description": "Applying physics and forces to particles"
+    },
+    "topic4": {
+      "title": "Color & Visual Effects",
+      "description": "Managing particle appearance and visual effects"
+    },
+    "topic5": {
+      "title": "Math & Logic",
+      "description": "Advanced calculations and conditional logic"
+    },
+    "topic6": {
+      "title": "Advanced Techniques",
+      "description": "Specialized and advanced particle techniques"
+    }
   }
 }

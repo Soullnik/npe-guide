@@ -1,0 +1,136 @@
+{
+  "title": "4.1: Advanced Color Management",
+  "summary": "Learn to create smooth color transitions and gradients using ParticleLerpBlock",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to create smooth color transitions over a particle's lifetime. We'll use ParticleLerpBlock to interpolate between two colors based on the particle's age, creating beautiful fading effects and color animations.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a BoxShapeBlock to emit particles from a box volume",
+    "Add UpdateColorBlock to modify particle color",
+    "Get the particle's age and lifetime using ParticleInputBlock",
+    "Calculate the age ratio (age / lifetime) to get a value from 0 to 1",
+    "Create a start color using ParticleConverterBlock (e.g., bright red)",
+    "Create an end color using ParticleConverterBlock (e.g., blue with transparency)",
+    "Use ParticleLerpBlock to interpolate between start and end colors",
+    "Connect the age ratio to ParticleLerpBlock's gradient input",
+    "Connect the lerped color to UpdateColorBlock's color input"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "ParticleLerpBlock",
+      "description": "Linearly interpolates (lerps) between two values based on a gradient factor (0 to 1). Works with Float, Vector2, Vector3, and Color4 types. Perfect for creating smooth transitions.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Color Lerp'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "left",
+          "value": "Color4 input",
+          "description": "The starting value (when gradient = 0)"
+        },
+        {
+          "name": "right",
+          "value": "Color4 input",
+          "description": "The ending value (when gradient = 1)"
+        },
+        {
+          "name": "gradient",
+          "value": "Float input (0 to 1)",
+          "description": "The interpolation factor. 0 = left value, 1 = right value, 0.5 = halfway between"
+        }
+      ]
+    },
+    {
+      "name": "ParticleConverterBlock (Color4)",
+      "description": "Creates a Color4 from individual R, G, B, A float values. Used to define custom colors for the start and end of color transitions.",
+      "properties": [
+        {
+          "name": "xIn, yIn, zIn, wIn",
+          "value": "Float inputs",
+          "description": "Individual float inputs for R, G, B, A components (xIn = R, yIn = G, zIn = B, wIn = A)"
+        },
+        {
+          "name": "colorOut",
+          "value": "Color4 output",
+          "description": "The combined Color4 output"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Age)",
+      "description": "Retrieves the current age of a particle. Age increases from 0 to lifetime as the particle lives.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Age",
+          "description": "The type of contextual data - Age in this case"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Lifetime)",
+      "description": "Retrieves the total lifetime of a particle. This is the maximum age a particle can reach before it dies.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Lifetime",
+          "description": "The type of contextual data - Lifetime in this case"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Divide)",
+      "description": "Divides two values. Used to calculate age ratio: age / lifetime, which gives a value from 0 (birth) to 1 (death).",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Divide",
+          "description": "The mathematical operation - Divide"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates color interpolation using linear interpolation (lerp). The formula is: result = (1 - gradient) * left + gradient * right. When gradient = 0, we get the left color (start). When gradient = 1, we get the right color (end). By using age / lifetime as the gradient, particles smoothly transition from their start color to their end color over their lifetime. This technique is essential for creating fading effects, color animations, and smooth visual transitions.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand linear interpolation (lerp) for smooth color transitions",
+    "Use ParticleLerpBlock to interpolate between two colors",
+    "Calculate age ratio for time-based color transitions",
+    "Create Color4 values using ParticleConverterBlock",
+    "Apply smooth color gradients over particle lifetime"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Using wrong gradient value for ParticleLerpBlock",
+      "explanation": "The gradient input should be a value from 0 to 1. Using values outside this range or using age directly instead of age ratio causes incorrect interpolation.",
+      "solution": "Always calculate age ratio first: ageRatio = Age / Lifetime. Then use this value (0 to 1) as the gradient input to ParticleLerpBlock."
+    },
+    {
+      "mistake": "Swapping left and right colors",
+      "explanation": "When gradient = 0, you get the left color. When gradient = 1, you get the right color. Swapping them reverses the transition direction.",
+      "solution": "Set left to the start color (when particle is created) and right to the end color (when particle dies). Use age ratio as gradient to transition from left to right."
+    },
+    {
+      "mistake": "Not normalizing color components",
+      "explanation": "Color4 components should be in range 0-1. Using values outside this range (like 0-255) causes incorrect colors or errors.",
+      "solution": "When creating Color4 with ParticleConverterBlock, use values from 0.0 to 1.0 for R, G, B, A components. For example: red = 1.0, not 255."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different color combinations (e.g., yellow to purple, green to cyan)",
+    "Create a color transition that fades to transparent (set end alpha to 0)",
+    "Experiment with non-linear transitions by modifying the age ratio with math operations",
+    "Try creating a color cycle by using multiple ParticleLerpBlocks",
+    "Combine color transitions with size changes for more dynamic effects"
+  ]
+}

@@ -1,0 +1,133 @@
+{
+  "title": "1.1: Первая Эмиссия",
+  "summary": "Создайте свою первую систему частиц с базовыми блоками",
+  "introTitle": "Введение",
+  "intro": "В этом уроке вы научитесь создавать простую систему частиц, используя Редактор Частиц. Мы начнем с основных блоков: SystemBlock, UpdatePositionBlock и CreateParticleBlock.",
+  "stepsTitle": "Пошаговые Инструкции",
+  "steps": [
+    "Создайте SystemBlock - это корень вашей системы частиц",
+    "Добавьте UpdatePositionBlock для обработки движения частиц",
+    "Подключите CreateParticleBlock с BoxShapeBlock для эмиссии частиц из формы куба",
+    "Используйте ParticleInputBlock для получения текущей позиции и масштабированного направления",
+    "Добавьте ParticleMathBlock для объединения позиции и направления",
+    "Подключите результат к входу position блока UpdatePositionBlock",
+    "Добавьте ParticleTextureSourceBlock для предоставления текстуры частицам"
+  ],
+  "blocksTitle": "Блоки, Используемые в Этом Уроке",
+  "blocks": [
+    {
+      "name": "SystemBlock",
+      "description": "Корневой блок любой системы частиц. Управляет общими свойствами системы и подключается ко всем блокам, связанным с частицами.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Particle System'",
+          "description": "Отображаемое имя системы частиц"
+        }
+      ]
+    },
+    {
+      "name": "UpdatePositionBlock",
+      "description": "Обновляет позицию частиц каждый кадр. Этот блок необходим для любого движения частиц.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update position'",
+          "description": "Отображаемое имя блока"
+        }
+      ]
+    },
+    {
+      "name": "CreateParticleBlock",
+      "description": "Создает новые частицы. Этот блок отвечает за эмиссию частиц.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Create particle'",
+          "description": "Отображаемое имя блока"
+        }
+      ]
+    },
+    {
+      "name": "BoxShapeBlock",
+      "description": "Определяет эмиттер в форме куба. Частицы будут создаваться в объеме этого куба.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Box emitter'",
+          "description": "Отображаемое имя эмиттера"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock",
+      "description": "Получает контекстные данные частиц, такие как позиция, скорость или возраст. В этом уроке мы используем его для получения текущей позиции и масштабированного направления.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Position / ScaledDirection",
+          "description": "Тип контекстных данных для получения"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock",
+      "description": "Выполняет математические операции над данными частиц. Мы используем его для сложения векторов позиции и направления.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Add",
+          "description": "Математическая операция для выполнения (Add, Subtract, Multiply, Divide и т.д.)"
+        }
+      ]
+    },
+    {
+      "name": "ParticleTextureSourceBlock",
+      "description": "Предоставляет текстуру для частиц. Это определяет, как частицы выглядят при рендеринге.",
+      "properties": [
+        {
+          "name": "url",
+          "value": "Tools.GetAssetUrl('https://assets.babylonjs.com/core/textures/flare.png')",
+          "description": "URL изображения текстуры для использования"
+        }
+      ]
+    }
+  ],
+  "properties": "Свойства",
+  "codeTitle": "Объяснение Кода",
+  "codeCopy": "Код создает NodeParticleSystemSet и строит граф связанных блоков. Каждый блок имеет определенную функцию, и они связаны с помощью метода connectTo().",
+  "objectivesTitle": "Цели Обучения",
+  "objectives": [
+    "Понять базовую структуру системы частиц",
+    "Научиться соединять блоки с помощью метода connectTo()",
+    "Создавать частицы с помощью CreateParticleBlock и BoxShapeBlock",
+    "Использовать ParticleInputBlock для получения контекстных данных частиц",
+    "Применять математические операции для объединения позиции и направления",
+    "Понять поток частиц: Create → Shape → Update → System"
+  ],
+  "commonMistakesTitle": "Частые Ошибки",
+  "commonMistakes": [
+    {
+      "mistake": "Забывание соединить блоки в правильном порядке",
+      "explanation": "Блоки должны быть соединены в логическом порядке. CreateParticleBlock должен соединяться с формой, затем с блоками обновления, и наконец с SystemBlock.",
+      "solution": "Следуйте цепочке: CreateParticleBlock → ShapeBlock → UpdateBlocks → SystemBlock. Каждый блок должен соединять свой выход со входом следующего блока."
+    },
+    {
+      "mistake": "Использование неправильного контекстного значения в ParticleInputBlock",
+      "explanation": "ParticleInputBlock может получать разные типы данных (Position, Direction, Age и т.д.). Использование неправильного типа даст неверные результаты.",
+      "solution": "Убедитесь, что правильно установлено contextualValue: NodeParticleContextualSources.Position для позиции, NodeParticleContextualSources.ScaledDirection для направления."
+    },
+    {
+      "mistake": "Не соединение конечного результата с SystemBlock",
+      "explanation": "SystemBlock - это корень системы частиц. Если блоки обновления не соединены с ним, частицы не будут обновляться.",
+      "solution": "Всегда соединяйте последний блок обновления (UpdatePositionBlock) с SystemBlock, используя systemBlock.updateBlocks.push(updateBlock)."
+    }
+  ],
+  "homeworkTitle": "Упражнения для Практики",
+  "homework": [
+    "Попробуйте изменить BoxShapeBlock на другую форму",
+    "Экспериментируйте с разными URL текстур",
+    "Измените математическую операцию, чтобы увидеть, как это влияет на движение частиц",
+    "Добавьте больше частиц, настроив параметры CreateParticleBlock"
+  ]
+}

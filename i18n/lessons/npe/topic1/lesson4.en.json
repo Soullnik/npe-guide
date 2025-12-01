@@ -1,0 +1,112 @@
+{
+  "title": "1.4: Property Combinations",
+  "summary": "Learn to combine multiple particle properties (color, size, scale) to create complex effects",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to combine multiple particle properties (color, size, and scale) to create complex, dynamic effects. You'll create a complete particle system from scratch using Age, Lifetime, age ratio, and mathematical operations to create particles that change color, grow in size, and scale non-uniformly over time. This lesson demonstrates the power of combining multiple properties together.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles with initial color and size",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
+    "Get the particle's Age and Lifetime using ParticleInputBlock",
+    "Calculate age ratio: Age / Lifetime using ParticleMathBlock (Divide operation)",
+    "Calculate inverted age ratio: 1 - ageRatio for fading effects",
+    "Add an UpdateColorBlock after UpdatePositionBlock",
+    "Create complex color transition using ParticleConverterBlock",
+    "Set red component to increase with age (ageRatio)",
+    "Set green component to fade with age (ageRatioInverted)",
+    "Set blue component to fade with age, multiplied by 0.5",
+    "Connect the color from ParticleConverterBlock to UpdateColorBlock",
+    "Add UpdateSizeBlock with growth calculation: baseSize * (1 + growthAmount * ageRatio)",
+    "Add UpdateScaleBlock with non-uniform scaling",
+    "Set scale X to decrease: baseX * (1 - ageRatio)",
+    "Set scale Y to increase: baseY * (1 + ageRatio)",
+    "Convert scale X and Y to Vector2 using ParticleConverterBlock",
+    "Connect the Vector2 scale to UpdateScaleBlock",
+    "Chain all update blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → UpdateScale → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Observe how all properties work together to create a cohesive, dynamic effect"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateScaleBlock",
+      "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property. This allows for non-uniform scaling (different X and Y values).",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update scale'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "scale",
+          "value": "Vector2 input",
+          "description": "The scale value. Must be a Vector2 for non-uniform scaling (different X and Y values)."
+        }
+      ]
+    },
+    {
+      "name": "ParticleConverterBlock",
+      "description": "Converts individual float values into Vector2, Vector3, or Color4. In this lesson, we use it to create a Color4 from individual R, G, B, A components, and a Vector2 for scale.",
+      "properties": [
+        {
+          "name": "xIn, yIn, zIn, wIn",
+          "value": "Float inputs",
+          "description": "Individual float inputs for X, Y, Z, W components (for Vector2, Vector3, or Color4)"
+        },
+        {
+          "name": "colorOut",
+          "value": "Color4 output",
+          "description": "The combined Color4 output (from xIn=R, yIn=G, zIn=B, wIn=A)"
+        },
+        {
+          "name": "xyOut",
+          "value": "Vector2 output",
+          "description": "The combined Vector2 output (from xIn=X, yIn=Y)"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates how to combine multiple particle properties together. The key concept is that properties can be calculated using the same age ratio, but with different formulas. For color, we use ageRatio directly for red (increases), and (1 - ageRatio) for green/blue (fades). For size, we calculate: baseSize * (1 + growthAmount * ageRatio), creating growth from baseSize to 3 * baseSize. For scale, we use different formulas for X and Y: scaleX = baseX * (1 - ageRatio) makes particles wider, scaleY = baseY * (1 + ageRatio) makes particles taller. This creates non-uniform scaling where particles become wider but taller over time. By combining all these properties, we create rich, dynamic effects that change in multiple ways simultaneously.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Combine multiple particle properties (color, size, scale) together",
+    "Use ParticleConverterBlock to create Color4 and Vector2 from individual components",
+    "Apply different formulas to different properties using the same age ratio",
+    "Create non-uniform scaling with UpdateScaleBlock",
+    "Understand how properties interact when combined together"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Using wrong component order in ParticleConverterBlock",
+      "explanation": "ParticleConverterBlock expects components in specific order: for Color4 it's R, G, B, A (xIn, yIn, zIn, wIn), for Vector2 it's X, Y (xIn, yIn).",
+      "solution": "For Color4: xIn = Red, yIn = Green, zIn = Blue, wIn = Alpha. For Vector2: xIn = X, yIn = Y. Check the output type (colorOut vs xyOut) to ensure correct mapping."
+    },
+    {
+      "mistake": "Using Vector3 for UpdateScaleBlock instead of Vector2",
+      "explanation": "UpdateScaleBlock requires a Vector2 input (X and Y scale), not Vector3. Using Vector3 will cause an error.",
+      "solution": "Use ParticleConverterBlock with xyOut to create a Vector2 for UpdateScaleBlock. Only provide X and Y components."
+    },
+    {
+      "mistake": "Applying same formula to all properties",
+      "explanation": "Different properties can use different formulas with the same age ratio. Using the same formula everywhere creates uniform, boring effects.",
+      "solution": "Use ageRatio for properties that should increase, (1 - ageRatio) for properties that should decrease. Mix and match formulas for interesting effects."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different color combinations using ParticleConverterBlock",
+    "Experiment with different growth formulas for size",
+    "Create uniform scaling (X and Y scale the same)",
+    "Try reversing the scale effects (X increases, Y decreases)",
+    "Combine size growth with color transitions for more dramatic effects",
+    "Experiment with different math operations to create unique property combinations",
+    "Try creating particles that shrink in size but grow in scale"
+  ]
+}
+

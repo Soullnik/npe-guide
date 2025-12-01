@@ -1,0 +1,103 @@
+{
+  "title": "6.1: Angle and Rotation",
+  "summary": "Learn to control particle rotation using UpdateAngleBlock and AlignAngleBlock",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to control particle rotation and angle. You'll use UpdateAngleBlock to set particle rotation based on calculations (like time-based rotation), and learn about AlignAngleBlock which automatically aligns particles to their direction. Rotation is essential for creating effects like spinning particles, directional sprites, and animated textures.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Get the system time using ParticleInputBlock with Time system source",
+    "Create a rotation speed value (rotations per second)",
+    "Calculate rotation angle: time * rotationSpeed",
+    "Add UpdateAngleBlock to update particle angle",
+    "Connect the rotation angle to UpdateAngleBlock's angle input",
+    "Optionally use AlignAngleBlock to align particles to their direction",
+    "Observe how particles rotate continuously based on time"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateAngleBlock",
+      "description": "Updates the rotation angle of particles. The angle is specified in radians and determines how particles are rotated.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update Angle'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "angle",
+          "value": "Float input",
+          "description": "The rotation angle in radians"
+        }
+      ]
+    },
+    {
+      "name": "AlignAngleBlock",
+      "description": "Automatically aligns particle angle to its direction vector. Useful for creating particles that face their movement direction.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Align Angle'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "alignment",
+          "value": "Float (default: Math.PI / 2)",
+          "description": "The alignment offset in radians"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Time)",
+      "description": "Retrieves the system time for time-based rotation calculations.",
+      "properties": [
+        {
+          "name": "systemSource",
+          "value": "NodeParticleSystemSources.Time",
+          "description": "The system source - Time for system time"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates particle rotation control. UpdateAngleBlock allows you to set particle rotation based on calculations - in this case, time-based rotation where angle = time * rotationSpeed. This creates continuous rotation. AlignAngleBlock automatically calculates the angle needed to align particles with their direction vector, which is useful for directional sprites. Rotation is specified in radians (2π = 360 degrees), and can be combined with other effects like color changes or size variations.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Control particle rotation using UpdateAngleBlock",
+    "Calculate rotation angles from time and speed",
+    "Use AlignAngleBlock to align particles with their direction",
+    "Understand angle units (radians vs degrees)",
+    "Combine rotation with other particle effects"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Using degrees instead of radians",
+      "explanation": "UpdateAngleBlock expects angles in radians, not degrees. Using degrees (0-360) creates incorrect rotation (particles rotate much more than expected).",
+      "solution": "Convert degrees to radians: radians = degrees * (Math.PI / 180). Or use radians directly: 2π = 360 degrees, π = 180 degrees, π/2 = 90 degrees."
+    },
+    {
+      "mistake": "Not scaling rotation speed correctly",
+      "explanation": "Rotation speed should be in radians per second. Using raw time or wrong scaling creates incorrect rotation speeds.",
+      "solution": "Calculate rotation: angle = time * rotationSpeed, where rotationSpeed is in radians per second. For 1 rotation per second, use rotationSpeed = 2 * Math.PI."
+    },
+    {
+      "mistake": "Confusing UpdateAngleBlock with AlignAngleBlock",
+      "explanation": "UpdateAngleBlock sets a specific angle value, while AlignAngleBlock automatically calculates angle from direction. Using the wrong one creates incorrect rotation.",
+      "solution": "Use UpdateAngleBlock when you want to set rotation manually (e.g., time-based rotation). Use AlignAngleBlock when you want particles to face their movement direction automatically."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different rotation speeds and observe the effect",
+    "Combine rotation with age-based effects (rotate faster as particles age)",
+    "Use AlignAngleBlock to make particles face their movement direction",
+    "Combine rotation with color changes for more dynamic effects",
+    "Experiment with rotation based on particle properties (speed, age, etc.)"
+  ]
+}

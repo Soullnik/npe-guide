@@ -1,0 +1,133 @@
+{
+  "title": "1.3: Time-Based Properties",
+  "summary": "Learn to use Age and Lifetime to create time-based particle effects",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn about Age and Lifetime - two fundamental concepts for creating time-based effects. Age represents how long a particle has been alive, while Lifetime is its total lifespan. By calculating the age ratio (Age / Lifetime), we can create effects that change over time, such as particles that grow or fade as they age.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Create a CreateParticleBlock to emit particles",
+    "Set an initial color and size using ParticleInputBlock",
+    "Add a PointShapeBlock to emit particles from a single point",
+    "Add an UpdatePositionBlock to handle particle movement",
+    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
+    "Get the particle's Age using ParticleInputBlock with Age contextual value",
+    "Get the particle's Lifetime using ParticleInputBlock with Lifetime contextual value",
+    "Calculate the age ratio: Age / Lifetime using ParticleMathBlock with Divide operation",
+    "Add an UpdateColorBlock and connect InitialColor contextual value to it",
+    "Add an UpdateSizeBlock to change particle size over time",
+    "Calculate growth factor: 1 + ageRatio using ParticleMathBlock (Add operation)",
+    "Apply the growth factor to size calculation: baseSize * (1 + ageRatio)",
+    "Connect the final size to UpdateSizeBlock's size input",
+    "Chain the blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Observe how particles now grow over time based on their age"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "ParticleInputBlock (Age)",
+      "description": "Retrieves the current age of a particle. Age starts at 0 when the particle is created and increases each frame until it reaches the lifetime value. Age is measured in seconds.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Age",
+          "description": "The type of contextual data - Age in this case"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Lifetime)",
+      "description": "Retrieves the total lifetime of a particle. Lifetime is a constant value set when the particle is created. It represents the maximum age a particle can reach before it dies. Lifetime is measured in seconds.",
+      "properties": [
+        {
+          "name": "contextualValue",
+          "value": "NodeParticleContextualSources.Lifetime",
+          "description": "The type of contextual data - Lifetime in this case"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Divide)",
+      "description": "Divides two values. In this lesson, we use it to calculate the age ratio (Age / Lifetime), which gives us a value from 0 (just created) to 1 (about to die). This ratio is the foundation for all time-based effects.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Divide",
+          "description": "The mathematical operation - Divide"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Multiply)",
+      "description": "Multiplies two values. Used to calculate final size by multiplying base size with a growth factor.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Multiply",
+          "description": "The mathematical operation - Multiply"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Add)",
+      "description": "Adds two values. Used to create growth factor: 1 + ageRatio, which increases from 1.0 to 2.0 as the particle ages.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Add",
+          "description": "The mathematical operation - Add"
+        }
+      ]
+    },
+    {
+      "name": "ParticleMathBlock (Subtract)",
+      "description": "Subtracts two values. Used to calculate fade factor: 1 - ageRatio, which decreases from 1.0 to 0.0 as the particle ages.",
+      "properties": [
+        {
+          "name": "operation",
+          "value": "ParticleMathBlockOperations.Subtract",
+          "description": "The mathematical operation - Subtract"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson introduces time-based calculations using Age and Lifetime. The age ratio (Age / Lifetime) is a value from 0 to 1 that represents how far through its life the particle is. When ageRatio = 0, the particle was just created. When ageRatio = 1, the particle is about to die. We use this ratio to create effects that change over time. For example, size = baseSize * (1 + ageRatio) makes particles grow from baseSize to 2 * baseSize as they age. The inverted ratio (1 - ageRatio) is useful for fading effects.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Understand Age and Lifetime contextual values",
+    "Calculate age ratio (Age / Lifetime) for time-based effects",
+    "Use age ratio to create particles that change over time",
+    "Apply mathematical operations to age ratio for different effects",
+    "Understand the difference between growth (1 + ageRatio) and fade (1 - ageRatio) formulas"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Dividing Lifetime by Age instead of Age by Lifetime",
+      "explanation": "The age ratio should be Age / Lifetime, not Lifetime / Age. The correct formula gives a value from 0 to 1.",
+      "solution": "Always divide Age by Lifetime: ageRatio = Age / Lifetime. This gives 0 when particle is created, 1 when it dies."
+    },
+    {
+      "mistake": "Using Age directly without calculating ratio",
+      "explanation": "Age is measured in seconds and can be any value. Without dividing by Lifetime, you can't create normalized effects.",
+      "solution": "Always calculate the ratio first: ageRatio = Age / Lifetime. Then use this normalized value (0 to 1) for calculations."
+    },
+    {
+      "mistake": "Forgetting that ageRatio increases from 0 to 1",
+      "explanation": "ageRatio starts at 0 (just created) and increases to 1 (about to die). Using it directly makes things grow, using (1 - ageRatio) makes them fade.",
+      "solution": "For growth effects, use ageRatio or (1 + ageRatio). For fade effects, use (1 - ageRatio). Remember: ageRatio goes from 0 to 1."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different size growth formulas (e.g., baseSize * ageRatio, baseSize * (2 - ageRatio))",
+    "Experiment with fade effects using (1 - ageRatio)",
+    "Create particles that shrink over time instead of growing",
+    "Try combining growth and fade effects together",
+    "Experiment with different math operations to see how they affect the particle behavior"
+  ]
+}
+

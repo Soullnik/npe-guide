@@ -1,0 +1,66 @@
+{
+  "title": "6.4: Complex Systems",
+  "summary": "Combine all learned concepts to create production-ready complex particle systems",
+  "introTitle": "Introduction",
+  "intro": "In this final lesson, you'll combine all the concepts learned throughout the course to create a complex, production-ready particle system. You'll create a complete system from scratch that uses multiple techniques including time-based properties, randomness, vector operations, direction updates, and angle rotation.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Create a SystemBlock - this is the root of your particle system",
+    "Add UpdateDirectionBlock to modify particle direction over time",
+    "Use system Time to create direction variation",
+    "Add UpdatePositionBlock to handle particle movement",
+    "Create a CreateParticleBlock with random color and size using ParticleRandomBlock",
+    "Set lockMode to OncePerParticle for consistent random values",
+    "Add a SphereShapeBlock with radius input",
+    "Chain: CreateParticle → SphereShape → UpdateDirection → UpdatePosition",
+    "Add time-based color fade using Age and Lifetime",
+    "Calculate fade factor: 1 - ageRatio",
+    "Multiply initial color by fade factor for smooth fading",
+    "Add time-based size growth using age ratio",
+    "Add UpdateAngleBlock with time-based rotation",
+    "Chain all blocks: UpdatePosition → UpdateColor → UpdateSize → UpdateAngle → SystemBlock",
+    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Observe the complex, multi-layered particle effect"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "Complex System Integration",
+      "description": "This lesson combines multiple blocks and techniques: UpdateDirectionBlock, ParticleRandomBlock, time-based calculations, vector operations, and angle updates. All working together to create a sophisticated effect.",
+      "properties": []
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "Complex particle systems combine multiple techniques to create rich, dynamic effects. This system uses randomness for variation, time-based calculations for evolution over time, direction updates for dynamic movement, and angle rotation for visual interest. The key is organizing these techniques into a coherent block chain that flows logically from creation to final output.",
+  "objectivesTitle": "Learning Objectives",
+  "objectives": [
+    "Combine multiple techniques in one system",
+    "Organize complex block chains effectively",
+    "Create production-ready particle effects",
+    "Understand how different techniques work together",
+    "Design sophisticated particle systems from scratch"
+  ],
+  "commonMistakesTitle": "Common Mistakes",
+  "commonMistakes": [
+    {
+      "mistake": "Overcomplicating the system",
+      "explanation": "Adding too many effects can make the system hard to understand and debug. Start simple and add complexity gradually.",
+      "solution": "Build systems incrementally. Start with basic movement, then add color, then size, then advanced features. Test at each step."
+    },
+    {
+      "mistake": "Not organizing block chains logically",
+      "explanation": "Complex systems need clear organization. Random blocks connected in confusing ways are hard to debug and maintain.",
+      "solution": "Organize blocks in logical order: Creation → Shape → Direction → Position → Color → Size → Angle → System. Keep related calculations together."
+    }
+  ],
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Create your own complex particle system combining 5+ techniques",
+    "Experiment with different combinations of effects",
+    "Optimize a complex system for performance",
+    "Create a themed effect (fire, magic, explosion) using multiple techniques",
+    "Document your complex system for future reference"
+  ]
+}
+
