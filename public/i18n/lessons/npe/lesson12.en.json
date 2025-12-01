@@ -1,0 +1,74 @@
+{
+  "title": "Lesson 12: Angle and Rotation",
+  "summary": "Learn to control particle rotation using UpdateAngleBlock and AlignAngleBlock",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to control particle rotation and angle. You'll use UpdateAngleBlock to set particle rotation based on calculations (like time-based rotation), and learn about AlignAngleBlock which automatically aligns particles to their direction. Rotation is essential for creating effects like spinning particles, directional sprites, and animated textures.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Start with a basic particle system using PointShapeBlock",
+    "Get the system time using ParticleInputBlock with Time system source",
+    "Create a rotation speed value (rotations per second)",
+    "Calculate rotation angle: time * rotationSpeed",
+    "Add UpdateAngleBlock to update particle angle",
+    "Connect the rotation angle to UpdateAngleBlock's angle input",
+    "Optionally use AlignAngleBlock to align particles to their direction",
+    "Observe how particles rotate continuously based on time"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "UpdateAngleBlock",
+      "description": "Updates the rotation angle of particles. The angle is specified in radians and determines how particles are rotated.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Update Angle'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "angle",
+          "value": "Float input",
+          "description": "The rotation angle in radians"
+        }
+      ]
+    },
+    {
+      "name": "AlignAngleBlock",
+      "description": "Automatically aligns particle angle to its direction vector. Useful for creating particles that face their movement direction.",
+      "properties": [
+        {
+          "name": "name",
+          "value": "'Align Angle'",
+          "description": "The display name of the block"
+        },
+        {
+          "name": "alignment",
+          "value": "Float (default: Math.PI / 2)",
+          "description": "The alignment offset in radians"
+        }
+      ]
+    },
+    {
+      "name": "ParticleInputBlock (Time)",
+      "description": "Retrieves the system time for time-based rotation calculations.",
+      "properties": [
+        {
+          "name": "systemSource",
+          "value": "NodeParticleSystemSources.Time",
+          "description": "The system source - Time for system time"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates particle rotation control. UpdateAngleBlock allows you to set particle rotation based on calculations - in this case, time-based rotation where angle = time * rotationSpeed. This creates continuous rotation. AlignAngleBlock automatically calculates the angle needed to align particles with their direction vector, which is useful for directional sprites. Rotation is specified in radians (2π = 360 degrees), and can be combined with other effects like color changes or size variations.",
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different rotation speeds and observe the effect",
+    "Combine rotation with age-based effects (rotate faster as particles age)",
+    "Use AlignAngleBlock to make particles face their movement direction",
+    "Combine rotation with color changes for more dynamic effects",
+    "Experiment with rotation based on particle properties (speed, age, etc.)"
+  ]
+}

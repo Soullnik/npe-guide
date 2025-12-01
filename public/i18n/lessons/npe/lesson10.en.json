@@ -1,0 +1,95 @@
+{
+  "title": "Lesson 10: Texture Animation and Sprite Sheets",
+  "summary": "Learn to create animated particle textures using sprite sheets and cell index updates",
+  "introTitle": "Introduction",
+  "intro": "In this lesson, you'll learn how to use SetupSpriteSheetBlock and UpdateSpriteCellIndexBlock to create animated particle textures. Sprite sheets allow you to display different frames of animation on particles, creating effects like animated flames, explosions, or other dynamic visual effects. You'll learn to calculate sprite cell indices based on particle age to create smooth animations.",
+  "stepsTitle": "Step-by-Step Instructions",
+  "steps": [
+    "Start with a basic particle system using PointShapeBlock",
+    "Add SetupSpriteSheetBlock to configure the sprite sheet (start cell, end cell, width, height)",
+    "Set the sprite sheet properties (start: 0, end: 8, width: 64, height: 64)",
+    "Enable looping if you want the animation to repeat",
+    "Add UpdateSpriteCellIndexBlock to update the sprite cell index",
+    "Calculate sprite index from particle age: Age / Lifetime",
+    "Multiply by the number of cells (end - start + 1)",
+    "Convert the result to an integer using ParticleFloatToIntBlock",
+    "Connect the integer cell index to UpdateSpriteCellIndexBlock's cellIndex input"
+  ],
+  "blocksTitle": "Blocks Used in This Lesson",
+  "blocks": [
+    {
+      "name": "SetupSpriteSheetBlock",
+      "description": "Configures a sprite sheet for particles. Defines the start and end cell indices, cell dimensions, and animation behavior.",
+      "properties": [
+        {
+          "name": "start",
+          "value": "0",
+          "description": "The starting cell index of the sprite sheet"
+        },
+        {
+          "name": "end",
+          "value": "8",
+          "description": "The ending cell index of the sprite sheet"
+        },
+        {
+          "name": "width",
+          "value": "64",
+          "description": "The width of each sprite cell in pixels"
+        },
+        {
+          "name": "height",
+          "value": "64",
+          "description": "The height of each sprite cell in pixels"
+        },
+        {
+          "name": "loop",
+          "value": "true",
+          "description": "Whether the sprite sheet animation should loop"
+        },
+        {
+          "name": "randomStartCell",
+          "value": "false",
+          "description": "Whether particles should start at a random cell"
+        }
+      ]
+    },
+    {
+      "name": "UpdateSpriteCellIndexBlock",
+      "description": "Updates the sprite cell index of a particle. The cell index determines which frame of the sprite sheet is displayed.",
+      "properties": [
+        {
+          "name": "cellIndex",
+          "value": "Int input",
+          "description": "The cell index to display (0-based, from start to end)"
+        }
+      ]
+    },
+    {
+      "name": "ParticleFloatToIntBlock",
+      "description": "Converts a float value to an integer. Required for sprite cell indices, which must be integers.",
+      "properties": [
+        {
+          "name": "input",
+          "value": "Float input",
+          "description": "The float value to convert"
+        },
+        {
+          "name": "output",
+          "value": "Int output",
+          "description": "The integer result"
+        }
+      ]
+    }
+  ],
+  "properties": "Properties",
+  "codeTitle": "Code Explanation",
+  "codeCopy": "This lesson demonstrates sprite sheet animation. A sprite sheet is a texture containing multiple frames of animation arranged in a grid. By updating the cell index based on particle age, we create smooth animations. The formula is: cellIndex = floor((Age / Lifetime) * cellCount), where cellCount = end - start + 1. This maps the particle's lifetime (0 to 1) to the sprite sheet cells (0 to cellCount-1). Sprite sheets are essential for creating animated effects like flames, smoke, explosions, and other dynamic visual elements.",
+  "homeworkTitle": "Practice Exercises",
+  "homework": [
+    "Try different sprite sheet configurations (different cell counts, sizes)",
+    "Experiment with randomStartCell to create varied animations",
+    "Create sprite animations that speed up or slow down based on particle properties",
+    "Combine sprite animation with color changes for more dynamic effects",
+    "Try creating a sprite sheet with your own texture and test different cell arrangements"
+  ]
+}

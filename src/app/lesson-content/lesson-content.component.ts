@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, effect, inject, input, signal } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
+import { LessonTranslationService } from '../services/lesson-translation.service';
 
 interface BlockInfo {
   name: string;
@@ -20,15 +21,15 @@ interface BlockInfo {
         <!-- Introduction -->
         <section class="rounded-xl border border-white/10 bg-white/5 p-4">
           <h2 class="mb-3 text-lg font-semibold text-white">
-            {{ ('lessons.' + lessonKey() + '.introTitle') | translate }}
+            {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.introTitle' : 'lessons.' + category() + '.' + lessonKey() + '.introTitle') | translate }}
           </h2>
-          <p class="text-white/80">{{ ('lessons.' + lessonKey() + '.intro') | translate }}</p>
+          <p class="text-white/80">{{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.intro' : 'lessons.' + category() + '.' + lessonKey() + '.intro') | translate }}</p>
         </section>
 
         <!-- Steps -->
         <section class="rounded-xl border border-white/10 bg-white/5 p-4">
           <h2 class="mb-4 text-lg font-semibold text-white">
-            {{ ('lessons.' + lessonKey() + '.stepsTitle') | translate }}
+            {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.stepsTitle' : 'lessons.' + category() + '.' + lessonKey() + '.stepsTitle') | translate }}
           </h2>
           <ol class="space-y-3">
             @for (step of steps(); track $index) {
@@ -48,7 +49,7 @@ interface BlockInfo {
         @if (blocks().length > 0) {
           <section class="rounded-xl border border-white/10 bg-white/5 p-4">
             <h2 class="mb-4 text-lg font-semibold text-white">
-              {{ ('lessons.' + lessonKey() + '.blocksTitle') | translate }}
+              {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.blocksTitle' : 'lessons.' + category() + '.' + lessonKey() + '.blocksTitle') | translate }}
             </h2>
             <div class="space-y-2">
               @for (block of blocks(); track block.name) {
@@ -82,7 +83,7 @@ interface BlockInfo {
                       @if (block.properties && block.properties.length > 0) {
                         <div class="space-y-2">
                           <h4 class="text-xs font-semibold uppercase tracking-wider text-white/60">
-                            {{ ('lessons.' + lessonKey() + '.properties') | translate }}
+                            {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.properties' : 'lessons.' + category() + '.' + lessonKey() + '.properties') | translate }}
                           </h4>
                           @for (prop of block.properties; track prop.name) {
                             <div class="rounded border border-white/10 bg-white/5 p-2">
@@ -108,7 +109,7 @@ interface BlockInfo {
         @if (homework().length > 0) {
           <section class="rounded-xl border border-white/10 bg-white/5 p-4">
             <h2 class="mb-4 text-lg font-semibold text-white">
-              {{ ('lessons.' + lessonKey() + '.homeworkTitle') | translate }}
+              {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.homeworkTitle' : 'lessons.' + category() + '.' + lessonKey() + '.homeworkTitle') | translate }}
             </h2>
             <ul class="space-y-2">
               @for (task of homework(); track $index) {
@@ -130,20 +131,37 @@ interface BlockInfo {
 })
 export class LessonContentComponent implements OnDestroy {
   private readonly translate = inject(TranslateService);
+  private readonly lessonTranslationService = inject(LessonTranslationService);
   private readonly langSub: Subscription;
   private readonly openBlocks = signal<Set<string>>(new Set());
 
   readonly lessonKey = input<string | null>(null);
+  readonly category = input<string>('npe');
   protected readonly steps = signal<string[]>([]);
   protected readonly homework = signal<string[]>([]);
   protected readonly blocks = signal<BlockInfo[]>([]);
 
   constructor() {
-    this.langSub = this.translate.onLangChange.subscribe(() => this.refreshData());
-    effect(() => {
-      this.lessonKey();
-      this.refreshData();
+    this.langSub = this.translate.onLangChange.subscribe(() => {
+      this.loadLessonTranslation().then(() => this.refreshData());
     });
+    effect(() => {
+      const key = this.lessonKey();
+      const category = this.category();
+      if (key) {
+        this.loadLessonTranslation().then(() => this.refreshData());
+      }
+    });
+  }
+
+  private async loadLessonTranslation(): Promise<void> {
+    const key = this.lessonKey();
+    const category = this.category();
+    const lang = this.translate.currentLang || this.translate.defaultLang || 'en';
+    
+    if (key) {
+      await firstValueFrom(this.lessonTranslationService.loadLessonTranslation(category, key, lang));
+    }
   }
 
   protected toggleBlock(name: string): void {
@@ -210,6 +228,7 @@ export class LessonContentComponent implements OnDestroy {
 
   private refreshData(): void {
     const key = this.lessonKey();
+    const category = this.category();
     if (!key) {
       this.steps.set([]);
       this.homework.set([]);
@@ -217,9 +236,11 @@ export class LessonContentComponent implements OnDestroy {
       return;
     }
 
-    const stepsKey = `lessons.${key}.steps`;
-    const homeworkKey = `lessons.${key}.homework`;
-    const blocksKey = `lessons.${key}.blocks`;
+    // Build translation keys with category support
+    const baseKey = category === 'npe' ? `lessons.${key}` : `lessons.${category}.${key}`;
+    const stepsKey = `${baseKey}.steps`;
+    const homeworkKey = `${baseKey}.homework`;
+    const blocksKey = `${baseKey}.blocks`;
 
     this.translate.get([stepsKey, homeworkKey, blocksKey]).subscribe((values) => {
       const stepsValue = values[stepsKey];
