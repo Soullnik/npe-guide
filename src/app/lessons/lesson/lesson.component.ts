@@ -25,13 +25,6 @@ interface BlockInfo {
       <div class="flex h-full min-h-0 flex-col gap-6">
         <header class="flex flex-wrap items-start justify-between gap-6">
           <div class="flex items-start gap-4">
-            <button
-              type="button"
-              class="rounded-2xl border border-white/10 bg-white/10 px-4 py-2 text-sm font-semibold text-white/80 shadow-lg backdrop-blur transition hover:bg-white/20 lg:hidden"
-              (click)="drawerOpen.set(true)"
-            >
-              ☰ {{ 'ui.menu' | translate }}
-            </button>
             <div>
               <a [routerLink]="['/']" class="mb-2 inline-block text-xs text-blue-400 hover:text-blue-300 transition-colors">
                 ← {{ 'ui.backToHome' | translate }}
@@ -76,46 +69,6 @@ interface BlockInfo {
             </div>
           </div>
         </header>
-
-        <!-- Mobile Drawer -->
-        @if (drawerOpen()) {
-          <div class="fixed inset-0 z-50 flex items-start justify-start lg:hidden">
-            <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" (click)="drawerOpen.set(false)"></div>
-            <div
-              class="relative z-10 h-full w-80 max-w-full overflow-y-auto bg-slate-900/95 p-6 shadow-2xl transition-transform duration-300 ease-in-out"
-            >
-              <div class="flex items-center justify-between gap-4">
-                <h3 class="text-lg font-semibold text-white">{{ 'ui.lessonList' | translate }}</h3>
-                <button type="button" class="text-white/70 transition hover:text-white" (click)="drawerOpen.set(false)">
-                  ✕
-                </button>
-              </div>
-              <div class="mt-4 flex flex-col gap-3">
-                @for (lesson of lessons; track lesson.id) {
-                  <button
-                    type="button"
-                    class="rounded-2xl border border-white/10 bg-white/5 p-4 text-left transition hover:border-white/30"
-                    [class.bg-white/20]="lesson.id === currentLesson()?.id"
-                    (click)="navigateToLesson(lesson.id)"
-                  >
-                    @if (translationLoaded()) {
-                      <span class="block text-base font-semibold text-white">
-                        {{ ('lessons.' + lesson.translationKey + '.title') | translate }}
-                      </span>
-                      <span class="mt-1 block text-sm text-white/70">
-                        {{ ('lessons.' + lesson.translationKey + '.summary') | translate }}
-                      </span>
-                    } @else {
-                      <span class="block h-5 w-32 animate-pulse rounded bg-white/20"></span>
-                      <span class="mt-1 block h-4 w-24 animate-pulse rounded bg-white/10"></span>
-                    }
-                  </button>
-                }
-              </div>
-            </div>
-          </div>
-        }
-
         <main class="grid flex-1 min-h-0 grid-cols-1 gap-6 lg:grid-cols-[30%_70%]">
           <section class="relative flex min-h-0 flex-col overflow-hidden rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
             <div class="flex items-center justify-between">
@@ -219,25 +172,14 @@ interface BlockInfo {
             <div class="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.editorLabel' | translate }}</p>
-                <h2 class="text-2xl font-semibold text-white">
-                  @if (currentLesson()) {
-                    @if (translationLoaded()) {
-                      {{ ('lessons.' + currentLesson()!.translationKey + '.title') | translate }}
-                    } @else {
-                      <span class="inline-block h-6 w-32 animate-pulse rounded bg-white/20"></span>
-                    }
-                  } @else {
-                    {{ 'ui.noLesson' | translate }}
-                  }
-                </h2>
               </div>
               <button
                 type="button"
                 class="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/40"
-                (click)="loadLessonExample()"
+                (click)="toggleSolution()"
                 [disabled]="!currentLesson()"
               >
-                {{ 'ui.loadExample' | translate }}
+                {{ (showingSolution() ? 'ui.hideSolution' : 'ui.showSolution') | translate }}
               </button>
             </div>
             <div class="mt-4 flex-1 overflow-hidden">
@@ -246,6 +188,7 @@ interface BlockInfo {
                   class="block h-full"
                   [lesson]="currentLesson()!"
                   [loadToken]="lessonLoadToken()"
+                  (showingSolutionChange)="showingSolution.set($event)"
                 ></app-npe-preview>
               }
             </div>
@@ -268,6 +211,7 @@ export class LessonComponent implements OnDestroy {
   protected readonly lessonLoadToken = signal(0);
   protected readonly lessonId = signal<string | null>(null);
   protected readonly translationLoaded = signal(false);
+  protected readonly showingSolution = signal(false);
 
   protected readonly currentLesson = computed<LessonDefinition | null>(() => {
     const id = this.lessonId();
@@ -368,11 +312,12 @@ export class LessonComponent implements OnDestroy {
     this.loadAllLessonTranslations();
   }
 
-  protected loadLessonExample(): void {
+  protected toggleSolution(): void {
     const lesson = this.currentLesson();
     if (!lesson) {
       return;
     }
+    this.showingSolution.update((value) => !value);
     this.lessonLoadToken.update((value) => value + 1);
   }
 

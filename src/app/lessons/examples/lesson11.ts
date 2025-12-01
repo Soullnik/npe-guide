@@ -17,8 +17,8 @@ import {
   ParticleTextureSourceBlock
 } from 'babylonjs';
 
-export function createLesson11Set(): NodeParticleSystemSet {
-  const set = new NodeParticleSystemSet('Lesson 11 · Conditional Logic');
+export function createLesson11Set(existingSet?: NodeParticleSystemSet): NodeParticleSystemSet {
+  const set = existingSet || new NodeParticleSystemSet('Lesson 11 · Conditional Logic');
   set.clear();
   set.editorData = null;
 

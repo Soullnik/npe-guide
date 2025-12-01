@@ -16,6 +16,8 @@
     "mobileNotSupported": "Desktop Only",
     "mobileMessage": "This application is optimized for desktop devices. Please open it on a desktop or laptop computer for the best experience.",
     "backToHome": "Back to Home",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "showSolution": "Show Solution",
+    "hideSolution": "Hide Solution"
   }
 }

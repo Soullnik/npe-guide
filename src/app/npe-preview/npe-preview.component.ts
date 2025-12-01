@@ -3,10 +3,12 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  EventEmitter,
   Inject,
   Input,
   OnChanges,
   OnDestroy,
+  Output,
   PLATFORM_ID,
   SimpleChanges,
   ViewChild,
@@ -26,7 +28,7 @@ import 'babylonjs';
   standalone: true,
   imports: [CommonModule, TranslatePipe],
   template: `
-    <div class="relative h-full w-full rounded-3xl border border-white/10 bg-slate-900/60">
+    <div class="relative h-full w-full border border-white/10 bg-slate-900/60">
       <div class="absolute inset-0" #host></div>
 
       @if (!lesson) {
@@ -58,6 +60,7 @@ import 'babylonjs';
 export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges {
   @Input() lesson: LessonDefinition | null = null;
   @Input() loadToken = 0;
+  @Output() showingSolutionChange = new EventEmitter<boolean>();
 
   @ViewChild('host', { static: true }) private hostRef!: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', { static: true }) private canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -65,8 +68,11 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
   private engine: Engine | null = null;
   private scene: Scene | null = null;
   private resizeHandler = () => {};
+  private nodeParticleSet: NodeParticleSystemSet | null = null;
+  private savedUserState: { editorData: any; systemBlocks: any[] } | null = null;
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
+  protected readonly showingSolution = signal(false);
 
   constructor(@Inject(PLATFORM_ID) private readonly platformId: object) {}
 
@@ -103,15 +109,17 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['lesson'] && !changes['lesson'].firstChange) {
-      // Clear and reinitialize editor when lesson changes
-      if (this.hostRef && this.scene) {
-        this.hostRef.nativeElement.innerHTML = '';
-        this.initializeEditor();
+      // Reset when lesson changes
+      if (this.nodeParticleSet) {
+        this.nodeParticleSet.clear();
+        this.nodeParticleSet.editorData = { locations: [] };
+        this.savedUserState = null;
+        this.showingSolution.set(false);
       }
     }
 
     if (changes['loadToken'] && !changes['loadToken'].firstChange) {
-      this.loadLessonExample();
+      this.toggleSolution();
     }
   }
 
@@ -128,11 +136,30 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
       return;
     }
 
-    this.showEditor(this.createEmptySet());
+    // Create one NodeParticleSystemSet instance
+    this.nodeParticleSet = new NodeParticleSystemSet('Sandbox');
+    this.nodeParticleSet.clear();
+    this.nodeParticleSet.editorData = { locations: [] };
+
+    this.showEditor();
   }
 
-  private loadLessonExample(): void {
-    if (!this.lesson || !this.scene || !this.hostRef || !this.isBrowser()) {
+  private toggleSolution(): void {
+    if (!this.lesson || !this.nodeParticleSet || !this.isBrowser()) {
+      return;
+    }
+
+    if (this.showingSolution()) {
+      // Hide solution - restore user state
+      this.restoreUserState();
+    } else {
+      // Show solution - save current state and load solution
+      this.showSolution();
+    }
+  }
+
+  private showSolution(): void {
+    if (!this.lesson || !this.nodeParticleSet || !this.isBrowser()) {
       return;
     }
 
@@ -140,18 +167,83 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
     this.loading.set(true);
 
     try {
-      const nodeSet = this.lesson.createSet();
-      this.showEditor(nodeSet);
+      // Save current user state
+      this.saveUserState();
+
+      // Clear and load solution
+      this.nodeParticleSet.clear();
+      this.nodeParticleSet.editorData = null;
+
+      // Load solution blocks into the existing set
+      this.lesson.createSet(this.nodeParticleSet);
+      
+      // Update editor to reflect changes
+      this.updateEditor();
+      
+      this.showingSolution.set(true);
+      this.showingSolutionChange.emit(true);
       requestAnimationFrame(() => this.loading.set(false));
     } catch (error) {
-      console.error('Failed to load lesson graph', error);
-      this.errorMessage.set('Failed to load the Node Particle Editor preview.');
+      console.error('Failed to load lesson solution', error);
+      this.errorMessage.set('Failed to load the solution.');
       this.loading.set(false);
     }
   }
 
-  private showEditor(nodeParticleSet: NodeParticleSystemSet): void {
-    if (!this.scene || !this.hostRef || !this.isBrowser()) {
+  private saveUserState(): void {
+    if (!this.nodeParticleSet) {
+      return;
+    }
+
+    // Save current editorData (contains block positions and connections)
+    // Note: systemBlocks are already part of the set, we just need to save editorData
+    this.savedUserState = {
+      editorData: this.nodeParticleSet.editorData ? JSON.parse(JSON.stringify(this.nodeParticleSet.editorData)) : null,
+      systemBlocks: [], // We'll restore from editorData
+    };
+  }
+
+  private restoreUserState(): void {
+    if (!this.nodeParticleSet) {
+      return;
+    }
+
+    this.errorMessage.set(null);
+    this.loading.set(true);
+
+    try {
+      if (!this.savedUserState || !this.savedUserState.editorData) {
+        // If no saved state, create empty set
+        this.nodeParticleSet.clear();
+        this.nodeParticleSet.editorData = { locations: [] };
+      } else {
+        // Restore saved editorData
+        // The editor will restore blocks from editorData
+        this.nodeParticleSet.editorData = JSON.parse(JSON.stringify(this.savedUserState.editorData));
+        // Clear systemBlocks - they will be restored from editorData by the editor
+        this.nodeParticleSet.clear();
+        // Restore editorData after clear
+        this.nodeParticleSet.editorData = JSON.parse(JSON.stringify(this.savedUserState.editorData));
+      }
+
+      this.updateEditor();
+      this.showingSolution.set(false);
+      this.showingSolutionChange.emit(false);
+      requestAnimationFrame(() => this.loading.set(false));
+    } catch (error) {
+      console.error('Failed to restore user state', error);
+      // Fallback to empty set
+      this.nodeParticleSet.clear();
+      this.nodeParticleSet.editorData = { locations: [] };
+      this.updateEditor();
+      this.showingSolution.set(false);
+      this.showingSolutionChange.emit(false);
+      requestAnimationFrame(() => this.loading.set(false));
+    }
+  }
+
+  private showEditor(): void {
+    if (!this.scene || !this.hostRef || !this.nodeParticleSet || !this.isBrowser()) {
       return;
     }
 
@@ -159,7 +251,7 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
 
     try {
       NodeParticleEditor.Show({
-        nodeParticleSet: nodeParticleSet,
+        nodeParticleSet: this.nodeParticleSet,
         hostScene: this.scene,
         hostElement: this.hostRef.nativeElement,
       });
@@ -171,11 +263,28 @@ export class NpePreviewComponent implements AfterViewInit, OnDestroy, OnChanges 
     }
   }
 
-  private createEmptySet(): NodeParticleSystemSet {
-    const set = new NodeParticleSystemSet('Sandbox');
-    set.clear();
-    set.editorData = { locations: [] };
-    return set;
+  private updateEditor(): void {
+    // Force editor to refresh with updated set
+    // The editor should automatically detect changes to the set
+    if (this.nodeParticleSet && this.hostRef?.nativeElement) {
+      // Trigger a refresh by re-showing the editor
+      // Note: This might cause flickering, but it's necessary to update the editor
+      const currentHtml = this.hostRef.nativeElement.innerHTML;
+      this.hostRef.nativeElement.innerHTML = '';
+      requestAnimationFrame(() => {
+        if (this.scene && this.hostRef && this.nodeParticleSet) {
+          try {
+            NodeParticleEditor.Show({
+              nodeParticleSet: this.nodeParticleSet,
+              hostScene: this.scene,
+              hostElement: this.hostRef.nativeElement,
+            });
+          } catch (error) {
+            console.error('Failed to update editor', error);
+          }
+        }
+      });
+    }
   }
 
   private isBrowser(): boolean {

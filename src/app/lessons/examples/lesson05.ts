@@ -17,8 +17,8 @@ import {
   ParticleTextureSourceBlock
 } from 'babylonjs';
 
-export function createLesson05Set(): NodeParticleSystemSet {
-  const set = new NodeParticleSystemSet('Lesson 05 · Advanced Color Management');
+export function createLesson05Set(existingSet?: NodeParticleSystemSet): NodeParticleSystemSet {
+  const set = existingSet || new NodeParticleSystemSet('Lesson 05 · Advanced Color Management');
   set.clear();
   set.editorData = null;
 

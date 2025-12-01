@@ -18,8 +18,8 @@ import {
   ParticleTextureSourceBlock
 } from 'babylonjs';
 
-export function createLesson04Set(): NodeParticleSystemSet {
-  const set = new NodeParticleSystemSet('Lesson 04 · Basic Forces and Physics');
+export function createLesson04Set(existingSet?: NodeParticleSystemSet): NodeParticleSystemSet {
+  const set = existingSet || new NodeParticleSystemSet('Lesson 04 · Basic Forces and Physics');
   set.clear();
   set.editorData = null;
 

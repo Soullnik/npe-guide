@@ -18,8 +18,8 @@ import {
   ParticleTextureSourceBlock
 } from 'babylonjs';
 
-export function createLesson12Set(): NodeParticleSystemSet {
-  const set = new NodeParticleSystemSet('Lesson 12 · Angle and Rotation');
+export function createLesson12Set(existingSet?: NodeParticleSystemSet): NodeParticleSystemSet {
+  const set = existingSet || new NodeParticleSystemSet('Lesson 12 · Angle and Rotation');
   set.clear();
   set.editorData = null;
 

@@ -6,6 +6,6 @@ export interface LessonDefinition {
   id: string;
   category: LessonCategory;
   translationKey: string;
-  createSet: () => NodeParticleSystemSet;
+  createSet: (existingSet?: NodeParticleSystemSet) => NodeParticleSystemSet;
 }
 

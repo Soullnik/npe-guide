@@ -17,8 +17,8 @@ import {
   Color4,
 } from 'babylonjs';
 
-export function createLesson08Set(): NodeParticleSystemSet {
-  const set = new NodeParticleSystemSet('Lesson 08 · Attractors');
+export function createLesson08Set(existingSet?: NodeParticleSystemSet): NodeParticleSystemSet {
+  const set = existingSet || new NodeParticleSystemSet('Lesson 08 · Attractors');
   set.clear();
   set.editorData = null;
 
