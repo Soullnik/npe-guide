@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal, ViewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -147,19 +147,30 @@ interface BlockInfo {
               <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.editorLabel' | translate }}</p>
               </div>
-              <button
-                type="button"
-                class="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/40"
-                (click)="toggleSolution()"
-                [disabled]="!currentLesson()"
-              >
-                {{ (showingSolution() ? 'ui.hideSolution' : 'ui.showSolution') | translate }}
-              </button>
+              <div class="flex gap-2">
+                <button
+                  type="button"
+                  class="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/40"
+                  (click)="clearUserWork()"
+                  [disabled]="!currentLesson()"
+                >
+                  {{ 'ui.clear' | translate }}
+                </button>
+                <button
+                  type="button"
+                  class="inline-flex items-center rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:border-white/10 disabled:text-white/40"
+                  (click)="toggleSolution()"
+                  [disabled]="!currentLesson()"
+                >
+                  {{ (showingSolution() ? 'ui.hideSolution' : 'ui.showSolution') | translate }}
+                </button>
+              </div>
             </div>
             <div class="mt-4 flex-1 overflow-hidden">
               @if (currentLesson()) {
                 <app-npe-preview
                   class="block h-full"
+                  #npePreview
                   [lesson]="currentLesson()!"
                   [loadToken]="lessonLoadToken()"
                   (showingSolutionChange)="showingSolution.set($event)"
@@ -177,6 +188,8 @@ export class LessonComponent {
   private readonly router = inject(Router);
   private readonly lessonTranslationService = inject(LessonTranslationService);
   private readonly destroyRef = inject(DestroyRef);
+
+  @ViewChild('npePreview') npePreviewComponent?: NpePreviewComponent;
 
   protected readonly drawerOpen = signal(false);
   protected readonly lessonLoadToken = signal(0);
@@ -383,6 +396,12 @@ export class LessonComponent {
     }
     this.showingSolution.update((value) => !value);
     this.lessonLoadToken.update((value) => value + 1);
+  }
+
+  protected clearUserWork(): void {
+    if (this.npePreviewComponent) {
+      this.npePreviewComponent.clearUserWork();
+    }
   }
 
   protected getTopicTitle(topicId: number): string {

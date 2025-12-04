@@ -17,7 +17,6 @@ import {
 } from '@angular/core';
 import { Engine, NodeParticleSystemSet, Scene } from '@babylonjs/core';
 import { NodeParticleEditor } from '@babylonjs/node-particle-editor';
-import { SerializationTools } from '@babylonjs/node-particle-editor/serializationTools';
 import type { LessonDefinition } from '../lessons/lesson-definition';
 import { TranslatePipe } from '@ngx-translate/core';
 import '@babylonjs/materials';
@@ -60,6 +59,7 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
   @Input() lesson: LessonDefinition | null = null;
   @Input() loadToken = 0;
   @Output() showingSolutionChange = new EventEmitter<boolean>();
+  @Output() clearRequested = new EventEmitter<void>();
 
   @ViewChild('host', { static: true }) private hostRef!: ElementRef<HTMLDivElement>;
   @ViewChild('canvas', { static: true }) private canvasRef!: ElementRef<HTMLCanvasElement>;
@@ -68,8 +68,9 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
   private scene: Scene | null = null;
   private resizeHandler = () => {};
   private nodeParticleSet: NodeParticleSystemSet | null = null;
-  private savedUserState: { editorData: any; systemBlocks: any[] } | null = null;
+  private savedUserState: string | null = null; // Serialized JSON string (in-memory for solution toggle)
   private previousLessonId: string | null = null;
+  private autoSaveInterval: number | null = null;
   protected readonly loading = signal(true);
   protected readonly errorMessage = signal<string | null>(null);
   protected readonly showingSolution = signal(false);
@@ -80,6 +81,9 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
     this.destroyRef.onDestroy(() => {
       if (this.resizeHandler) {
         window.removeEventListener('resize', this.resizeHandler);
+      }
+      if (this.autoSaveInterval !== null) {
+        clearInterval(this.autoSaveInterval);
       }
       this.scene?.dispose();
       this.engine?.dispose();
@@ -155,10 +159,25 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
     this.showingSolutionChange.emit(false);
     this.previousLessonId = this.lesson?.id ?? null;
 
+    // Load saved state from localStorage if available
+    this.loadUserStateFromStorage();
+
     try {
       // Clear the particle set completely
       this.nodeParticleSet.clear();
-      this.nodeParticleSet.editorData = { locations: [] };
+      
+      // If we have saved state, restore it; otherwise start with empty editor
+      if (this.savedUserState) {
+        try {
+          const serializedData = JSON.parse(this.savedUserState);
+          this.nodeParticleSet.parseSerializedObject(serializedData);
+        } catch (error) {
+          console.error('Failed to restore from localStorage', error);
+          this.nodeParticleSet.editorData = { locations: [] };
+        }
+      } else {
+        this.nodeParticleSet.editorData = { locations: [] };
+      }
       
       // Completely reinitialize the editor to ensure clean state
       if (this.hostRef?.nativeElement) {
@@ -250,16 +269,88 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
   }
 
   private saveUserState(): void {
-    if (!this.nodeParticleSet) {
+    if (!this.nodeParticleSet || !this.lesson) {
       return;
     }
 
-    // Save current editorData (contains block positions and connections)
-    // Note: systemBlocks are already part of the set, we just need to save editorData
-    this.savedUserState = {
-      editorData: this.nodeParticleSet.editorData ? JSON.parse(JSON.stringify(this.nodeParticleSet.editorData)) : null,
-      systemBlocks: [], // We'll restore from editorData
-    };
+    try {
+      // Serialize the entire particle set including all blocks, connections, and editorData
+      // The serialize() method captures the complete state of the particle system
+      // including block positions, connections, and all editor metadata
+      const serialized = this.nodeParticleSet.serialize();
+      const serializedString = JSON.stringify(serialized);
+      
+      // Save to in-memory state (for solution toggle)
+      this.savedUserState = serializedString;
+      
+      // Save to localStorage with lesson ID as key
+      if (this.isBrowser()) {
+        const storageKey = this.getStorageKey();
+        localStorage.setItem(storageKey, serializedString);
+      }
+    } catch (error) {
+      console.error('Failed to save user state', error);
+      this.savedUserState = null;
+    }
+  }
+
+  private loadUserStateFromStorage(): void {
+    if (!this.lesson || !this.isBrowser()) {
+      return;
+    }
+
+    try {
+      const storageKey = this.getStorageKey();
+      const savedData = localStorage.getItem(storageKey);
+      if (savedData) {
+        this.savedUserState = savedData;
+      }
+    } catch (error) {
+      console.error('Failed to load user state from storage', error);
+    }
+  }
+
+  private getStorageKey(): string {
+    if (!this.lesson) {
+      return 'npe-user-state-default';
+    }
+    return `npe-user-state-${this.lesson.id}`;
+  }
+
+  clearUserWork(): void {
+    if (!this.nodeParticleSet || !this.isBrowser()) {
+      return;
+    }
+
+    this.errorMessage.set(null);
+    this.loading.set(true);
+
+    try {
+      // Clear the particle set
+      this.nodeParticleSet.clear();
+      this.nodeParticleSet.editorData = { locations: [] };
+      
+      // Clear in-memory state
+      this.savedUserState = null;
+      
+      // Clear localStorage for this lesson
+      if (this.lesson) {
+        const storageKey = this.getStorageKey();
+        localStorage.removeItem(storageKey);
+      }
+      
+      // Reset solution state
+      this.showingSolution.set(false);
+      this.showingSolutionChange.emit(false);
+      
+      // Update editor
+      this.updateEditor();
+      requestAnimationFrame(() => this.loading.set(false));
+    } catch (error) {
+      console.error('Failed to clear user work', error);
+      this.errorMessage.set('Failed to clear the editor.');
+      this.loading.set(false);
+    }
   }
 
   private restoreUserState(): void {
@@ -271,18 +362,21 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
     this.loading.set(true);
 
     try {
-      if (!this.savedUserState || !this.savedUserState.editorData) {
+      // Try to load from localStorage first (in case in-memory state was lost)
+      if (!this.savedUserState && this.lesson) {
+        this.loadUserStateFromStorage();
+      }
+
+      if (!this.savedUserState) {
         // If no saved state, create empty set
         this.nodeParticleSet.clear();
         this.nodeParticleSet.editorData = { locations: [] };
       } else {
-        // Restore saved editorData
-        // The editor will restore blocks from editorData
-        this.nodeParticleSet.editorData = JSON.parse(JSON.stringify(this.savedUserState.editorData));
-        // Clear systemBlocks - they will be restored from editorData by the editor
-        this.nodeParticleSet.clear();
-        // Restore editorData after clear
-        this.nodeParticleSet.editorData = JSON.parse(JSON.stringify(this.savedUserState.editorData));
+        // Parse the serialized state and restore it
+        const serializedData = JSON.parse(this.savedUserState);
+        // Restore the entire particle set from serialized data
+        // This will restore all blocks, connections, and editorData
+        this.nodeParticleSet.parseSerializedObject(serializedData);
       }
 
       this.updateEditor();
@@ -315,11 +409,40 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
         hostElement: this.hostRef.nativeElement,
       });
       this.loading.set(false);
+      
+      // Start auto-save interval (save every 2 seconds when not showing solution)
+      this.startAutoSave();
     } catch (error) {
       console.error('Failed to show Node Particle Editor', error);
       this.errorMessage.set('Failed to load the Node Particle Editor preview.');
       this.loading.set(false);
     }
+  }
+
+  private startAutoSave(): void {
+    if (!this.isBrowser()) {
+      return;
+    }
+
+    // Clear existing interval if any
+    if (this.autoSaveInterval !== null) {
+      clearInterval(this.autoSaveInterval);
+    }
+
+    // Auto-save every 2 seconds (only when not showing solution)
+    this.autoSaveInterval = window.setInterval(() => {
+      if (!this.showingSolution() && this.nodeParticleSet && this.lesson) {
+        try {
+          const serialized = this.nodeParticleSet.serialize();
+          const serializedString = JSON.stringify(serialized);
+          const storageKey = this.getStorageKey();
+          localStorage.setItem(storageKey, serializedString);
+        } catch (error) {
+          // Silently fail - don't interrupt user experience
+          console.debug('Auto-save failed', error);
+        }
+      }
+    }, 2000);
   }
 
   private updateEditor(): void {
@@ -338,6 +461,8 @@ export class NpePreviewComponent implements AfterViewInit, OnChanges {
               hostScene: this.scene,
               hostElement: this.hostRef.nativeElement,
             });
+            // Restart auto-save after editor update
+            this.startAutoSave();
           } catch (error) {
             console.error('Failed to update editor', error);
           }
