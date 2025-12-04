@@ -21,6 +21,7 @@
     "loading": "Loading...",
     "showSolution": "Show Solution",
     "hideSolution": "Hide Solution",
+    "clear": "Clear",
     "topic": "Topic",
     "difficulty": {
       "beginner": "Beginner",

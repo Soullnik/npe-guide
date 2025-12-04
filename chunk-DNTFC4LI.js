@@ -1,0 +1,3 @@
+import{a as t,b as o}from"./chunk-RR3YIVG4.js";import{e as a}from"./chunk-FAF55DAL.js";var e,i,n,r=a(()=>{o();e="lightProxyPixelShader",i=`flat varying vOffset: u32;flat varying vMask: u32;uniform tileMaskResolution: vec3f;var<storage,read_write> tileMaskBuffer: array<atomic<u32>>;@fragment
+fn main(input: FragmentInputs)->FragmentOutputs {let maskResolution=vec2u(uniforms.tileMaskResolution.yz);let tilePosition=vec2u(fragmentInputs.position.xy);let tileIndex=(tilePosition.x*maskResolution.x+tilePosition.y)*maskResolution.y+fragmentInputs.vOffset;atomicOr(&tileMaskBuffer[tileIndex],fragmentInputs.vMask);}
+`;t.ShadersStoreWGSL[e]||(t.ShadersStoreWGSL[e]=i);n={name:e,shader:i}});export{n as a,r as b};

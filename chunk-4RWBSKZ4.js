@@ -1,0 +1,1 @@
+import{e as r}from"./chunk-FAF55DAL.js";function t(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,n=>{let x=Math.random()*16|0;return(n==="x"?x:x&3|8).toString(16)})}var a,o=r(()=>{"use strict";a={RandomId:t}});export{t as a,a as b,o as c};

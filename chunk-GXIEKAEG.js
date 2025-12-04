@@ -1,0 +1,1 @@
+import{c as t,d as e}from"./chunk-CKT5VIRA.js";import{e as o}from"./chunk-FAF55DAL.js";var r,u=o(()=>{"use strict";e();r=class extends t{constructor(s){super(s),this.out=this._registerSignalOutput("out")}}});export{r as a,u as b};

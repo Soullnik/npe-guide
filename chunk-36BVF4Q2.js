@@ -1,0 +1,2 @@
+import{a as e,b as a}from"./chunk-RR3YIVG4.js";import{e as n}from"./chunk-FAF55DAL.js";var t,r,v,s=n(()=>{a();t="meshUVSpaceRendererMaskerVertexShader",r=`attribute uv: vec2f;varying vUV: vec2f;@vertex
+fn main(input : VertexInputs)->FragmentInputs {vertexOutputs.position= vec4f( vec2f(input.uv.x,input.uv.y)*2.0-1.0,0.,1.0);vertexOutputs.vUV=input.uv;}`;e.ShadersStoreWGSL[t]||(e.ShadersStoreWGSL[t]=r);v={name:t,shader:r}});export{v as a,s as b};

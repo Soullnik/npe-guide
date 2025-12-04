@@ -1,0 +1,1 @@
+import{a as s,b as n}from"./chunk-7MNAH2IS.js";import{e as h}from"./chunk-FAF55DAL.js";var e,p=h(()=>{"use strict";n();e=class extends s{constructor(t,a,r,i,o){super(a,o),this._operation=r,this._className=i,this.a=this.registerDataInput("a",t)}_doOperation(t){return this._operation(this.a.getValue(t))}getClassName(){return this._className}}});export{e as a,p as b};

@@ -1,0 +1,1 @@
+import{e as t}from"./chunk-FAF55DAL.js";var s,r=t(()=>{"use strict";s=(()=>{class e{get underlyingResource(){return null}constructor(){this.references=0,this.capacity=0,this.is32Bits=!1,this.uniqueId=e._Counter++}}return e._Counter=0,e})()});export{s as a,r as b};

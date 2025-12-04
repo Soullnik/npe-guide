@@ -1,0 +1,1 @@
+import{a as r,b as n}from"./chunk-RR3YIVG4.js";import{e as a}from"./chunk-FAF55DAL.js";var e,o,t=a(()=>{"use strict";n();e="kernelBlurVaryingDeclaration",o="varying vec2 sampleCoord{X};";r.IncludesShadersStore[e]||(r.IncludesShadersStore[e]=o)});export{t as a};

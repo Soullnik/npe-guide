@@ -1,0 +1,2 @@
+import{a as e,b as t}from"./chunk-RR3YIVG4.js";import{e as o}from"./chunk-FAF55DAL.js";var r,i,s,a=o(()=>{t();r="meshUVSpaceRendererFinaliserVertexShader",i=`precision highp float;attribute vec3 position;attribute vec2 uv;uniform mat4 worldViewProjection;varying vec2 vUV;void main() {gl_Position=worldViewProjection*vec4(position,1.0);vUV=uv;}
+`;e.ShadersStore[r]||(e.ShadersStore[r]=i);s={name:r,shader:i}});export{s as a,a as b};

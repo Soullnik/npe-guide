@@ -1,0 +1,1 @@
+import{a,b}from"./chunk-QAQW3CEW.js";import"./chunk-GHDU24UV.js";import"./chunk-UHREBOBB.js";import"./chunk-6R2MQ2L3.js";import"./chunk-RR3YIVG4.js";import"./chunk-FAF55DAL.js";b();export{a as lightProxyVertexShader};

@@ -1,0 +1,1 @@
+import{e as s}from"./chunk-FAF55DAL.js";function o(e,n){t[e]=n}function i(e){return t[e]}function c(e){for(let n in t)if(e instanceof t[n]&&!n.includes("Abstract"))return n;return"Unknown"}var t,r=s(()=>{"use strict";t={}});export{o as a,i as b,c,r as d};
