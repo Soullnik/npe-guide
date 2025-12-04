@@ -15,7 +15,7 @@ import {
   ParticleConverterBlock,
   Tools,
   Color4,
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 2.3: Attractors

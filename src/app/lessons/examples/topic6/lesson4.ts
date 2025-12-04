@@ -1,6 +1,5 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
   SphereShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
@@ -8,7 +7,6 @@ import {
   ParticleInputBlock,
   ParticleMathBlock,
   ParticleMathBlockOperations,
-  ParticleConverterBlock,
   ParticleRandomBlock,
   ParticleRandomBlockLocks,
   SystemBlock,
@@ -19,7 +17,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 6.4: Complex Systems

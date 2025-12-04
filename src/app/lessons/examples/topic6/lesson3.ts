@@ -13,7 +13,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 6.3: Performance Optimization

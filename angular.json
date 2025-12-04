@@ -28,12 +28,10 @@
               "src/styles.css"
             ],
             "allowedCommonJsDependencies": [
-              "babylonjs",
-              "babylonjs-node-particle-editor",
-              "babylonjs-loaders",
-              "babylonjs-materials",
-              "babylonjs-post-process",
-              "babylonjs-procedural-textures"
+              "@babylonjs/core",
+              "@babylonjs/node-particle-editor",
+              "@babylonjs/loaders",
+              "@babylonjs/materials"
             ]
           },
           "configurations": {

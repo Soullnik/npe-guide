@@ -11,7 +11,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 1.1: First Emission

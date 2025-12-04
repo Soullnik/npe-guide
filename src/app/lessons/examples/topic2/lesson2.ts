@@ -15,7 +15,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 3.2: Randomness

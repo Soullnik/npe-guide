@@ -14,7 +14,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 2.2: Advanced Movement and Physics

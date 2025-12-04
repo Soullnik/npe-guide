@@ -7,7 +7,6 @@ import {
   ParticleMathBlock,
   ParticleMathBlockOperations,
   ParticleVectorLengthBlock,
-  ParticleConverterBlock,
   SystemBlock,
   UpdatePositionBlock,
   UpdateColorBlock,
@@ -15,7 +14,7 @@ import {
   Tools,
   Color4,
   ParticleTextureSourceBlock
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 6.2: Vector Operations

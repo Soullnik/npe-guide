@@ -17,7 +17,7 @@ import {
   ParticleTrigonometryBlockOperations,
   Tools,
   Color4,
-} from 'babylonjs';
+} from '@babylonjs/core';
 
 /**
  * Lesson 5.1: Advanced Math Operations

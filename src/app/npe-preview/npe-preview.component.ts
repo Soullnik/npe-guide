@@ -15,10 +15,12 @@ import {
   ViewChild,
   signal,
 } from '@angular/core';
-import { Engine, NodeParticleSystemSet, Scene } from 'babylonjs';
-import { NodeParticleEditor } from 'babylonjs-node-particle-editor';
+import { Engine, NodeParticleSystemSet, Scene } from '@babylonjs/core';
+import { NodeParticleEditor } from '@babylonjs/node-particle-editor';
+import { SerializationTools } from '@babylonjs/node-particle-editor/serializationTools';
 import type { LessonDefinition } from '../lessons/lesson-definition';
 import { TranslatePipe } from '@ngx-translate/core';
+import '@babylonjs/materials';
 
 @Component({
   selector: 'app-npe-preview',

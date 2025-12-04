@@ -1,4 +1,4 @@
-import type { NodeParticleSystemSet } from 'babylonjs';
+import type { NodeParticleSystemSet } from '@babylonjs/core';
 
 export type LessonCategory = 'npe' | string;
 export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
