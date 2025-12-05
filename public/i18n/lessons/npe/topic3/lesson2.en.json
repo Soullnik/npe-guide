@@ -2,76 +2,93 @@
   "title": "3.2: Advanced Movement and Physics",
   "summary": "Learn to combine speed control and drag effects to create realistic particle physics",
   "introTitle": "Introduction",
-  "intro": "In this lesson, you'll learn how to combine speed control and drag effects to create realistic particle physics. You'll use ParticleLerpBlock to create speed transitions (fast to slow), and combine it with drag calculations to simulate air resistance. By combining both effects, you create particles that start fast, slow down over time, and experience drag - creating more natural, physics-based movement.",
+  "intro": "In this lesson, you'll learn how to combine speed control and drag effects to create realistic particle physics. You'll use Lerp block to create speed transitions (fast to slow), and combine it with drag calculations to simulate air resistance. By combining both effects, you create particles that start fast, slow down over time, and experience drag - creating more natural, physics-based movement.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume",
-    "Get the particle's direction and direction scale using ParticleInputBlock",
-    "Get the particle's age and lifetime to create time-based physics",
-    "Calculate the age ratio (age / lifetime) to get a value from 0 to 1",
-    "PART 1 - Speed Control: Use ParticleLerpBlock to interpolate between start speed (2.0) and end speed (0.5)",
-    "PART 2 - Drag Effect: Use ParticleLerpBlock to interpolate drag from 0.0 to 0.6",
-    "Calculate drag factor: (1 - drag) to reduce speed",
-    "Combine both effects: speedLerp * (1 - dragLerp)",
-    "Multiply the base direction scale by the combined factor",
-    "Calculate the scaled direction and add it to position"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdatePosition</filter-value> block to handle particle movement and connect between CylinderShape and System blocks",
+    "Add a <filter-value>DirectionScale</filter-value> block to get the particle's direction scale",
+    "Add an <filter-value>Age</filter-value> block and a <filter-value>Lifetime</filter-value> block to create time-based physics",
+    "Add a math <filter-value>Divide</filter-value> block to calculate age ratio and connect Age block to left input and Lifetime block to right input",
+    "PART 1 - Speed Control: Add a <filter-value>Lerp</filter-value> block to interpolate between start speed (2.0) and end speed (0.5)",
+    "Add <filter-value>Float</filter-value> blocks with values 2.0 and 0.5 for start and end speeds",
+    "Connect the Float blocks to Lerp block's min and max inputs, and age ratio to Lerp block's factor input",
+    "PART 2 - Drag Effect: Add another <filter-value>Lerp</filter-value> block to interpolate drag from 0.0 to 0.6",
+    "Add <filter-value>Float</filter-value> blocks with values 0.0 and 0.6 for min and max drag",
+    "Connect the Float blocks to Lerp block's min and max inputs, and age ratio to Lerp block's factor input",
+    "Add a math <filter-value>Subtract</filter-value> block to calculate drag factor: (1 - drag)",
+    "Add a <filter-value>Float</filter-value> block with value 1.0 and connect to Subtract block's left input",
+    "Connect the drag Lerp block's output to Subtract block's right input",
+    "Add a math <filter-value>Multiply</filter-value> block to combine both effects: speedLerp * (1 - dragLerp)",
+    "Connect speed Lerp block's output to Multiply block's left input and drag factor from Subtract block to right input",
+    "Add another math <filter-value>Multiply</filter-value> block to multiply base direction scale by combined factor",
+    "Connect DirectionScale block to Multiply block's left input and combined factor to right input",
+    "Add a <filter-value>ScaledDirection</filter-value> block and connect the result from Multiply block to it",
+    "Add a <filter-value>Position</filter-value> block and a math <filter-value>Add</filter-value> block",
+    "Connect Position and ScaledDirection blocks to Add block's left and right inputs respectively",
+    "Connect the result from Add block to UpdatePosition block's position input"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "ParticleInputBlock (DirectionScale)",
-      "description": "Retrieves the direction scale of a particle. DirectionScale is a multiplier that determines how far a particle moves each frame. It's multiplied by the direction vector to get the actual movement distance.",
+      "name": "Input Block (Direction Scale)",
+      "description": "Retrieves the direction scale of a particle. Direction Scale is a multiplier that determines how far a particle moves each frame. It's multiplied by the direction vector to get the actual movement distance. In the visual editor, you can find this block in the block list and set its contextual value to Direction Scale in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.DirectionScale",
-          "description": "The type of contextual data - DirectionScale in this case"
+          "name": "Contextual Value",
+          "value": "Direction Scale",
+          "description": "The type of contextual data - Direction Scale in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Direction)",
-      "description": "Retrieves the current direction vector of a particle. Direction represents the velocity vector, and when multiplied by DirectionScale, gives the actual movement per frame.",
+      "name": "Input Block (Direction)",
+      "description": "Retrieves the current direction vector of a particle. Direction represents the velocity vector, and when multiplied by Direction Scale, gives the actual movement per frame. In the visual editor, you can find this block in the block list and set its contextual value to Direction in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Direction",
-          "description": "The type of contextual data - Direction in this case"
+          "name": "Contextual Value",
+          "value": "Direction",
+          "description": "The type of contextual data - Direction in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleLerpBlock (Speed)",
-      "description": "Interpolates between two speed values based on age ratio. Used to create smooth speed transitions (e.g., fast to slow, slow to fast).",
+      "name": "Lerp Block",
+      "description": "Interpolates between two values based on a gradient factor. Used to create smooth transitions (e.g., fast to slow, slow to fast). In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "left",
-          "value": "Float input (start speed)",
-          "description": "The starting speed value (when gradient = 0)"
+          "name": "Min",
+          "value": "Float input (start value)",
+          "description": "The starting value (when gradient = 0). Connect a Float block to this input."
         },
         {
-          "name": "right",
-          "value": "Float input (end speed)",
-          "description": "The ending speed value (when gradient = 1)"
+          "name": "Max",
+          "value": "Float input (end value)",
+          "description": "The ending value (when gradient = 1). Connect a Float block to this input."
         },
         {
-          "name": "gradient",
+          "name": "Gradient",
           "value": "Float input (age ratio)",
-          "description": "The interpolation factor based on particle age"
+          "description": "The interpolation factor based on particle age. Connect age ratio (0 to 1) to this input."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Multiply)",
-      "description": "Multiplies two values. Used to multiply direction scale by speed multiplier, and to multiply direction by the modified scale to get the final movement vector.",
+      "name": "Math Block (Multiply)",
+      "description": "Multiplies two values. Used to multiply direction scale by speed multiplier, and to multiply direction by the modified scale to get the final movement vector. In the visual editor, you can find this block in the block list and set its operation to Multiply in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Multiply",
-          "description": "The mathematical operation - Multiply"
+          "name": "Operation",
+          "value": "Multiply",
+          "description": "The mathematical operation - Multiply. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
@@ -82,7 +99,7 @@
   "objectivesTitle": "Learning Objectives",
   "objectives": [
     "Combine speed control and drag effects for realistic physics",
-    "Use ParticleLerpBlock to create smooth speed transitions",
+    "Use Lerp block to create smooth speed transitions",
     "Understand DirectionScale and how it affects particle movement",
     "Calculate drag effects using (1 - drag) formula",
     "Combine multiple physics effects: speedLerp * (1 - dragLerp)"

@@ -1,98 +1,109 @@
 {
   "title": "3.1: Базовые Силы и Физика",
-  "summary": "Научитесь применять силы, такие как гравитация, к частицам с помощью UpdateDirectionBlock",
+  "summary": "Научитесь применять силы, такие как гравитация, к частицам с помощью Update Direction блока",
   "introTitle": "Введение",
-  "intro": "В этом уроке вы научитесь применять силы к частицам, такие как гравитация. Мы будем использовать UpdateDirectionBlock для изменения направления частиц со временем и комбинировать его с delta time для создания реалистичного физического движения.",
+  "intro": "В этом уроке вы научитесь применять силы к частицам, такие как гравитация. Мы будем использовать Update Direction блок для изменения направления частиц со временем и комбинировать его с delta time для создания реалистичного физического движения.",
   "stepsTitle": "Пошаговые Инструкции",
   "steps": [
-    "Создайте SystemBlock - это корень вашей системы частиц",
-    "Создайте CreateParticleBlock для эмиссии частиц",
-    "Установите начальный цвет и размер используя ParticleInputBlock",
-    "Добавьте <filter-value>SphereShape</filter-value> блок для эмиссии частиц из объема сферы",
-    "Добавьте UpdateDirectionBlock для изменения направления частиц",
-    "Получите текущее направление, используя ParticleInputBlock с контекстным значением Direction",
-    "Получите delta time, используя ParticleInputBlock с системным источником Delta",
-    "Создайте вектор гравитации, используя ParticleConverterBlock (0, -9.8, 0 для гравитации вниз)",
-    "Умножьте гравитацию на delta time, чтобы получить ускорение гравитации за кадр",
-    "Добавьте дельту гравитации к текущему направлению, используя ParticleMathBlock",
-    "Подключите результат к входу direction блока UpdateDirectionBlock",
-    "Соедините цепочку: UpdateDirection → UpdatePosition → UpdateColor → UpdateSize"
+    "Создайте <filter-value>System</filter-value> блок - это корень вашей системы частиц",
+    "Добавьте <filter-value>Texture</filter-value> блок для предоставления текстуры частицам и подключите к System блоку",
+    "Загрузите <textures>flare.png</textures> с помощью кнопки загрузки в свойствах Texture блока",
+    "Добавьте <filter-value>CreateParticle</filter-value> блок для эмиссии частиц и подключите к System блоку",
+    "Добавьте <filter-value>Color4</filter-value> блок и установите его значение на базовый цвет",
+    "Подключите выход Color4 блока к входу color блока CreateParticle",
+    "Добавьте <filter-value>Float</filter-value> блок и установите его значение для базового размера",
+    "Подключите выход Float блока к входу size блока CreateParticle",
+    "Добавьте <filter-value>SphereShape</filter-value> блок для эмиссии частиц из объема сферы и подключите между CreateParticle и System блоками",
+    "Добавьте <filter-value>UpdateDirection</filter-value> блок для изменения направления частиц и подключите между SphereShape и System блоками",
+    "Добавьте <filter-value>Direction</filter-value> блок для получения текущего направления",
+    "Добавьте <filter-value>Delta</filter-value> блок для получения delta time",
+    "Добавьте <filter-value>Converter</filter-value> блок для создания вектора гравитации (0, -9.8, 0 для гравитации вниз)",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 0 для X, еще один со значением -9.8 для Y, и еще один со значением 0 для Z",
+    "Подключите Float блоки к входам X, Y и Z блока Converter соответственно",
+    "Добавьте математический <filter-value>Multiply</filter-value> блок для умножения гравитации на delta time",
+    "Подключите выход Vector3 блока Converter к левому входу Multiply блока и Delta блок к правому входу",
+    "Добавьте математический <filter-value>Add</filter-value> блок для добавления дельты гравитации к текущему направлению",
+    "Подключите Direction блок к левому входу Add блока и результат Multiply блока к правому входу",
+    "Подключите результат из Add блока к входу direction блока UpdateDirection",
+    "Добавьте <filter-value>UpdatePosition</filter-value> блок после UpdateDirection блока и подключите между UpdateDirection и System блоками",
+    "Добавьте <filter-value>UpdateColor</filter-value> блок после UpdatePosition блока и подключите между UpdatePosition и System блоками",
+    "Добавьте <filter-value>UpdateSize</filter-value> блок после UpdateColor блока и подключите между UpdateColor и System блоками"
   ],
   "blocksTitle": "Блоки, Используемые в Этом Уроке",
   "blocks": [
     {
-      "name": "UpdateDirectionBlock",
-      "description": "Обновляет направление частиц каждый кадр. Это необходимо для применения сил, таких как гравитация, ветер или другие направленные эффекты.",
+      "name": "Update Direction Block",
+      "description": "Обновляет направление частиц каждый кадр. Это необходимо для применения сил, таких как гравитация, ветер или другие направленные эффекты. В визуальном редакторе вы можете найти этот блок в списке блоков и настроить его свойства в панели свойств справа.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Update direction'",
-          "description": "Отображаемое имя блока"
+          "name": "Name",
+          "value": "Update direction",
+          "description": "Отображаемое имя блока. Установите это в панели свойств справа от редактора."
         },
         {
-          "name": "direction",
+          "name": "Direction",
           "value": "Vector3 input",
-          "description": "Новый вектор направления для применения к частице. Может быть вычислен из текущего направления плюс силы."
+          "description": "Новый вектор направления для применения к частице. Может быть вычислен из текущего направления плюс силы. Подключите выход Vector3 к этому входу."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Direction)",
-      "description": "Получает текущее направление частицы. Направление представляет вектор скорости частицы.",
+      "name": "Input Block (Direction)",
+      "description": "Получает текущее направление частицы. Направление представляет вектор скорости частицы. В визуальном редакторе вы можете найти этот блок в списке блоков и установить его контекстное значение на Direction в панели свойств справа.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Direction",
-          "description": "Тип контекстных данных - Direction в данном случае"
+          "name": "Contextual Value",
+          "value": "Direction",
+          "description": "Тип контекстных данных - Direction в данном случае. Установите это в панели свойств справа от редактора."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Delta Time)",
-      "description": "Получает delta time из системы. Delta time - это время, прошедшее с последнего кадра, необходимое для физических расчетов, независимых от частоты кадров.",
+      "name": "Input Block (Delta)",
+      "description": "Получает delta time из системы. Delta time - это время, прошедшее с последнего кадра, необходимое для физических расчетов, независимых от частоты кадров. В визуальном редакторе вы можете найти этот блок в списке блоков и установить его системный источник на Delta в панели свойств справа.",
       "properties": [
         {
-          "name": "systemSource",
-          "value": "NodeParticleSystemSources.Delta",
-          "description": "Системный источник - Delta для delta time"
+          "name": "System Source",
+          "value": "Delta",
+          "description": "Системный источник - Delta для delta time. Установите это в панели свойств справа от редактора."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock",
-      "description": "Создает Vector3 из отдельных значений Float X, Y, Z. Используется для построения вектора гравитации (0, -9.8, 0).",
+      "name": "Converter Block",
+      "description": "Создает Vector3 из отдельных значений Float X, Y, Z. Используется для построения вектора гравитации (0, -9.8, 0). В визуальном редакторе вы можете найти этот блок в списке блоков и настроить его свойства в панели свойств справа.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn",
+          "name": "Inputs (X, Y, Z)",
           "value": "Float inputs",
-          "description": "Отдельные входы Float для компонентов X, Y, Z"
+          "description": "Отдельные входы Float для компонентов X, Y, Z. Подключите Float блоки к этим входам."
         },
         {
-          "name": "xyzOut",
+          "name": "Vector3 Output",
           "value": "Vector3 output",
-          "description": "Объединенный выход Vector3"
+          "description": "Объединенный выход Vector3. Используйте этот выход при создании 3D векторов."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Multiply)",
-      "description": "Умножает два значения. Используется для умножения гравитации на delta time, обеспечивая независимость физических расчетов от частоты кадров.",
+      "name": "Math Block (Multiply)",
+      "description": "Умножает два значения. Используется для умножения гравитации на delta time, обеспечивая независимость физических расчетов от частоты кадров. В визуальном редакторе вы можете найти этот блок в списке блоков и установить его операцию на Multiply в панели свойств справа.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Multiply",
-          "description": "Математическая операция - Multiply"
+          "name": "Operation",
+          "value": "Multiply",
+          "description": "Математическая операция - Multiply. Установите это в панели свойств справа от редактора."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Add)",
-      "description": "Складывает два значения Vector3. Используется для добавления ускорения гравитации к текущему вектору направления.",
+      "name": "Math Block (Add)",
+      "description": "Складывает два значения Vector3. Используется для добавления ускорения гравитации к текущему вектору направления. В визуальном редакторе вы можете найти этот блок в списке блоков и установить его операцию на Add в панели свойств справа.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Add",
-          "description": "Математическая операция - Add"
+          "name": "Operation",
+          "value": "Add",
+          "description": "Математическая операция - Add. Установите это в панели свойств справа от редактора."
         }
       ]
     },
@@ -113,7 +124,7 @@
   "codeCopy": "Этот урок демонстрирует, как применять силы к частицам. Ключевая концепция заключается в том, что силы изменяют направление со временем. Мы умножаем силу (гравитацию) на delta time, чтобы эффект был постоянным независимо от частоты кадров. Формула: newDirection = currentDirection + (force * deltaTime). Это создает реалистичное физическое движение, где частицы ускоряются вниз из-за гравитации.",
   "objectivesTitle": "Цели Обучения",
   "objectives": [
-    "Понять, как UpdateDirectionBlock изменяет скорость частиц",
+    "Понять, как Update Direction блок изменяет скорость частиц",
     "Применять силу гравитации к частицам, используя векторную математику",
     "Использовать delta time для физики, независимой от частоты кадров",
     "Комбинировать силы с текущим направлением для создания ускорения",
@@ -129,7 +140,7 @@
     {
       "mistake": "Использование позиции вместо направления для сил",
       "explanation": "Силы изменяют направление (скорость), а не позицию напрямую. Позиция обновляется на основе направления.",
-      "solution": "Применяйте силы к UpdateDirectionBlock, а не к UpdatePositionBlock. Цепочка должна быть: UpdateDirection → UpdatePosition."
+      "solution": "Применяйте силы к Update Direction блоку, а не к Update Position блоку. Цепочка должна быть: Update Direction → Update Position. Соединяйте блоки в этом порядке в редакторе."
     },
     {
       "mistake": "Использование неправильного направления гравитации",

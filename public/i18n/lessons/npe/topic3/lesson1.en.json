@@ -5,94 +5,105 @@
   "intro": "In this lesson, you'll learn how to apply forces to particles, such as gravity. We'll use UpdateDirectionBlock to modify particle direction over time, and combine it with delta time to create realistic physics-based movement.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume",
-    "Add an UpdateDirectionBlock to modify particle direction",
-    "Get the current direction using ParticleInputBlock with Direction contextual value",
-    "Get delta time using ParticleInputBlock with Delta system source",
-    "Create a gravity vector using ParticleConverterBlock (0, -9.8, 0 for downward gravity)",
-    "Multiply gravity by delta time to get gravity acceleration per frame",
-    "Add the gravity delta to the current direction using ParticleMathBlock",
-    "Connect the result to UpdateDirectionBlock's direction input",
-    "Chain UpdateDirection → UpdatePosition → UpdateColor → UpdateSize"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdateDirection</filter-value> block to modify particle direction and connect between SphereShape and System blocks",
+    "Add a <filter-value>Direction</filter-value> block to get the current direction",
+    "Add a <filter-value>Delta</filter-value> block to get delta time",
+    "Add a <filter-value>Converter</filter-value> block to create a gravity vector (0, -9.8, 0 for downward gravity)",
+    "Add a <filter-value>Float</filter-value> block with value 0 for X, another with value -9.8 for Y, and another with value 0 for Z",
+    "Connect the Float blocks to Converter block's X, Y, and Z inputs respectively",
+    "Add a math <filter-value>Multiply</filter-value> block to multiply gravity by delta time",
+    "Connect the Converter block's Vector3 output to Multiply block's left input and Delta block to right input",
+    "Add a math <filter-value>Add</filter-value> block to add gravity delta to current direction",
+    "Connect Direction block to Add block's left input and Multiply block's result to right input",
+    "Connect the result from Add block to UpdateDirection block's direction input",
+    "Add an <filter-value>UpdatePosition</filter-value> block after UpdateDirection block and connect between UpdateDirection and System blocks",
+    "Add an <filter-value>UpdateColor</filter-value> block after UpdatePosition block and connect between UpdatePosition and System blocks",
+    "Add an <filter-value>UpdateSize</filter-value> block after UpdateColor block and connect between UpdateColor and System blocks"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "UpdateDirectionBlock",
-      "description": "Updates the direction of particles each frame. This is essential for applying forces like gravity, wind, or other directional effects.",
+      "name": "Update Direction Block",
+      "description": "Updates the direction of particles each frame. This is essential for applying forces like gravity, wind, or other directional effects. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Update direction'",
-          "description": "The display name of the block"
+          "name": "Name",
+          "value": "Update direction",
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
-          "name": "direction",
+          "name": "Direction",
           "value": "Vector3 input",
-          "description": "The new direction vector to apply to the particle. Can be calculated from current direction plus forces."
+          "description": "The new direction vector to apply to the particle. Can be calculated from current direction plus forces. Connect a Vector3 output to this input."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Direction)",
-      "description": "Retrieves the current direction of a particle. Direction represents the velocity vector of the particle.",
+      "name": "Input Block (Direction)",
+      "description": "Retrieves the current direction of a particle. Direction represents the velocity vector of the particle. In the visual editor, you can find this block in the block list and set its contextual value to Direction in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Direction",
-          "description": "The type of contextual data - Direction in this case"
+          "name": "Contextual Value",
+          "value": "Direction",
+          "description": "The type of contextual data - Direction in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Delta Time)",
-      "description": "Retrieves the delta time from the system. Delta time is the time elapsed since the last frame, essential for frame-rate independent physics calculations.",
+      "name": "Input Block (Delta)",
+      "description": "Retrieves the delta time from the system. Delta time is the time elapsed since the last frame, essential for frame-rate independent physics calculations. In the visual editor, you can find this block in the block list and set its system source to Delta in the properties panel on the right.",
       "properties": [
         {
-          "name": "systemSource",
-          "value": "NodeParticleSystemSources.Delta",
-          "description": "The system source - Delta for delta time"
+          "name": "System Source",
+          "value": "Delta",
+          "description": "The system source - Delta for delta time. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock",
-      "description": "Creates Vector3 from individual X, Y, Z float values. Used to construct the gravity vector (0, -9.8, 0).",
+      "name": "Converter Block",
+      "description": "Creates Vector3 from individual X, Y, Z float values. Used to construct the gravity vector (0, -9.8, 0). In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn",
+          "name": "Inputs (X, Y, Z)",
           "value": "Float inputs",
-          "description": "Individual float inputs for X, Y, Z components"
+          "description": "Individual float inputs for X, Y, Z components. Connect Float blocks to these inputs."
         },
         {
-          "name": "xyzOut",
+          "name": "Vector3 Output",
           "value": "Vector3 output",
-          "description": "The combined Vector3 output"
+          "description": "The combined Vector3 output. Use this output when creating 3D vectors."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Multiply)",
-      "description": "Multiplies two values. Used to multiply gravity by delta time, ensuring physics calculations are frame-rate independent.",
+      "name": "Math Block (Multiply)",
+      "description": "Multiplies two values. Used to multiply gravity by delta time, ensuring physics calculations are frame-rate independent. In the visual editor, you can find this block in the block list and set its operation to Multiply in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Multiply",
-          "description": "The mathematical operation - Multiply"
+          "name": "Operation",
+          "value": "Multiply",
+          "description": "The mathematical operation - Multiply. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Add)",
-      "description": "Adds two Vector3 values. Used to add gravity acceleration to the current direction vector.",
+      "name": "Math Block (Add)",
+      "description": "Adds two Vector3 values. Used to add gravity acceleration to the current direction vector. In the visual editor, you can find this block in the block list and set its operation to Add in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Add",
-          "description": "The mathematical operation - Add"
+          "name": "Operation",
+          "value": "Add",
+          "description": "The mathematical operation - Add. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
@@ -113,7 +124,7 @@
   "codeCopy": "This lesson demonstrates how to apply forces to particles. The key concept is that forces modify direction over time. We multiply the force (gravity) by delta time to ensure the effect is consistent regardless of frame rate. The formula is: newDirection = currentDirection + (force * deltaTime). This creates realistic physics-based movement where particles accelerate downward due to gravity.",
   "objectivesTitle": "Learning Objectives",
   "objectives": [
-    "Understand how UpdateDirectionBlock modifies particle velocity",
+    "Understand how Update Direction block modifies particle velocity",
     "Apply gravity force to particles using vector math",
     "Use delta time for frame-rate independent physics",
     "Combine forces with current direction to create acceleration",
@@ -129,7 +140,7 @@
     {
       "mistake": "Using position instead of direction for forces",
       "explanation": "Forces modify direction (velocity), not position directly. Position is updated based on direction.",
-      "solution": "Apply forces to UpdateDirectionBlock, not UpdatePositionBlock. The chain should be: UpdateDirection → UpdatePosition."
+      "solution": "Apply forces to Update Direction block, not Update Position block. The chain should be: Update Direction → Update Position. Connect blocks in this order in the editor."
     },
     {
       "mistake": "Using wrong gravity direction",
