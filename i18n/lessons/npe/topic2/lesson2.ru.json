@@ -8,7 +8,7 @@
     "Создайте SystemBlock - это корень вашей системы частиц",
     "Создайте CreateParticleBlock для эмиссии частиц",
     "Установите начальный цвет и размер используя ParticleInputBlock",
-    "Добавьте PointShapeBlock для эмиссии частиц из одной точки",
+    "Добавьте <filter-value>CylinderShape</filter-value> блок для эмиссии частиц из объема цилиндра",
     "Добавьте UpdateColorBlock для изменения цвета частиц",
     "Создайте два цветовых входа: minColor (синий) и maxColor (оранжевый)",
     "Используйте ParticleRandomBlock для генерации случайного цвета между min и max",

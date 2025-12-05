@@ -2,28 +2,36 @@
   "title": "2.2: Randomness",
   "summary": "Learn to add randomness to particle properties using ParticleRandomBlock",
   "introTitle": "Introduction",
-  "intro": "In this lesson, you'll learn how to add randomness and variation to your particle systems using ParticleRandomBlock. Randomness is essential for creating organic, natural-looking effects. You'll learn how to randomize colors, sizes, and other properties, and understand the different lock modes that control when random values are generated.",
+  "intro": "In this lesson, you'll learn how to add randomness and variation to your particle systems using Random block. Randomness is essential for creating organic, natural-looking effects. You'll learn how to randomize colors, sizes, and other properties, and understand the different lock modes that control when random values are generated.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
-    "Add UpdateColorBlock to modify particle color",
-    "Create two color inputs: minColor (blue) and maxColor (orange)",
-    "Use ParticleRandomBlock to generate a random color between min and max",
-    "Set lockMode to OncePerParticle so each particle gets a fixed random color for its lifetime",
-    "Connect the random color to UpdateColorBlock",
-    "Add UpdateSizeBlock to modify particle size",
-    "Create minSize and maxSize inputs",
-    "Use another ParticleRandomBlock to randomize size with OncePerParticle lock mode",
-    "Connect the random size to UpdateSizeBlock"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdatePosition</filter-value> block to handle particle movement and connect between CylinderShape and System blocks",
+    "Add an <filter-value>UpdateColor</filter-value> block after UpdatePosition block and connect between UpdatePosition and System blocks",
+    "Create two <filter-value>Color4</filter-value> blocks: minColor (blue) and maxColor (orange)",
+    "Add a <filter-value>Random</filter-value> block to generate a random color between min and max",
+    "Connect minColor to Random block's min input and maxColor to max input",
+    "Set lockMode to OncePerParticle in Random block properties so each particle gets a fixed random color for its lifetime",
+    "Connect the Random block's output to UpdateColor block's color input",
+    "Add an <filter-value>UpdateSize</filter-value> block after UpdateColor block and connect between UpdateColor and System blocks",
+    "Create two <filter-value>Float</filter-value> blocks: minSize and maxSize",
+    "Add another <filter-value>Random</filter-value> block to randomize size with OncePerParticle lock mode",
+    "Connect minSize and maxSize to Random block's min and max inputs",
+    "Connect the random size to UpdateSize block's size input"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "ParticleRandomBlock",
-      "description": "Generates random values between a minimum and maximum. Supports Float, Vector2, Vector3, and Color4 types. Essential for adding variation to particle systems.",
+      "name": "Random Block",
+      "description": "Generates random values between a minimum and maximum. Supports Float, Vector2, Vector3, and Color4 types. Essential for adding variation to particle systems. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "name",
@@ -41,15 +49,15 @@
           "description": "The maximum value for random generation"
         },
         {
-          "name": "lockMode",
-          "value": "ParticleRandomBlockLocks enum",
-          "description": "Controls when the random value is generated: None (every frame), PerParticle (once per particle per frame), PerSystem (once per system), OncePerParticle (once when particle is created)"
+          "name": "Lock Mode",
+          "value": "OncePerParticle, PerParticle, PerSystem, None",
+          "description": "Controls when the random value is generated: None (every frame), PerParticle (once per particle per frame), PerSystem (once per system), OncePerParticle (once when particle is created). Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Color4)",
-      "description": "Provides a Color4 value. Used to define the min and max colors for random color generation.",
+      "name": "Color4 Block",
+      "description": "Provides a Color4 value. Used to define the min and max colors for random color generation. In the visual editor, you can find this block in the block list and set its color value in the properties panel on the right.",
       "properties": [
         {
           "name": "value",
@@ -61,10 +69,10 @@
   ],
   "properties": "Properties",
   "codeTitle": "Code Explanation",
-  "codeCopy": "This lesson demonstrates the use of ParticleRandomBlock to add randomness to particle properties. The key concept is the lockMode property, which determines when random values are generated. OncePerParticle ensures each particle gets a random value when it's created, and that value remains constant throughout the particle's lifetime. This is perfect for properties like color and size, where you want variation between particles but consistency for each individual particle. The formula for random generation is: randomValue = min + Math.random() * (max - min).",
+  "codeCopy": "This lesson demonstrates the use of Random block to add randomness to particle properties. The key concept is the lockMode property, which determines when random values are generated. OncePerParticle ensures each particle gets a random value when it's created, and that value remains constant throughout the particle's lifetime. This is perfect for properties like color and size, where you want variation between particles but consistency for each individual particle. The formula for random generation is: randomValue = min + Math.random() * (max - min).",
   "objectivesTitle": "Learning Objectives",
   "objectives": [
-    "Understand ParticleRandomBlock and its lockMode property",
+    "Understand Random block and its lockMode property",
     "Learn when to use different lockMode values (None, PerParticle, PerSystem, OncePerParticle)",
     "Randomize particle properties (color, size, direction) for variation",
     "Combine random values with other calculations",
@@ -75,17 +83,17 @@
     {
       "mistake": "Using wrong lockMode for the desired effect",
       "explanation": "lockMode determines when random values are generated. Using None makes values change every frame (flickering), while OncePerParticle gives each particle a fixed random value for its lifetime.",
-      "solution": "Use OncePerParticle for properties like color and size where you want variation between particles but consistency per particle. Use None only if you want flickering/changing values every frame."
+      "solution": "Use OncePerParticle for properties like color and size where you want variation between particles but consistency per particle. Set this in the Random block's properties panel on the right. Use None only if you want flickering/changing values every frame."
     },
     {
       "mistake": "Not setting min and max values correctly",
-      "explanation": "ParticleRandomBlock requires both min and max inputs. If min > max, or if types don't match, random generation will fail or produce incorrect results.",
-      "solution": "Always ensure min < max and that both inputs are the same type (both Float, both Color4, both Vector3, etc.). For colors, use Color4 values. For sizes, use float values."
+      "explanation": "Random block requires both min and max inputs. If min > max, or if types don't match, random generation will fail or produce incorrect results.",
+      "solution": "Always ensure min < max and that both inputs are the same type (both Float, both Color4, both Vector3, etc.). For colors, use Color4 blocks. For sizes, use Float blocks."
     },
     {
       "mistake": "Using random values that change every frame for static properties",
       "explanation": "Properties like initial color or size should use OncePerParticle lockMode. Using None or PerParticle makes these properties flicker or change constantly, which is usually not desired.",
-      "solution": "For properties that should be constant per particle (color, initial size), use OncePerParticle. Only use None or PerParticle for properties that should change over time (like animated effects)."
+      "solution": "For properties that should be constant per particle (color, initial size), use OncePerParticle. Set this in the Random block's properties panel on the right. Only use None or PerParticle for properties that should change over time (like animated effects)."
     }
   ],
   "homeworkTitle": "Practice Exercises",

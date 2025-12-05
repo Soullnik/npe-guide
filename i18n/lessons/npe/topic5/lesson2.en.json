@@ -8,7 +8,7 @@
     "Create a SystemBlock - this is the root of your particle system",
     "Create a CreateParticleBlock to emit particles",
     "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
     "Get the particle's Age and Lifetime using ParticleInputBlock",
     "Calculate the age ratio (Age / Lifetime) to get a value from 0 to 1",
     "Create a threshold value (0.5) using ParticleInputBlock",

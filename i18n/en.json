@@ -23,6 +23,12 @@
     "hideSolution": "Hide Solution",
     "clear": "Clear",
     "topic": "Topic",
+    "notFoundTitle": "Page Not Found",
+    "notFoundMessage": "The page you're looking for doesn't exist or has been moved.",
+    "clearConfirmTitle": "Clear Your Work?",
+    "clearConfirmMessage": "Are you sure you want to clear all your work? This action cannot be undone.",
+    "clearConfirm": "Clear",
+    "cancel": "Cancel",
     "difficulty": {
       "beginner": "Beginner",
       "intermediate": "Intermediate",

@@ -8,7 +8,7 @@
     "Create a SystemBlock - this is the root of your particle system",
     "Create a CreateParticleBlock to emit particles",
     "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
     "Add UpdateAttractorBlock to modify particle direction (must come before UpdatePositionBlock)",
     "Create an attractor position using ParticleConverterBlock (X, Y, Z coordinates)",
     "Set the attractor strength (higher values = stronger pull)",

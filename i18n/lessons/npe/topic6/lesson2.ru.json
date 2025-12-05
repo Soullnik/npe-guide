@@ -8,7 +8,7 @@
     "Создайте SystemBlock - это корень вашей системы частиц",
     "Создайте CreateParticleBlock для эмиссии частиц",
     "Установите начальный цвет и размер используя ParticleInputBlock",
-    "Добавьте PointShapeBlock для эмиссии частиц из одной точки",
+    "Добавьте <filter-value>CylinderShape</filter-value> блок для эмиссии частиц из объема цилиндра",
     "Добавьте UpdatePositionBlock для обработки движения частиц",
     "Получите Position и ScaledDirection, сложите их и подключите к UpdatePositionBlock",
     "Добавьте ParticleVectorLengthBlock для расчета длины вектора направления",
@@ -17,7 +17,7 @@
     "Умножьте длину на фактор размера для создания множителя размера",
     "Добавьте UpdateColorBlock и подключите контекстное значение InitialColor к нему",
     "Добавьте UpdateSizeBlock и объедините базовый размер с множителем размера",
-    "Соедините блоки: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Соедините блоки: CreateParticle → CylinderShape → UpdatePosition → UpdateColor → UpdateSize → System",
     "Добавьте ParticleTextureSourceBlock для предоставления текстуры",
     "Наблюдайте, как размер частиц варьируется в зависимости от скорости движения"
   ],

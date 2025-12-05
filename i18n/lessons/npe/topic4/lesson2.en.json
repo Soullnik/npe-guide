@@ -8,7 +8,7 @@
     "Create a SystemBlock - this is the root of your particle system",
     "Create a CreateParticleBlock to emit particles",
     "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume",
     "Add SetupSpriteSheetBlock to configure the sprite sheet (start cell, end cell, width, height)",
     "Set the sprite sheet properties (start: 0, end: 8, width: 64, height: 64)",
     "Enable looping if you want the animation to repeat",

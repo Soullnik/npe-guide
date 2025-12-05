@@ -5,66 +5,86 @@
   "intro": "В этом уроке вы научитесь комбинировать несколько свойств частиц (цвет, размер и масштаб) для создания сложных, динамических эффектов. Вы создадите полную систему частиц с нуля, используя Возраст, Время жизни, соотношение возраста и математические операции - для создания частиц, которые изменяют цвет, растут в размере и масштабируются неравномерно со временем. Этот урок демонстрирует силу комбинирования нескольких свойств вместе.",
   "stepsTitle": "Пошаговые Инструкции",
   "steps": [
-    "Создайте SystemBlock - это корень вашей системы частиц",
-    "Создайте CreateParticleBlock для эмиссии частиц с начальным цветом и размером",
-    "Добавьте PointShapeBlock для эмиссии частиц из одной точки",
-    "Добавьте UpdatePositionBlock для обработки движения частиц",
-    "Получите Position и ScaledDirection, сложите их и подключите к UpdatePositionBlock",
-    "Получите Возраст и Время жизни частицы используя ParticleInputBlock",
-    "Вычислите соотношение возраста: Возраст / Время жизни используя ParticleMathBlock (операция Divide)",
-    "Вычислите инвертированное соотношение возраста: 1 - ageRatio для эффектов затухания",
-    "Добавьте UpdateColorBlock после UpdatePositionBlock",
-    "Создайте сложный переход цвета, используя ParticleConverterBlock",
-    "Установите красный компонент для увеличения с возрастом (ageRatio)",
-    "Установите зеленый компонент для затухания с возрастом (ageRatioInverted)",
-    "Установите синий компонент для затухания с возрастом, умноженный на 0.5",
-    "Подключите цвет из ParticleConverterBlock к UpdateColorBlock",
-    "Добавьте UpdateSizeBlock с расчетом роста: baseSize * (1 + growthAmount * ageRatio)",
-    "Добавьте UpdateScaleBlock с неравномерным масштабированием",
-    "Установите масштаб X для уменьшения: baseX * (1 - ageRatio)",
-    "Установите масштаб Y для увеличения: baseY * (1 + ageRatio)",
-    "Преобразуйте масштаб X и Y в Vector2 используя ParticleConverterBlock",
-    "Подключите Vector2 масштаб к UpdateScaleBlock",
-    "Соедините все блоки обновления: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → UpdateScale → SystemBlock",
-    "Добавьте ParticleTextureSourceBlock для предоставления текстуры",
+    "Создайте <filter-value>System</filter-value> блок - это корень вашей системы частиц",
+    "Добавьте <filter-value>Texture</filter-value> блок для предоставления текстуры частицам и подключите к System блоку",
+    "Загрузите <textures>flare.png</textures> с помощью кнопки загрузки в свойствах Texture блока",
+    "Добавьте <filter-value>CreateParticle</filter-value> блок для эмиссии частиц и подключите к System блоку",
+    "Добавьте <filter-value>Color4</filter-value> блок и установите его значение на оранжевый (R: 1, G: 0.5, B: 0, A: 1)",
+    "Подключите выход Color4 блока к входу color блока CreateParticle",
+    "Добавьте <filter-value>Float</filter-value> блок и установите его значение на 0.3",
+    "Подключите выход Float блока к входу size блока CreateParticle",
+    "Добавьте <filter-value>BoxShape</filter-value> блок для эмиссии частиц из объема куба и подключите между CreateParticle и System блоками",
+    "Добавьте <filter-value>UpdatePosition</filter-value> блок для обработки движения частиц и подключите между BoxShape и System блоками",
+    "Добавьте <filter-value>Position</filter-value> блок для получения текущей позиции",
+    "Добавьте <filter-value>ScaledDirection</filter-value> блок для получения масштабированного направления",
+    "Добавьте математический <filter-value>Add</filter-value> блок и подключите Position и ScaledDirection блоки к левому и правому входам соответственно",
+    "Подключите результат из математического блока к входу position блока UpdatePosition",
+    "Добавьте <filter-value>Age</filter-value> блок для получения возраста частицы",
+    "Добавьте <filter-value>Lifetime</filter-value> блок для получения времени жизни частицы",
+    "Добавьте математический <filter-value>Divide</filter-value> блок для вычисления соотношения возраста и подключите Age блок к левому входу и Lifetime блок к правому входу",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 1.0",
+    "Добавьте математический <filter-value>Subtract</filter-value> блок для вычисления инвертированного соотношения возраста и подключите Float(1.0) блок к левому входу и соотношение возраста из Divide блока к правому входу",
+    "Добавьте <filter-value>UpdateColor</filter-value> блок после UpdatePosition блока и подключите между UpdatePosition и System блоками",
+    "Добавьте <filter-value>Converter</filter-value> блок для создания сложного перехода цвета",
+    "Подключите соотношение возраста из Divide блока к входу X (Red) блока Converter",
+    "Подключите инвертированное соотношение возраста из Subtract блока к входу Y (Green) блока Converter",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 0.5 и подключите к левому входу математического <filter-value>Multiply</filter-value> блока",
+    "Подключите инвертированное соотношение возраста к правому входу Multiply блока, затем подключите результат к входу Z (Blue) блока Converter",
+    "Подключите выход Converter блока к входу color блока UpdateColor",
+    "Добавьте <filter-value>UpdateSize</filter-value> блок после UpdateColor блока и подключите между UpdateColor и System блоками",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 0.3 для базового размера",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 0.5 для количества роста",
+    "Добавьте математический <filter-value>Multiply</filter-value> блок и подключите Float количества роста к левому входу и соотношение возраста к правому входу",
+    "Добавьте математический <filter-value>Add</filter-value> блок и подключите Float(1.0) к левому входу и результат из Multiply блока к правому входу",
+    "Добавьте еще один математический <filter-value>Multiply</filter-value> блок и подключите Float базового размера к левому входу и результат из Add блока к правому входу",
+    "Подключите итоговый результат к входу size блока UpdateSize",
+    "Добавьте <filter-value>UpdateScale</filter-value> блок после UpdateSize блока и подключите между UpdateSize и System блоками",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 1.0 для базового масштаба X",
+    "Добавьте математический <filter-value>Subtract</filter-value> блок и подключите Float базового масштаба X к левому входу и соотношение возраста к правому входу",
+    "Добавьте <filter-value>Float</filter-value> блок со значением 1.0 для базового масштаба Y",
+    "Добавьте математический <filter-value>Add</filter-value> блок и подключите Float базового масштаба Y к левому входу и соотношение возраста к правому входу",
+    "Добавьте <filter-value>Converter</filter-value> блок для преобразования масштаба X и Y в Vector2",
+    "Подключите результат из Subtract блока (масштаб X) к входу X блока Converter",
+    "Подключите результат из Add блока (масштаб Y) к входу Y блока Converter",
+    "Подключите выход Vector2 блока Converter к входу scale блока UpdateScale",
     "Наблюдайте, как все свойства работают вместе для создания целостного, динамического эффекта"
   ],
   "blocksTitle": "Блоки, Используемые в Этом Уроке",
   "blocks": [
     {
-      "name": "UpdateScaleBlock",
-      "description": "Обновляет масштаб частиц. Масштаб влияет на визуальный размер частицы независимо от свойства размера. Это позволяет неравномерное масштабирование (разные значения X и Y).",
+      "name": "Update Scale Block",
+      "description": "Обновляет масштаб частиц. Масштаб влияет на визуальный размер частицы независимо от свойства размера. Это позволяет неравномерное масштабирование (разные значения X и Y). В визуальном редакторе вы можете найти этот блок в списке блоков и настроить его свойства в панели свойств справа.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Update scale'",
-          "description": "Отображаемое имя блока"
+          "name": "Name",
+          "value": "Update scale",
+          "description": "Отображаемое имя блока. Установите это в панели свойств справа от редактора."
         },
         {
-          "name": "scale",
+          "name": "Scale",
           "value": "Vector2 input",
-          "description": "Значение масштаба. Должно быть Vector2 для неравномерного масштабирования (разные значения X и Y)."
+          "description": "Значение масштаба. Должно быть Vector2 для неравномерного масштабирования (разные значения X и Y). Подключите выход Vector2 блока Converter к этому входу."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock",
-      "description": "Преобразует отдельные значения float в Vector2, Vector3 или Color4. В этом уроке мы используем его для создания Color4 из отдельных компонентов R, G, B, A и Vector2 для масштаба.",
+      "name": "Converter Block",
+      "description": "Преобразует отдельные значения float в Vector2, Vector3 или Color4. В этом уроке мы используем его для создания Color4 из отдельных компонентов R, G, B, A и Vector2 для масштаба. В визуальном редакторе вы можете найти этот блок в списке блоков и настроить его свойства в панели свойств справа.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn, wIn",
+          "name": "Inputs (X, Y, Z, W)",
           "value": "Float inputs",
-          "description": "Отдельные входы float для компонентов X, Y, Z, W (для Vector2, Vector3 или Color4)"
+          "description": "Отдельные входы float для компонентов X, Y, Z, W. Для Color4: X=Red, Y=Green, Z=Blue, W=Alpha. Для Vector2: X=X, Y=Y. Установите это в панели свойств справа от редактора."
         },
         {
-          "name": "colorOut",
+          "name": "Color Output",
           "value": "Color4 output",
-          "description": "Итоговый вывод Color4 (из xIn=R, yIn=G, zIn=B, wIn=A)"
+          "description": "Итоговый вывод Color4 (из X=Red, Y=Green, Z=Blue, W=Alpha). Используйте этот выход при создании цветов."
         },
         {
-          "name": "xyOut",
+          "name": "Vector2 Output",
           "value": "Vector2 output",
-          "description": "Итоговый вывод Vector2 (из xIn=X, yIn=Y)"
+          "description": "Итоговый вывод Vector2 (из X=X, Y=Y). Используйте этот выход при создании 2D векторов для масштаба."
         }
       ]
     }
@@ -75,22 +95,22 @@
   "objectivesTitle": "Цели Обучения",
   "objectives": [
     "Комбинировать несколько свойств частиц (цвет, размер, масштаб) вместе",
-    "Использовать ParticleConverterBlock для создания Color4 и Vector2 из отдельных компонентов",
+    "Использовать Converter блок для создания Color4 и Vector2 из отдельных компонентов",
     "Применять разные формулы к разным свойствам, используя то же соотношение возраста",
-    "Создавать неравномерное масштабирование с UpdateScaleBlock",
+    "Создавать неравномерное масштабирование с Update Scale блоком",
     "Понять, как свойства взаимодействуют при комбинировании"
   ],
   "commonMistakesTitle": "Частые Ошибки",
   "commonMistakes": [
     {
-      "mistake": "Использование неправильного порядка компонентов в ParticleConverterBlock",
-      "explanation": "ParticleConverterBlock ожидает компоненты в определенном порядке: для Color4 это R, G, B, A (xIn, yIn, zIn, wIn), для Vector2 это X, Y (xIn, yIn).",
-      "solution": "Для Color4: xIn = Красный, yIn = Зеленый, zIn = Синий, wIn = Альфа. Для Vector2: xIn = X, yIn = Y. Проверьте тип выхода (colorOut vs xyOut), чтобы убедиться в правильном сопоставлении."
+      "mistake": "Использование неправильного порядка компонентов в Converter блоке",
+      "explanation": "Converter блок ожидает компоненты в определенном порядке: для Color4 это R, G, B, A (X, Y, Z, W входы), для Vector2 это X, Y (X, Y входы).",
+      "solution": "Для Color4: X вход = Красный, Y вход = Зеленый, Z вход = Синий, W вход = Альфа. Для Vector2: X вход = X, Y вход = Y. Проверьте тип выхода (Color Output vs Vector2 Output) в панели свойств, чтобы убедиться в правильном сопоставлении."
     },
     {
-      "mistake": "Использование Vector3 для UpdateScaleBlock вместо Vector2",
-      "explanation": "UpdateScaleBlock требует вход Vector2 (масштаб X и Y), а не Vector3. Использование Vector3 вызовет ошибку.",
-      "solution": "Используйте ParticleConverterBlock с xyOut для создания Vector2 для UpdateScaleBlock. Предоставьте только компоненты X и Y."
+      "mistake": "Использование Vector3 для Update Scale блока вместо Vector2",
+      "explanation": "Update Scale блок требует вход Vector2 (масштаб X и Y), а не Vector3. Использование Vector3 вызовет ошибку.",
+      "solution": "Используйте Converter блок с Vector2 Output для создания Vector2 для Update Scale блока. Предоставьте только компоненты X и Y в Converter блок."
     },
     {
       "mistake": "Применение той же формулы ко всем свойствам",
@@ -100,7 +120,7 @@
   ],
   "homeworkTitle": "Практические Упражнения",
   "homework": [
-    "Попробуйте разные комбинации цветов, используя ParticleConverterBlock",
+    "Попробуйте разные комбинации цветов, используя Converter блок",
     "Экспериментируйте с разными формулами роста для размера",
     "Создайте равномерное масштабирование (X и Y масштабируются одинаково)",
     "Попробуйте обратить эффекты масштаба (X увеличивается, Y уменьшается)",

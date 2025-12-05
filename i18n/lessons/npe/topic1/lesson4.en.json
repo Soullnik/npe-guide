@@ -5,66 +5,86 @@
   "intro": "In this lesson, you'll learn how to combine multiple particle properties (color, size, and scale) to create complex, dynamic effects. You'll create a complete particle system from scratch using Age, Lifetime, age ratio, and mathematical operations to create particles that change color, grow in size, and scale non-uniformly over time. This lesson demonstrates the power of combining multiple properties together.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles with initial color and size",
-    "Add a PointShapeBlock to emit particles from a single point",
-    "Add an UpdatePositionBlock to handle particle movement",
-    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
-    "Get the particle's Age and Lifetime using ParticleInputBlock",
-    "Calculate age ratio: Age / Lifetime using ParticleMathBlock (Divide operation)",
-    "Calculate inverted age ratio: 1 - ageRatio for fading effects",
-    "Add an UpdateColorBlock after UpdatePositionBlock",
-    "Create complex color transition using ParticleConverterBlock",
-    "Set red component to increase with age (ageRatio)",
-    "Set green component to fade with age (ageRatioInverted)",
-    "Set blue component to fade with age, multiplied by 0.5",
-    "Connect the color from ParticleConverterBlock to UpdateColorBlock",
-    "Add UpdateSizeBlock with growth calculation: baseSize * (1 + growthAmount * ageRatio)",
-    "Add UpdateScaleBlock with non-uniform scaling",
-    "Set scale X to decrease: baseX * (1 - ageRatio)",
-    "Set scale Y to increase: baseY * (1 + ageRatio)",
-    "Convert scale X and Y to Vector2 using ParticleConverterBlock",
-    "Connect the Vector2 scale to UpdateScaleBlock",
-    "Chain all update blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → UpdateScale → SystemBlock",
-    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to orange (R: 1, G: 0.5, B: 0, A: 1)",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value to 0.3",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdatePosition</filter-value> block to handle particle movement and connect between BoxShape and System blocks",
+    "Add a <filter-value>Position</filter-value> block to get the current position",
+    "Add a <filter-value>ScaledDirection</filter-value> block to get the scaled direction",
+    "Add a math <filter-value>Add</filter-value> block and connect Position and ScaledDirection blocks to the left and right inputs respectively",
+    "Connect the result from the math block to UpdatePosition's position input",
+    "Add an <filter-value>Age</filter-value> block to get the particle's age",
+    "Add a <filter-value>Lifetime</filter-value> block to get the particle's lifetime",
+    "Add a math <filter-value>Divide</filter-value> block to calculate age ratio and connect Age block to the left input and Lifetime block to the right input",
+    "Add a <filter-value>Float</filter-value> block with value 1.0",
+    "Add a math <filter-value>Subtract</filter-value> block to calculate inverted age ratio and connect the Float(1.0) block to the left input and the age ratio from Divide block to the right input",
+    "Add an <filter-value>UpdateColor</filter-value> block after UpdatePosition block and connect between UpdatePosition and System blocks",
+    "Add a <filter-value>Converter</filter-value> block to create complex color transition",
+    "Connect the age ratio from Divide block to Converter block's red input",
+    "Connect the inverted age ratio from Subtract block to Converter block's green input",
+    "Add a <filter-value>Float</filter-value> block with value 0.5 and connect to a math <filter-value>Multiply</filter-value> block's left input",
+    "Connect the inverted age ratio to the Multiply block's right input, then connect the result to Converter block's blue input",
+    "Connect the Converter block's output to UpdateColor block's color input",
+    "Add an <filter-value>UpdateSize</filter-value> block after UpdateColor block and connect between UpdateColor and System blocks",
+    "Add a <filter-value>Float</filter-value> block with value 0.3 for base size",
+    "Add a <filter-value>Float</filter-value> block with value 0.5 for growth amount",
+    "Add a math <filter-value>Multiply</filter-value> block and connect growth amount Float to the left input and age ratio to the right input",
+    "Add a math <filter-value>Add</filter-value> block and connect Float(1.0) to the left input and the result from Multiply block to the right input",
+    "Add another math <filter-value>Multiply</filter-value> block and connect base size Float to the left input and the result from Add block to the right input",
+    "Connect the final result to UpdateSize block's size input",
+    "Add an <filter-value>UpdateScale</filter-value> block after UpdateSize block and connect between UpdateSize and System blocks",
+    "Add a <filter-value>Float</filter-value> block with value 1.0 for base scale X",
+    "Add a math <filter-value>Subtract</filter-value> block and connect base scale X Float to the left input and age ratio to the right input",
+    "Add a <filter-value>Float</filter-value> block with value 1.0 for base scale Y",
+    "Add a math <filter-value>Add</filter-value> block and connect base scale Y Float to the left input and age ratio to the right input",
+    "Add a <filter-value>Converter</filter-value> block to convert scale X and Y to Vector2",
+    "Connect the result from Subtract block (scale X) to Converter block's X input",
+    "Connect the result from Add block (scale Y) to Converter block's Y input",
+    "Connect the Converter block's Vector2 output to UpdateScale block's scale input",
     "Observe how all properties work together to create a cohesive, dynamic effect"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "UpdateScaleBlock",
-      "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property. This allows for non-uniform scaling (different X and Y values).",
+      "name": "Update Scale Block",
+      "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property. This allows for non-uniform scaling (different X and Y values). In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Update scale'",
-          "description": "The display name of the block"
+          "name": "Name",
+          "value": "Update scale",
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
-          "name": "scale",
+          "name": "Scale",
           "value": "Vector2 input",
-          "description": "The scale value. Must be a Vector2 for non-uniform scaling (different X and Y values)."
+          "description": "The scale value. Must be a Vector2 for non-uniform scaling (different X and Y values). Connect a Converter block's Vector2 output here."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock",
-      "description": "Converts individual float values into Vector2, Vector3, or Color4. In this lesson, we use it to create a Color4 from individual R, G, B, A components, and a Vector2 for scale.",
+      "name": "Converter Block",
+      "description": "Converts individual float values into Vector2, Vector3, or Color4. In this lesson, we use it to create a Color4 from individual R, G, B, A components, and a Vector2 for scale. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn, wIn",
+          "name": "Inputs (X, Y, Z, W)",
           "value": "Float inputs",
-          "description": "Individual float inputs for X, Y, Z, W components (for Vector2, Vector3, or Color4)"
+          "description": "Individual float inputs for X, Y, Z, W components. For Color4: X=Red, Y=Green, Z=Blue, W=Alpha. For Vector2: X=X, Y=Y. Set these in the properties panel on the right side of the editor."
         },
         {
-          "name": "colorOut",
+          "name": "Color Output",
           "value": "Color4 output",
-          "description": "The combined Color4 output (from xIn=R, yIn=G, zIn=B, wIn=A)"
+          "description": "The combined Color4 output (from X=Red, Y=Green, Z=Blue, W=Alpha). Use this output when creating colors."
         },
         {
-          "name": "xyOut",
+          "name": "Vector2 Output",
           "value": "Vector2 output",
-          "description": "The combined Vector2 output (from xIn=X, yIn=Y)"
+          "description": "The combined Vector2 output (from X=X, Y=Y). Use this output when creating 2D vectors for scale."
         }
       ]
     }
@@ -75,22 +95,22 @@
   "objectivesTitle": "Learning Objectives",
   "objectives": [
     "Combine multiple particle properties (color, size, scale) together",
-    "Use ParticleConverterBlock to create Color4 and Vector2 from individual components",
+    "Use Converter block to create Color4 and Vector2 from individual components",
     "Apply different formulas to different properties using the same age ratio",
-    "Create non-uniform scaling with UpdateScaleBlock",
+    "Create non-uniform scaling with Update Scale block",
     "Understand how properties interact when combined together"
   ],
   "commonMistakesTitle": "Common Mistakes",
   "commonMistakes": [
     {
-      "mistake": "Using wrong component order in ParticleConverterBlock",
-      "explanation": "ParticleConverterBlock expects components in specific order: for Color4 it's R, G, B, A (xIn, yIn, zIn, wIn), for Vector2 it's X, Y (xIn, yIn).",
-      "solution": "For Color4: xIn = Red, yIn = Green, zIn = Blue, wIn = Alpha. For Vector2: xIn = X, yIn = Y. Check the output type (colorOut vs xyOut) to ensure correct mapping."
+      "mistake": "Using wrong component order in Converter block",
+      "explanation": "Converter block expects components in specific order: for Color4 it's R, G, B, A (X, Y, Z, W inputs), for Vector2 it's X, Y (X, Y inputs).",
+      "solution": "For Color4: X input = Red, Y input = Green, Z input = Blue, W input = Alpha. For Vector2: X input = X, Y input = Y. Check the output type (Color Output vs Vector2 Output) in the properties panel to ensure correct mapping."
     },
     {
-      "mistake": "Using Vector3 for UpdateScaleBlock instead of Vector2",
-      "explanation": "UpdateScaleBlock requires a Vector2 input (X and Y scale), not Vector3. Using Vector3 will cause an error.",
-      "solution": "Use ParticleConverterBlock with xyOut to create a Vector2 for UpdateScaleBlock. Only provide X and Y components."
+      "mistake": "Using Vector3 for Update Scale block instead of Vector2",
+      "explanation": "Update Scale block requires a Vector2 input (X and Y scale), not Vector3. Using Vector3 will cause an error.",
+      "solution": "Use Converter block with Vector2 Output to create a Vector2 for Update Scale block. Only provide X and Y components to the Converter block."
     },
     {
       "mistake": "Applying same formula to all properties",
@@ -100,7 +120,7 @@
   ],
   "homeworkTitle": "Practice Exercises",
   "homework": [
-    "Try different color combinations using ParticleConverterBlock",
+    "Try different color combinations using Converter block",
     "Experiment with different growth formulas for size",
     "Create uniform scaling (X and Y scale the same)",
     "Try reversing the scale effects (X increases, Y decreases)",
