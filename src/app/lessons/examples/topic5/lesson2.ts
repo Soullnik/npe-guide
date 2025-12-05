@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -59,9 +59,9 @@ export function createTopic5Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize11 = new ParticleInputBlock('Base Size');
   baseSize11.value = 0.3;
   baseSize11.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
+  boxShape.output.connectTo(updatePosition.particle);
 
   // GET AGE AND LIFETIME FOR CONDITIONAL LOGIC
   // We'll use age ratio to create conditions based on particle age

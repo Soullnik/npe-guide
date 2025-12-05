@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  SphereShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   NodeParticleSystemSources,
@@ -59,9 +59,9 @@ export function createTopic6Lesson1Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize12 = new ParticleInputBlock('Base Size');
   baseSize12.value = 0.3;
   baseSize12.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const sphereShape = new SphereShapeBlock('Sphere emitter');
+  createParticle.particle.connectTo(sphereShape.particle);
+  sphereShape.output.connectTo(updatePosition.particle);
 
   // TIME-BASED ROTATION
   // We'll use system time to create continuous rotation

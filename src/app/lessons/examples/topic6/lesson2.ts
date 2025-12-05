@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  CylinderShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -56,9 +56,9 @@ export function createTopic6Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize = new ParticleInputBlock('Base Size');
   baseSize.value = 0.3;
   baseSize.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const cylinderShape = new CylinderShapeBlock('Cylinder emitter');
+  createParticle.particle.connectTo(cylinderShape.particle);
+  cylinderShape.output.connectTo(updatePosition.particle);
 
   // VECTOR LENGTH CALCULATION
   // Calculate the length of the particle's direction vector

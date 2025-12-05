@@ -8,7 +8,7 @@
     "Создайте SystemBlock - это корень вашей системы частиц",
     "Создайте CreateParticleBlock для эмиссии частиц",
     "Установите начальный цвет и размер используя ParticleInputBlock",
-    "Добавьте PointShapeBlock для эмиссии частиц из одной точки",
+    "Добавьте <filter-value>CylinderShape</filter-value> блок для эмиссии частиц из объема цилиндра",
     "Получите системное время, используя ParticleInputBlock с системным источником Time",
     "Используйте ParticleTrigonometryBlock с операцией Sin для создания синусоидальной волны",
     "Масштабируйте выход синусоидальной волны, используя ParticleMathBlock (Multiply)",

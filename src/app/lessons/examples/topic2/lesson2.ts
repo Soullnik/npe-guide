@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  CylinderShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -65,9 +65,9 @@ export function createTopic2Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   // Average between minSize (0.2) and maxSize (0.6) = 0.4
   avgSize07.value = 0.4;
   avgSize07.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const cylinderShape = new CylinderShapeBlock('Cylinder emitter');
+  createParticle.particle.connectTo(cylinderShape.particle);
+  cylinderShape.output.connectTo(updatePosition.particle);
 
   // RANDOM COLOR USING PARTICLERANDOMBLOCK
   // ParticleRandomBlock generates a random value between min and max

@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  CylinderShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   NodeParticleSystemSources,
@@ -62,9 +62,9 @@ export function createTopic5Lesson1Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize10 = new ParticleInputBlock('Base Size');
   baseSize10.value = 0.3;
   baseSize10.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const cylinderShape = new CylinderShapeBlock('Cylinder emitter');
+  createParticle.particle.connectTo(cylinderShape.particle);
+  cylinderShape.output.connectTo(updatePosition.particle);
 
   // COLOR UPDATE WITH TRIGONOMETRIC FUNCTIONS
   // We'll create an animated color that changes over time using trigonometric functions

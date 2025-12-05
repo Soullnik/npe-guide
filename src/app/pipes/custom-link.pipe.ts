@@ -16,7 +16,7 @@ export class CustomLinkPipe implements PipeTransform {
 
   transform(text: string): SafeHtml {
     if (!text) {
-      return '';
+      return this.sanitizer.bypassSecurityTrustHtml('');
     }
 
     let result = text;
@@ -30,7 +30,9 @@ export class CustomLinkPipe implements PipeTransform {
       );
     }
 
-    return this.sanitizer.sanitize(1, result) || '';
+    // Sanitize first to remove dangerous content, then wrap in SafeHtml
+    const sanitized = this.sanitizer.sanitize(1, result) || '';
+    return this.sanitizer.bypassSecurityTrustHtml(sanitized);
   }
 }
 

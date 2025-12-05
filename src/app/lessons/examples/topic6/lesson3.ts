@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -56,9 +56,9 @@ export function createTopic6Lesson3Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize = new ParticleInputBlock('Base Size');
   baseSize.value = 0.2; // Smaller size for better performance
   baseSize.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
+  boxShape.output.connectTo(updatePosition.particle);
 
   // EFFICIENT COLOR UPDATE - Using contextual value (no recalculation)
   const updateColor = new UpdateColorBlock('Update color');

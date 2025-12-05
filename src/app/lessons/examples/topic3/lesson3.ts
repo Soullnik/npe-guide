@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -48,8 +48,8 @@ export function createTopic3Lesson3Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize09 = new ParticleInputBlock('Base Size');
   baseSize09.value = 0.3;
   baseSize09.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
 
   // ATTRACTOR
   // UpdateAttractorBlock creates a force that pulls particles toward a specific point
@@ -60,10 +60,10 @@ export function createTopic3Lesson3Set(existingSet?: NodeParticleSystemSet): Nod
   // - Particles orbiting a center point
   //
   // IMPORTANT: UpdateAttractorBlock modifies the particle's direction, so it must come BEFORE UpdatePositionBlock
-  // The chain should be: CreateParticle → PointShape → UpdateAttractor → UpdatePosition
+  // The chain should be: CreateParticle → BoxShape → UpdateAttractor → UpdatePosition
   // This ensures the attractor modifies direction first, then position is updated based on the modified direction
   const updateAttractor = new UpdateAttractorBlock('Attractor');
-  pointShape.output.connectTo(updateAttractor.particle);
+  boxShape.output.connectTo(updateAttractor.particle);
 
   // CREATE ATTRACTOR POSITION
   // The attractor position is a 3D point (Vector3) that particles are attracted to

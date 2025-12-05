@@ -2,12 +2,14 @@
   "title": "2.4: Multiple Emitters",
   "summary": "Learn to create multiple particle systems with different emitters in a single set",
   "introTitle": "Introduction",
-  "intro": "In this lesson, you'll learn how to create multiple particle systems within a single NodeParticleSystemSet. Each system can have its own emitter shape, color, and behavior, allowing you to create complex, layered effects. You'll create a complete setup with two different particle systems - one using a Point emitter and another using a Sphere emitter.",
+  "intro": "In this lesson, you'll learn how to create multiple particle systems within a single NodeParticleSystemSet. Each system can have its own emitter shape, color, and behavior, allowing you to create complex, layered effects. You'll create a complete setup with two different particle systems - one using a Box emitter and another using a Sphere emitter.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create the first SystemBlock for the Point Particle System",
-    "Create a CreateParticleBlock with initial color (e.g., red) and size",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Create the first <filter-value>System</filter-value> block for the Box Particle System",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block with initial color (e.g., red) and size and connect to System block",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
     "Add UpdatePositionBlock, UpdateColorBlock, and UpdateSizeBlock",
     "Connect all blocks and add a texture for the first system",
     "Create a second SystemBlock for the Sphere Particle System",
@@ -26,14 +28,14 @@
       "properties": [
         {
           "name": "name",
-          "value": "'Point Particle System' or 'Sphere Particle System'",
+          "value": "'Box Particle System' or 'Sphere Particle System'",
           "description": "The display name of each particle system"
         }
       ]
     },
     {
-      "name": "PointShapeBlock",
-      "description": "First emitter: Emits particles from a single point. Used in the first particle system.",
+      "name": "Box Shape Block",
+      "description": "First emitter: Emits particles from a box volume. Used in the first particle system. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": []
     },
     {
@@ -69,7 +71,7 @@
     {
       "mistake": "Using the same variable names for different systems",
       "explanation": "If you reuse variable names (like 'updatePosition' for both systems), the second system will overwrite the first, causing errors.",
-      "solution": "Use unique names for each system's blocks: updatePosition1, updatePosition2, or updatePositionPoint, updatePositionSphere."
+      "solution": "Use unique names for each system's blocks: updatePosition1, updatePosition2, or updatePositionBox, updatePositionSphere. Set these in the properties panel on the right side of the editor."
     },
     {
       "mistake": "Not understanding that systems run independently",
@@ -80,7 +82,7 @@
   "homeworkTitle": "Practice Exercises",
   "homework": [
     "Create three different particle systems with different colors",
-    "Try combining Point, Sphere, and Cone emitters in one set",
+    "Try combining Box, Sphere, and Cone emitters in one set",
     "Create a fire effect with two systems: flames (orange) and smoke (gray)",
     "Experiment with different sizes and behaviors for each system",
     "Create a layered magical effect with multiple systems"

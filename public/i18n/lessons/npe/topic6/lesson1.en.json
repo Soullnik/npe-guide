@@ -8,7 +8,7 @@
     "Create a SystemBlock - this is the root of your particle system",
     "Create a CreateParticleBlock to emit particles",
     "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume",
     "Get the system time using ParticleInputBlock with Time system source",
     "Create a rotation speed value (rotations per second)",
     "Calculate rotation angle: time * rotationSpeed",

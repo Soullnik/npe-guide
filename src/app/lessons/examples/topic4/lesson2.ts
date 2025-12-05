@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  SphereShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -61,9 +61,9 @@ export function createTopic4Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize11 = new ParticleInputBlock('Base Size');
   baseSize11.value = 0.3;
   baseSize11.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const sphereShape = new SphereShapeBlock('Sphere emitter');
+  createParticle.particle.connectTo(sphereShape.particle);
+  sphereShape.output.connectTo(updatePosition.particle);
 
   // SETUP SPRITE SHEET
   // A sprite sheet is a texture containing multiple frames arranged in a grid

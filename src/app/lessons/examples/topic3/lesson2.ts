@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  CylinderShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -157,9 +157,9 @@ export function createTopic3Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize06 = new ParticleInputBlock('Base Size');
   baseSize06.value = 0.3;
   baseSize06.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const cylinderShape = new CylinderShapeBlock('Cylinder emitter');
+  createParticle.particle.connectTo(cylinderShape.particle);
+  cylinderShape.output.connectTo(updatePosition.particle);
 
   // COLOR UPDATE
   const updateColor = new UpdateColorBlock('Update color');

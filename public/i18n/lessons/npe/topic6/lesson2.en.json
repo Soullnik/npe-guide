@@ -8,7 +8,7 @@
     "Create a SystemBlock - this is the root of your particle system",
     "Create a CreateParticleBlock to emit particles",
     "Set an initial color and size using ParticleInputBlock",
-    "Add a PointShapeBlock to emit particles from a single point",
+    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume",
     "Add an UpdatePositionBlock to handle particle movement",
     "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
     "Add a ParticleVectorLengthBlock to calculate the length of the direction vector",
@@ -17,7 +17,7 @@
     "Multiply the length by a size factor to create the size multiplier",
     "Add UpdateColorBlock and connect InitialColor contextual value to it",
     "Add UpdateSizeBlock and combine base size with the size multiplier",
-    "Chain the blocks: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock",
+    "Chain the blocks: CreateParticle → CylinderShape → UpdatePosition → UpdateColor → UpdateSize → System",
     "Add a ParticleTextureSourceBlock to provide a texture",
     "Observe how particle size varies based on movement speed"
   ],

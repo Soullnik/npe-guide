@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  SphereShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   NodeParticleSystemSources,
@@ -48,17 +48,17 @@ export function createTopic3Lesson1Set(existingSet?: NodeParticleSystemSet): Nod
   baseSize04.value = 0.3;
   baseSize04.output.connectTo(createParticle.size);
   
-  // Use PointShapeBlock to emit particles from a single point
+  // Use SphereShapeBlock to emit particles from a sphere
   // This is ideal for physics demonstrations where particles fall due to gravity
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
+  const sphereShape = new SphereShapeBlock('Sphere emitter');
+  createParticle.particle.connectTo(sphereShape.particle);
 
   // DIRECTION UPDATE WITH GRAVITY
   // UpdateDirectionBlock modifies the direction (velocity) of particles each frame
   // This is essential for applying forces like gravity, wind, or other directional effects
   // Direction represents the velocity vector - how fast and in what direction the particle moves
   const updateDirection = new UpdateDirectionBlock('Update direction');
-  pointShape.output.connectTo(updateDirection.particle);
+  sphereShape.output.connectTo(updateDirection.particle);
 
   // Get the current direction of the particle
   // This is the velocity vector that was set when the particle was created
