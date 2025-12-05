@@ -179,6 +179,35 @@ interface BlockInfo {
             </div>
           </section>
         </main>
+
+        @if (clearConfirmOpen()) {
+          <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+            <div class="w-full max-w-md rounded-2xl border border-white/20 bg-slate-900/98 p-6 shadow-2xl backdrop-blur-xl">
+              <h3 class="mb-4 text-lg font-semibold text-white">
+                {{ 'ui.clearConfirmTitle' | translate }}
+              </h3>
+              <p class="mb-6 text-sm text-white/70">
+                {{ 'ui.clearConfirmMessage' | translate }}
+              </p>
+              <div class="flex gap-3">
+                <button
+                  type="button"
+                  class="flex-1 rounded-lg border border-rose-500/30 bg-rose-500/20 px-4 py-2 text-sm font-semibold text-rose-200 transition hover:bg-rose-500/30"
+                  (click)="confirmClear()"
+                >
+                  {{ 'ui.clearConfirm' | translate }}
+                </button>
+                <button
+                  type="button"
+                  class="flex-1 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
+                  (click)="cancelClear()"
+                >
+                  {{ 'ui.cancel' | translate }}
+                </button>
+              </div>
+            </div>
+          </div>
+        }
     </div>
   `,
 })
@@ -192,6 +221,7 @@ export class LessonComponent {
   @ViewChild('npePreview') npePreviewComponent?: NpePreviewComponent;
 
   protected readonly drawerOpen = signal(false);
+  protected readonly clearConfirmOpen = signal(false);
   protected readonly lessonLoadToken = signal(0);
   protected readonly topicId = signal<number | null>(null);
   protected readonly lessonNumber = signal<number | null>(null);
@@ -399,9 +429,18 @@ export class LessonComponent {
   }
 
   protected clearUserWork(): void {
+    this.clearConfirmOpen.set(true);
+  }
+
+  protected confirmClear(): void {
     if (this.npePreviewComponent) {
       this.npePreviewComponent.clearUserWork();
     }
+    this.clearConfirmOpen.set(false);
+  }
+
+  protected cancelClear(): void {
+    this.clearConfirmOpen.set(false);
   }
 
   protected getTopicTitle(topicId: number): string {

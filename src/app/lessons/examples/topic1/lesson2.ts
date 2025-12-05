@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -65,10 +65,10 @@ export function createTopic1Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   baseSize.value = 0.3;
   baseSize.output.connectTo(createParticle.size);
   
-  // Use PointShapeBlock to emit particles from a single point
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  // Use BoxShapeBlock to emit particles from a box shape
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
+  boxShape.output.connectTo(updatePosition.particle);
 
   // Color update - UpdateColorBlock allows us to change particle color each frame
   // In this lesson, we'll use the initial color (constant value)
@@ -94,7 +94,7 @@ export function createTopic1Lesson2Set(existingSet?: NodeParticleSystemSet): Nod
   constantSize.output.connectTo(updateSize.size);
 
   // Connect final output to system
-  // The chain is: CreateParticle → PointShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock
+  // The chain is: CreateParticle → BoxShape → UpdatePosition → UpdateColor → UpdateSize → SystemBlock
   updateSize.output.connectTo(systemBlock.particle);
 
   // Texture

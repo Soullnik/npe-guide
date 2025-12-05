@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -59,9 +59,9 @@ export function createTopic1Lesson4Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize = new ParticleInputBlock('Base Size');
   baseSize.value = 0.3;
   baseSize.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
+  boxShape.output.connectTo(updatePosition.particle);
 
   // TIME-BASED CALCULATIONS
   // Get age and lifetime for all property calculations
@@ -149,18 +149,14 @@ export function createTopic1Lesson4Set(existingSet?: NodeParticleSystemSet): Nod
   // Formula: scaleX = baseX * (1 - ageRatio)
   const scaleX = new ParticleMathBlock('Scale X');
   scaleX.operation = ParticleMathBlockOperations.Multiply;
-  const scaleXBase = new ParticleInputBlock('Scale X Base');
-  scaleXBase.value = 1.0;
-  scaleXBase.output.connectTo(scaleX.left);
+  one.output.connectTo(scaleX.left);
   ageRatioInverted.output.connectTo(scaleX.right); // X scales down
   
   // Scale Y: increases over time (particles become taller)
   // Formula: scaleY = baseY * (1 + ageRatio)
   const scaleY = new ParticleMathBlock('Scale Y');
   scaleY.operation = ParticleMathBlockOperations.Multiply;
-  const scaleYBase = new ParticleInputBlock('Scale Y Base');
-  scaleYBase.value = 1.0;
-  scaleYBase.output.connectTo(scaleY.left);
+  one.output.connectTo(scaleY.left);
   const scaleYFactor = new ParticleMathBlock('Scale Y Factor');
   scaleYFactor.operation = ParticleMathBlockOperations.Add;
   one.output.connectTo(scaleYFactor.left);

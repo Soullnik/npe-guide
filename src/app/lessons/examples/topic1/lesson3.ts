@@ -1,6 +1,6 @@
 import {
   NodeParticleSystemSet,
-  PointShapeBlock,
+  BoxShapeBlock,
   CreateParticleBlock,
   NodeParticleContextualSources,
   ParticleInputBlock,
@@ -55,9 +55,9 @@ export function createTopic1Lesson3Set(existingSet?: NodeParticleSystemSet): Nod
   const baseSize = new ParticleInputBlock('Base Size');
   baseSize.value = 0.3;
   baseSize.output.connectTo(createParticle.size);
-  const pointShape = new PointShapeBlock('Point emitter');
-  createParticle.particle.connectTo(pointShape.particle);
-  pointShape.output.connectTo(updatePosition.particle);
+  const boxShape = new BoxShapeBlock('Box emitter');
+  createParticle.particle.connectTo(boxShape.particle);
+  boxShape.output.connectTo(updatePosition.particle);
 
   // TIME-BASED CALCULATIONS
   // Get the particle's age - how long it has been alive (in seconds)
