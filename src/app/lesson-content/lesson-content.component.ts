@@ -4,6 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { LessonTranslationService } from '../services/lesson-translation.service';
+import { CustomLinkDirective } from '../directives/custom-link.directive';
+import { CustomLinkPipe } from '../pipes/custom-link.pipe';
 
 interface BlockInfo {
   name: string;
@@ -15,7 +17,7 @@ interface BlockInfo {
 @Component({
   selector: 'app-lesson-content',
   standalone: true,
-  imports: [CommonModule, TranslatePipe],
+  imports: [CommonModule, TranslatePipe, CustomLinkDirective, CustomLinkPipe],
   template: `
     @if (lessonKey()) {
       <div class="space-y-6 text-sm leading-relaxed">
@@ -45,7 +47,7 @@ interface BlockInfo {
         }
 
         <!-- Steps -->
-        <section class="rounded-xl border border-white/10 bg-white/5 p-4">
+        <section class="rounded-xl border border-white/10 bg-white/5 p-4" appCustomLink>
           <h2 class="mb-4 text-lg font-semibold text-white">
             {{ (category() === 'npe' ? 'lessons.' + lessonKey() + '.stepsTitle' : 'lessons.' + category() + '.' + lessonKey() + '.stepsTitle') | translate }}
           </h2>
@@ -57,7 +59,7 @@ interface BlockInfo {
                 >
                   {{ $index + 1 }}
                 </span>
-                <span class="flex-1 text-white/80">{{ step }}</span>
+                <span class="flex-1 text-white/80" [innerHTML]="step | customLink"></span>
               </li>
             }
           </ol>

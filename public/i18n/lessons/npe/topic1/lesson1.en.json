@@ -5,13 +5,16 @@
   "intro": "In this lesson, you'll learn how to create a simple particle system using the Node Particle Editor. We'll start with the fundamental blocks: SystemBlock, UpdatePositionBlock, and CreateParticleBlock.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Add an UpdatePositionBlock to handle particle movement",
-    "Connect a CreateParticleBlock with a BoxShapeBlock to emit particles from a box shape",
-    "Use ParticleInputBlock to get the current position and scaled direction",
-    "Add a ParticleMathBlock to combine position and direction",
-    "Connect the result to UpdatePositionBlock's position input",
-    "Add a ParticleTextureSourceBlock to provide a texture for the particles"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdatePosition</filter-value> block to handle particle movement and connect between BoxShape and System blocks",
+    "Add a <filter-value>Position</filter-value> block to get the current position and connect to UpdatePosition block",
+    "Add a <filter-value>ScaledDirection</filter-value> block to get the scaled direction",
+    "Add a math <filter-value>Add</filter-value> block to combine position and direction and connect Position and ScaledDirection blocks to the left and right inputs respectively",
+    "Connect the result from the math block to UpdatePosition's position input"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
