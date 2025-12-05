@@ -6,6 +6,8 @@
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
     "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
     "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
     "Add a <filter-value>Color4</filter-value> block and set its value to orange (R: 1, G: 0.5, B: 0, A: 1)",
     "Connect the Color4 block's output to CreateParticle block's color input",
@@ -45,46 +47,44 @@
     "Connect the result from Subtract block (scale X) to Converter block's X input",
     "Connect the result from Add block (scale Y) to Converter block's Y input",
     "Connect the Converter block's Vector2 output to UpdateScale block's scale input",
-    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
-    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
     "Observe how all properties work together to create a cohesive, dynamic effect"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "UpdateScaleBlock",
-      "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property. This allows for non-uniform scaling (different X and Y values).",
+      "name": "Update Scale Block",
+      "description": "Updates the scale of particles. Scale affects the particle's visual size independently from the size property. This allows for non-uniform scaling (different X and Y values). In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Update scale'",
-          "description": "The display name of the block"
+          "name": "Name",
+          "value": "Update scale",
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
-          "name": "scale",
+          "name": "Scale",
           "value": "Vector2 input",
-          "description": "The scale value. Must be a Vector2 for non-uniform scaling (different X and Y values)."
+          "description": "The scale value. Must be a Vector2 for non-uniform scaling (different X and Y values). Connect a Converter block's Vector2 output here."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock",
-      "description": "Converts individual float values into Vector2, Vector3, or Color4. In this lesson, we use it to create a Color4 from individual R, G, B, A components, and a Vector2 for scale.",
+      "name": "Converter Block",
+      "description": "Converts individual float values into Vector2, Vector3, or Color4. In this lesson, we use it to create a Color4 from individual R, G, B, A components, and a Vector2 for scale. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn, wIn",
+          "name": "Inputs (X, Y, Z, W)",
           "value": "Float inputs",
-          "description": "Individual float inputs for X, Y, Z, W components (for Vector2, Vector3, or Color4)"
+          "description": "Individual float inputs for X, Y, Z, W components. For Color4: X=Red, Y=Green, Z=Blue, W=Alpha. For Vector2: X=X, Y=Y. Set these in the properties panel on the right side of the editor."
         },
         {
-          "name": "colorOut",
+          "name": "Color Output",
           "value": "Color4 output",
-          "description": "The combined Color4 output (from xIn=R, yIn=G, zIn=B, wIn=A)"
+          "description": "The combined Color4 output (from X=Red, Y=Green, Z=Blue, W=Alpha). Use this output when creating colors."
         },
         {
-          "name": "xyOut",
+          "name": "Vector2 Output",
           "value": "Vector2 output",
-          "description": "The combined Vector2 output (from xIn=X, yIn=Y)"
+          "description": "The combined Vector2 output (from X=X, Y=Y). Use this output when creating 2D vectors for scale."
         }
       ]
     }
@@ -95,22 +95,22 @@
   "objectivesTitle": "Learning Objectives",
   "objectives": [
     "Combine multiple particle properties (color, size, scale) together",
-    "Use ParticleConverterBlock to create Color4 and Vector2 from individual components",
+    "Use Converter block to create Color4 and Vector2 from individual components",
     "Apply different formulas to different properties using the same age ratio",
-    "Create non-uniform scaling with UpdateScaleBlock",
+    "Create non-uniform scaling with Update Scale block",
     "Understand how properties interact when combined together"
   ],
   "commonMistakesTitle": "Common Mistakes",
   "commonMistakes": [
     {
-      "mistake": "Using wrong component order in ParticleConverterBlock",
-      "explanation": "ParticleConverterBlock expects components in specific order: for Color4 it's R, G, B, A (xIn, yIn, zIn, wIn), for Vector2 it's X, Y (xIn, yIn).",
-      "solution": "For Color4: xIn = Red, yIn = Green, zIn = Blue, wIn = Alpha. For Vector2: xIn = X, yIn = Y. Check the output type (colorOut vs xyOut) to ensure correct mapping."
+      "mistake": "Using wrong component order in Converter block",
+      "explanation": "Converter block expects components in specific order: for Color4 it's R, G, B, A (X, Y, Z, W inputs), for Vector2 it's X, Y (X, Y inputs).",
+      "solution": "For Color4: X input = Red, Y input = Green, Z input = Blue, W input = Alpha. For Vector2: X input = X, Y input = Y. Check the output type (Color Output vs Vector2 Output) in the properties panel to ensure correct mapping."
     },
     {
-      "mistake": "Using Vector3 for UpdateScaleBlock instead of Vector2",
-      "explanation": "UpdateScaleBlock requires a Vector2 input (X and Y scale), not Vector3. Using Vector3 will cause an error.",
-      "solution": "Use ParticleConverterBlock with xyOut to create a Vector2 for UpdateScaleBlock. Only provide X and Y components."
+      "mistake": "Using Vector3 for Update Scale block instead of Vector2",
+      "explanation": "Update Scale block requires a Vector2 input (X and Y scale), not Vector3. Using Vector3 will cause an error.",
+      "solution": "Use Converter block with Vector2 Output to create a Vector2 for Update Scale block. Only provide X and Y components to the Converter block."
     },
     {
       "mistake": "Applying same formula to all properties",
@@ -120,7 +120,7 @@
   ],
   "homeworkTitle": "Practice Exercises",
   "homework": [
-    "Try different color combinations using ParticleConverterBlock",
+    "Try different color combinations using Converter block",
     "Experiment with different growth formulas for size",
     "Create uniform scaling (X and Y scale the same)",
     "Try reversing the scale effects (X increases, Y decreases)",

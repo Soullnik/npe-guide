@@ -6,6 +6,8 @@
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
     "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
     "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
     "Add a <filter-value>Color4</filter-value> block and set its value to orange (R: 1, G: 0.5, B: 0, A: 1)",
     "Connect the Color4 block's output to CreateParticle block's color input",
@@ -28,75 +30,73 @@
     "Add another <filter-value>Float</filter-value> block with value 0.3 for base size",
     "Add a math <filter-value>Multiply</filter-value> block and connect the base size Float block to the left input and the growth factor from Add block to the right input",
     "Connect the result from the Multiply block to UpdateSize block's size input",
-    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
-    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
     "Observe how particles now grow over time based on their age"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "ParticleInputBlock (Age)",
-      "description": "Retrieves the current age of a particle. Age starts at 0 when the particle is created and increases each frame until it reaches the lifetime value. Age is measured in seconds.",
+      "name": "Input Block (Age)",
+      "description": "Retrieves the current age of a particle. Age starts at 0 when the particle is created and increases each frame until it reaches the lifetime value. Age is measured in seconds. In the visual editor, you can find this block in the block list and set its contextual value to Age in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Age",
-          "description": "The type of contextual data - Age in this case"
+          "name": "Contextual Value",
+          "value": "Age",
+          "description": "The type of contextual data - Age in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Lifetime)",
-      "description": "Retrieves the total lifetime of a particle. Lifetime is a constant value set when the particle is created. It represents the maximum age a particle can reach before it dies. Lifetime is measured in seconds.",
+      "name": "Input Block (Lifetime)",
+      "description": "Retrieves the total lifetime of a particle. Lifetime is a constant value set when the particle is created. It represents the maximum age a particle can reach before it dies. Lifetime is measured in seconds. In the visual editor, you can find this block in the block list and set its contextual value to Lifetime in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Lifetime",
-          "description": "The type of contextual data - Lifetime in this case"
+          "name": "Contextual Value",
+          "value": "Lifetime",
+          "description": "The type of contextual data - Lifetime in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Divide)",
-      "description": "Divides two values. In this lesson, we use it to calculate the age ratio (Age / Lifetime), which gives us a value from 0 (just created) to 1 (about to die). This ratio is the foundation for all time-based effects.",
+      "name": "Math Block (Divide)",
+      "description": "Divides two values. In this lesson, we use it to calculate the age ratio (Age / Lifetime), which gives us a value from 0 (just created) to 1 (about to die). This ratio is the foundation for all time-based effects. In the visual editor, you can find this block in the block list and set its operation to Divide in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Divide",
-          "description": "The mathematical operation - Divide"
+          "name": "Operation",
+          "value": "Divide",
+          "description": "The mathematical operation - Divide. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Multiply)",
-      "description": "Multiplies two values. Used to calculate final size by multiplying base size with a growth factor.",
+      "name": "Math Block (Multiply)",
+      "description": "Multiplies two values. Used to calculate final size by multiplying base size with a growth factor. In the visual editor, you can find this block in the block list and set its operation to Multiply in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Multiply",
-          "description": "The mathematical operation - Multiply"
+          "name": "Operation",
+          "value": "Multiply",
+          "description": "The mathematical operation - Multiply. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Add)",
-      "description": "Adds two values. Used to create growth factor: 1 + ageRatio, which increases from 1.0 to 2.0 as the particle ages.",
+      "name": "Math Block (Add)",
+      "description": "Adds two values. Used to create growth factor: 1 + ageRatio, which increases from 1.0 to 2.0 as the particle ages. In the visual editor, you can find this block in the block list and set its operation to Add in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Add",
-          "description": "The mathematical operation - Add"
+          "name": "Operation",
+          "value": "Add",
+          "description": "The mathematical operation - Add. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Subtract)",
-      "description": "Subtracts two values. Used to calculate fade factor: 1 - ageRatio, which decreases from 1.0 to 0.0 as the particle ages.",
+      "name": "Math Block (Subtract)",
+      "description": "Subtracts two values. Used to calculate fade factor: 1 - ageRatio, which decreases from 1.0 to 0.0 as the particle ages. In the visual editor, you can find this block in the block list and set its operation to Subtract in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Subtract",
-          "description": "The mathematical operation - Subtract"
+          "name": "Operation",
+          "value": "Subtract",
+          "description": "The mathematical operation - Subtract. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
@@ -106,7 +106,7 @@
   "codeCopy": "This lesson introduces time-based calculations using Age and Lifetime. The age ratio (Age / Lifetime) is a value from 0 to 1 that represents how far through its life the particle is. When ageRatio = 0, the particle was just created. When ageRatio = 1, the particle is about to die. We use this ratio to create effects that change over time. For example, size = baseSize * (1 + ageRatio) makes particles grow from baseSize to 2 * baseSize as they age. The inverted ratio (1 - ageRatio) is useful for fading effects.",
   "objectivesTitle": "Learning Objectives",
   "objectives": [
-    "Understand Age and Lifetime contextual values",
+    "Understand Age and Lifetime contextual values in Input blocks",
     "Calculate age ratio (Age / Lifetime) for time-based effects",
     "Use age ratio to create particles that change over time",
     "Apply mathematical operations to age ratio for different effects",
