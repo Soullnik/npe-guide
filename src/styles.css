@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import 'tailwindcss'; 
 
 @layer base {
   :root {
@@ -11,47 +11,6 @@
   }
 }
 
-.npe-runtime-canvas {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-}
-
-.npe-right-panel #propertyTab .textInputLine .value input {
-  color: black !important;
-  padding: 2px 5px;
-}
-
-.npe-right-panel #propertyTab .listLine .options select {
-  color: black !important;
-  padding: 2px 5px;
-}
-
-.npe-right-panel #propertyTab .textInputArea textarea {
-  color: black !important;
-  padding: 2px 5px;
-}
-
-.npe-right-panel #propertyTab .sliderLine .floatLine .short input[type='number'] {
-  color: black !important;
-  padding: 2px 5px;
-}
-
-.npe-right-panel #propertyTab .floatLine .value input[type='number'] {
-  color: black !important;
-  padding: 2px 5px;
-}
-
-.npe-right-panel #propertyTab .checkBoxLine .checkBox {
-  padding: 2px 5px;
-}
-
-.numeric > input {
-  color: black !important;
-  padding: 2px 5px;
-}
 
 /* Lesson menu overlay animation */
 .lesson-menu-overlay {
@@ -102,4 +61,57 @@
 
 *::-webkit-scrollbar-corner {
   background: rgba(15, 23, 42, 0.5);
+}
+
+/* Отменяем Preflight reset только для NPE контейнера */
+.npe-no-preflight,
+.npe-no-preflight *,
+.npe-no-preflight *::before,
+.npe-no-preflight *::after {
+  box-sizing: revert;
+  margin: revert;
+  padding: revert;
+  border: revert;
+  font-size: revert;
+  font-family: revert;
+  line-height: revert;
+  color: revert;
+  background: revert;
+  text-align: revert;
+  text-decoration: revert;
+  text-transform: revert;
+  letter-spacing: revert;
+  word-spacing: revert;
+  vertical-align: revert;
+  list-style: revert;
+  quotes: revert;
+  border-collapse: revert;
+  border-spacing: revert;
+  caption-side: revert;
+  empty-cells: revert;
+  table-layout: revert;
+  appearance: revert;
+  outline: revert;
+  resize: revert;
+  cursor: revert;
+  opacity: revert;
+  visibility: revert;
+  overflow: revert;
+  overflow-x: revert;
+  overflow-y: revert;
+  clip: revert;
+  clip-path: revert;
+  text-overflow: revert;
+  white-space: revert;
+  word-break: revert;
+  word-wrap: revert;
+  box-shadow: revert;
+  text-shadow: revert;
+  transform: revert;
+  transform-origin: revert;
+  transform-style: revert;
+  backface-visibility: revert;
+  perspective: revert;
+  perspective-origin: revert;
+  will-change: revert;
 }

@@ -27,7 +27,7 @@ import '@babylonjs/materials';
   imports: [CommonModule, TranslatePipe],
   template: `
     <div class="relative h-full w-full border border-white/10 bg-slate-900/60">
-      <div class="absolute inset-0" #host></div>
+      <div class="absolute inset-0 npe-no-preflight" #host></div>
 
       @if (!lesson) {
         <div class="absolute inset-0 flex items-center justify-center text-sm text-white/70">
