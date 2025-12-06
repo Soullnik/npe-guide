@@ -51,7 +51,7 @@ import '@babylonjs/materials';
         }
       }
 
-      <canvas #canvas class="npe-runtime-canvas" aria-hidden="true"></canvas>
+      <canvas #canvas class="hidden absolute inset-0" aria-hidden="true"></canvas>
     </div>
   `,
 })

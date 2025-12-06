@@ -142,7 +142,7 @@ interface BlockInfo {
             }
           </section>
 
-          <section class="flex min-h-0 min-w-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-6 backdrop-blur-xl">
+          <section class="flex min-h-0 min-w-0 flex-col rounded-3xl border border-white/10 bg-white/5 p-6">
             <div class="flex flex-wrap items-center justify-between gap-4">
               <div>
                 <p class="text-xs uppercase tracking-[0.3em] text-white/60">{{ 'ui.editorLabel' | translate }}</p>
