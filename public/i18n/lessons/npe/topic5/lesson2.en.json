@@ -5,61 +5,71 @@
   "intro": "In this lesson, you'll learn how to use ParticleConditionBlock to create conditional logic in your particle systems. Conditional blocks allow you to make decisions based on particle properties - for example, changing color when a particle reaches a certain age, or applying different effects based on speed. You'll learn to use comparison operations (GreaterThan, LessThan, Equal, etc.) and combine conditions with other blocks.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
-    "Get the particle's Age and Lifetime using ParticleInputBlock",
-    "Calculate the age ratio (Age / Lifetime) to get a value from 0 to 1",
-    "Create a threshold value (0.5) using ParticleInputBlock",
-    "Create a ParticleConditionBlock with GreaterThan test",
-    "Connect ageRatio to the left input and threshold to the right input",
-    "Create two colors: Color1 (red) and Color2 (blue)",
-    "Connect Color1 to condition.ifTrue and Color2 to condition.ifFalse",
-    "Use the condition output to control particle color and size",
-    "Observe how particles change color and size when they pass the threshold"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a texture <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>Age</filter-value> block to get the particle's current age (set contextualValue to Age in properties)",
+    "Add a <filter-value>Lifetime</filter-value> block to get the particle's total lifetime (set contextualValue to Lifetime in properties)",
+    "Add a math <filter-value>Divide</filter-value> block to calculate age ratio (Age / Lifetime)",
+    "Connect Age block to Divide block's left input and Lifetime block to right input",
+    "Add a <filter-value>Float</filter-value> block for threshold value and set it to 0.5",
+    "Add a <filter-value>Condition</filter-value> block (ParticleConditionBlock) and set its test to GreaterThan in properties",
+    "Connect ageRatio from Divide block to Condition block's left input and threshold Float to right input",
+    "Add a <filter-value>Color4</filter-value> block for Color1 (e.g., red) and set its value",
+    "Add another <filter-value>Color4</filter-value> block for Color2 (e.g., blue) and set its value",
+    "Connect Color1 block's output to Condition block's ifTrue input",
+    "Connect Color2 block's output to Condition block's ifFalse input",
+    "Add <filter-value>UpdateColor</filter-value> block after BoxShape and connect Condition block's output to UpdateColor block's color input",
+    "Add <filter-value>UpdatePosition</filter-value> block after UpdateColor and connect to System block",
+    "Observe how particles change color when they pass the threshold (ageRatio > 0.5)"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
       "name": "ParticleConditionBlock",
-      "description": "Evaluates a condition and returns one value if true, another if false. Supports various comparison operations like Equal, NotEqual, LessThan, GreaterThan, etc.",
+      "description": "Evaluates a condition and returns one value if true, another if false. Supports various comparison operations like Equal, NotEqual, LessThan, GreaterThan, etc. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "test",
           "value": "ParticleConditionBlockTests.GreaterThan",
-          "description": "The comparison operation to perform"
+          "description": "The comparison operation to perform. Set this in the properties panel on the right side of the editor."
         },
         {
           "name": "left",
           "value": "Float input",
-          "description": "The left operand (e.g., ageRatio)"
+          "description": "The left operand (e.g., ageRatio). Connect a Float output to this input."
         },
         {
           "name": "right",
           "value": "Float input",
-          "description": "The right operand (e.g., threshold)"
+          "description": "The right operand (e.g., threshold). Connect a Float output to this input."
         },
         {
           "name": "ifTrue",
           "value": "AutoDetect input",
-          "description": "The value to return if condition is true (e.g., Color1)"
+          "description": "The value to return if condition is true (e.g., Color1). Connect the appropriate output to this input."
         },
         {
           "name": "ifFalse",
           "value": "AutoDetect input",
-          "description": "The value to return if condition is false (e.g., Color2)"
+          "description": "The value to return if condition is false (e.g., Color2). Connect the appropriate output to this input."
         }
       ]
     },
     {
       "name": "ParticleInputBlock (Age/Lifetime)",
-      "description": "Retrieves particle age and lifetime for conditional logic. Age ratio (Age / Lifetime) gives a normalized value from 0 to 1.",
+      "description": "Retrieves particle age and lifetime for conditional logic. Age ratio (Age / Lifetime) gives a normalized value from 0 to 1. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "contextualValue",
           "value": "NodeParticleContextualSources.Age / Lifetime",
-          "description": "The contextual source - Age or Lifetime"
+          "description": "The contextual source - Age or Lifetime. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
