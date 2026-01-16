@@ -5,37 +5,46 @@
   "intro": "В этом уроке вы изучите продвинутые векторные операции для систем частиц. Вы создадите полную систему частиц с нуля, которая демонстрирует расчеты длины векторов, нормализацию и как использовать векторную математику для создания сложных поведений частиц.",
   "stepsTitle": "Пошаговые Инструкции",
   "steps": [
-    "Создайте SystemBlock - это корень вашей системы частиц",
-    "Создайте CreateParticleBlock для эмиссии частиц",
-    "Установите начальный цвет и размер используя ParticleInputBlock",
-    "Добавьте <filter-value>CylinderShape</filter-value> блок для эмиссии частиц из объема цилиндра",
-    "Добавьте UpdatePositionBlock для обработки движения частиц",
-    "Получите Position и ScaledDirection, сложите их и подключите к UpdatePositionBlock",
-    "Добавьте ParticleVectorLengthBlock для расчета длины вектора направления",
-    "Подключите ScaledDirection к входу vector блока ParticleVectorLengthBlock",
-    "Используйте длину вектора для влияния на размер частиц (быстрее частицы = больше)",
-    "Умножьте длину на фактор размера для создания множителя размера",
-    "Добавьте UpdateColorBlock и подключите контекстное значение InitialColor к нему",
-    "Добавьте UpdateSizeBlock и объедините базовый размер с множителем размера",
-    "Соедините блоки: CreateParticle → CylinderShape → UpdatePosition → UpdateColor → UpdateSize → System",
-    "Добавьте ParticleTextureSourceBlock для предоставления текстуры",
+    "Создайте блок <filter-value>System</filter-value> - это корень вашей системы частиц",
+    "Добавьте блок <filter-value>Texture</filter-value> для предоставления текстуры частицам и подключите к блоку System",
+    "Загрузите текстуру <textures>flare.png</textures> с помощью кнопки загрузки в свойствах блока Texture",
+    "Добавьте блок <filter-value>CreateParticle</filter-value> для эмиссии частиц и подключите к блоку System",
+    "Добавьте блок <filter-value>Color4</filter-value> и установите его значение для базового цвета",
+    "Подключите выход блока Color4 к входу color блока CreateParticle",
+    "Добавьте блок <filter-value>Float</filter-value> и установите его значение для базового размера",
+    "Подключите выход блока Float к входу size блока CreateParticle",
+    "Добавьте блок <filter-value>CylinderShape</filter-value> для эмиссии частиц из объема цилиндра и подключите между блоками CreateParticle и System",
+    "Добавьте блок <filter-value>UpdatePosition</filter-value> после CylinderShape и подключите к блоку System",
+    "Добавьте блок <filter-value>Position</filter-value> для получения текущей позиции частицы",
+    "Добавьте блок <filter-value>Scaled Direction</filter-value> для получения масштабированного направления частицы",
+    "Добавьте математический блок <filter-value>Add</filter-value> для вычисления новой позиции (Position + Scaled Direction)",
+    "Подключите блок Position к левому входу блока Add и блок Scaled Direction к правому входу",
+    "Подключите выход блока Add к входу position блока UpdatePosition",
+    "Добавьте блок <filter-value>VectorLength</filter-value> (ParticleVectorLengthBlock) для расчета длины вектора направления",
+    "Подключите блок Scaled Direction к входу vector блока VectorLength",
+    "Добавьте блок <filter-value>Float</filter-value> для фактора размера и установите его значение (например, 0.5)",
+    "Добавьте математический блок <filter-value>Multiply</filter-value> для умножения длины вектора на фактор размера",
+    "Подключите выход блока VectorLength к левому входу блока Multiply и Float фактора размера к правому входу",
+    "Добавьте блок <filter-value>UpdateColor</filter-value> после UpdatePosition и подключите контекстное значение InitialColor к нему",
+    "Добавьте блок <filter-value>UpdateSize</filter-value> после UpdateColor и объедините базовый размер с множителем размера из блока Multiply",
+    "Подключите выход UpdateSize к блоку System",
     "Наблюдайте, как размер частиц варьируется в зависимости от скорости движения"
   ],
   "blocksTitle": "Блоки, Используемые в Этом Уроке",
   "blocks": [
     {
       "name": "ParticleVectorLengthBlock",
-      "description": "Вычисляет длину (величину) вектора. Полезно для расчетов расстояния, измерений скорости и нормализации векторов.",
+      "description": "Вычисляет длину (величину) вектора. Полезно для расчетов расстояния, измерений скорости и нормализации векторов. В визуальном редакторе вы можете найти этот блок в списке блоков и настроить его свойства в панели свойств справа.",
       "properties": [
         {
           "name": "vector",
           "value": "Вход Vector3",
-          "description": "Вектор, длина которого будет вычислена"
+          "description": "Вектор, длина которого будет вычислена. Подключите выход Vector3 к этому входу."
         },
         {
           "name": "length",
           "value": "Выход Float",
-          "description": "Вычисленная длина вектора"
+          "description": "Вычисленная длина вектора. Используйте этот выход для расчетов расстояния или скорости."
         }
       ]
     }

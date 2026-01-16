@@ -5,37 +5,46 @@
   "intro": "In this lesson, you'll learn advanced vector operations for particle systems. You'll create a complete particle system from scratch that demonstrates vector length calculations, normalization, and how to use vector math to create sophisticated particle behaviors.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume",
-    "Add an UpdatePositionBlock to handle particle movement",
-    "Get Position and ScaledDirection, add them together, and connect to UpdatePositionBlock",
-    "Add a ParticleVectorLengthBlock to calculate the length of the direction vector",
-    "Connect ScaledDirection to the vector input of ParticleVectorLengthBlock",
-    "Use the vector length to affect particle size (faster particles = larger)",
-    "Multiply the length by a size factor to create the size multiplier",
-    "Add UpdateColorBlock and connect InitialColor contextual value to it",
-    "Add UpdateSizeBlock and combine base size with the size multiplier",
-    "Chain the blocks: CreateParticle → CylinderShape → UpdatePosition → UpdateColor → UpdateSize → System",
-    "Add a ParticleTextureSourceBlock to provide a texture",
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a texture <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume and connect between CreateParticle and System blocks",
+    "Add <filter-value>UpdatePosition</filter-value> block after CylinderShape and connect to System block",
+    "Add a <filter-value>Position</filter-value> block to get the particle's current position",
+    "Add a <filter-value>Scaled Direction</filter-value> block to get the particle's scaled direction",
+    "Add a math <filter-value>Add</filter-value> block to calculate new position (Position + Scaled Direction)",
+    "Connect Position block to Add block's left input and Scaled Direction block to right input",
+    "Connect Add block's output to UpdatePosition block's position input",
+    "Add a <filter-value>VectorLength</filter-value> block (ParticleVectorLengthBlock) to calculate the length of the direction vector",
+    "Connect Scaled Direction block to VectorLength block's vector input",
+    "Add a <filter-value>Float</filter-value> block for size factor and set its value (e.g., 0.5)",
+    "Add a math <filter-value>Multiply</filter-value> block to multiply vector length by size factor",
+    "Connect VectorLength block's output to Multiply block's left input and size factor Float to right input",
+    "Add <filter-value>UpdateColor</filter-value> block after UpdatePosition and connect InitialColor contextual value to it",
+    "Add <filter-value>UpdateSize</filter-value> block after UpdateColor and combine base size with the size multiplier from Multiply block",
+    "Connect UpdateSize output to System block",
     "Observe how particle size varies based on movement speed"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
       "name": "ParticleVectorLengthBlock",
-      "description": "Calculates the length (magnitude) of a vector. Useful for distance calculations, speed measurements, and vector normalization.",
+      "description": "Calculates the length (magnitude) of a vector. Useful for distance calculations, speed measurements, and vector normalization. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "vector",
           "value": "Vector3 input",
-          "description": "The vector whose length will be calculated"
+          "description": "The vector whose length will be calculated. Connect a Vector3 output to this input."
         },
         {
           "name": "length",
           "value": "Float output",
-          "description": "The calculated length of the vector"
+          "description": "The calculated length of the vector. Use this output for distance or speed calculations."
         }
       ]
     }
