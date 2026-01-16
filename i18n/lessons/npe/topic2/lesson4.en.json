@@ -8,28 +8,40 @@
     "Create the first <filter-value>System</filter-value> block for the Box Particle System",
     "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
     "Load a <textures>flare.png</textures> by load button in the Texture block properties",
-    "Add a <filter-value>CreateParticle</filter-value> block with initial color (e.g., red) and size and connect to System block",
-    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
-    "Add UpdatePositionBlock, UpdateColorBlock, and UpdateSizeBlock",
-    "Connect all blocks and add a texture for the first system",
-    "Create a second SystemBlock for the Sphere Particle System",
-    "Create another CreateParticleBlock with different color (e.g., blue) and size",
-    "Add a SphereShapeBlock with a radius input",
-    "Add UpdatePositionBlock, UpdateColorBlock, and UpdateSizeBlock for the second system",
-    "Connect all blocks and add a texture for the second system",
-    "Add both SystemBlocks to the set's systemBlocks array",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color (e.g., red)",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdatePosition</filter-value> block and connect between BoxShape and System blocks",
+    "Add an <filter-value>UpdateColor</filter-value> block and connect between UpdatePosition and System blocks",
+    "Add an <filter-value>UpdateSize</filter-value> block and connect between UpdateColor and System blocks",
+    "Create a second <filter-value>System</filter-value> block for the Sphere Particle System",
+    "Add another <filter-value>Texture</filter-value> block and connect to the second System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add another <filter-value>CreateParticle</filter-value> block to emit particles and connect to the second System block",
+    "Add another <filter-value>Color4</filter-value> block and set its value to a different color (e.g., blue)",
+    "Connect the second Color4 block's output to the second CreateParticle block's color input",
+    "Add another <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the second Float block's output to the second CreateParticle block's size input",
+    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere and connect between CreateParticle and System blocks",
+    "Add a <filter-value>Float</filter-value> block with value for radius (e.g., 2.0) and connect to SphereShape block's radius input",
+    "Add an <filter-value>UpdatePosition</filter-value> block and connect between SphereShape and System blocks",
+    "Add an <filter-value>UpdateColor</filter-value> block and connect between UpdatePosition and System blocks",
+    "Add an <filter-value>UpdateSize</filter-value> block and connect between UpdateColor and System blocks",
     "Observe how both systems run simultaneously, creating layered effects"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "SystemBlock (Multiple)",
-      "description": "You can have multiple SystemBlocks in a single NodeParticleSystemSet. Each SystemBlock represents a separate particle system that runs independently. This allows you to create complex, multi-layered effects.",
+      "name": "System Block (Multiple)",
+      "description": "You can have multiple System blocks in a single set. Each System block represents a separate particle system that runs independently. This allows you to create complex, multi-layered effects. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
+          "name": "Name",
           "value": "'Box Particle System' or 'Sphere Particle System'",
-          "description": "The display name of each particle system"
+          "description": "The display name of each particle system. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
@@ -39,23 +51,23 @@
       "properties": []
     },
     {
-      "name": "SphereShapeBlock",
-      "description": "Second emitter: Emits particles from a sphere. Used in the second particle system with a radius input.",
+      "name": "Sphere Shape Block",
+      "description": "Second emitter: Emits particles from a sphere. Used in the second particle system with a radius input. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "radius",
+          "name": "Radius",
           "value": "Float input (e.g., 2.0)",
-          "description": "The radius of the sphere emitter"
+          "description": "The radius of the sphere emitter. Connect a Float block to this input."
         }
       ]
     }
   ],
   "properties": "Properties",
   "codeTitle": "Code Explanation",
-  "codeCopy": "Multiple particle systems in one set allow you to create complex, layered effects. Each SystemBlock runs independently, so you can have different colors, sizes, shapes, and behaviors all happening simultaneously. This is perfect for effects like fire with smoke (two systems), magical auras with particles (multiple systems), or any scenario where you need different particle behaviors in the same scene.",
+  "codeCopy": "Multiple particle systems in one set allow you to create complex, layered effects. Each System block runs independently, so you can have different colors, sizes, shapes, and behaviors all happening simultaneously. This is perfect for effects like fire with smoke (two systems), magical auras with particles (multiple systems), or any scenario where you need different particle behaviors in the same scene.",
   "objectivesTitle": "Learning Objectives",
   "objectives": [
-    "Understand how to create multiple SystemBlocks in one set",
+    "Understand how to create multiple System blocks in one set",
     "Learn to organize multiple particle systems",
     "Create layered effects with different emitters",
     "Combine different particle behaviors in one scene",
@@ -64,9 +76,9 @@
   "commonMistakesTitle": "Common Mistakes",
   "commonMistakes": [
     {
-      "mistake": "Forgetting to add all SystemBlocks to systemBlocks array",
-      "explanation": "Each SystemBlock must be added to the set's systemBlocks array. If you create a SystemBlock but don't add it, it won't run.",
-      "solution": "Always add all SystemBlocks to set.systemBlocks.push(systemBlock1, systemBlock2, ...). Every SystemBlock you create must be in this array."
+      "mistake": "Forgetting to connect all blocks to System blocks",
+      "explanation": "Each System block must be properly connected to other blocks. If you create a System block but don't connect update blocks to it, it won't work correctly.",
+      "solution": "Always connect all update blocks to the System block. Drag connections from update block outputs to the System block's particle input."
     },
     {
       "mistake": "Using the same variable names for different systems",
@@ -75,7 +87,7 @@
     },
     {
       "mistake": "Not understanding that systems run independently",
-      "explanation": "Each SystemBlock is completely independent. They don't share particles, properties, or state. This is by design for flexibility.",
+      "explanation": "Each System block is completely independent. They don't share particles, properties, or state. This is by design for flexibility.",
       "solution": "Design each system to be self-contained. If you need systems to interact, you'll need to use scene-level logic or combine them into one system."
     }
   ],

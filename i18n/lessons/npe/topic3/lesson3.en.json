@@ -2,57 +2,65 @@
   "title": "3.3: Attractors",
   "summary": "Learn to create particle attractors that pull particles toward specific points in space",
   "introTitle": "Introduction",
-  "intro": "In this lesson, you'll learn how to use UpdateAttractorBlock to create attractors that pull particles toward specific points in space. Attractors are useful for creating effects like particles being pulled toward a black hole, magnetic fields, or gravitational wells. You'll learn to set attractor position, strength, and combine attractors with other effects.",
+  "intro": "In this lesson, you'll learn how to use UpdateAttractor block to create attractors that pull particles toward specific points in space. Attractors are useful for creating effects like particles being pulled toward a black hole, magnetic fields, or gravitational wells. You'll learn to set attractor position, strength, and combine attractors with other effects.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume",
-    "Add UpdateAttractorBlock to modify particle direction (must come before UpdatePositionBlock)",
-    "Create an attractor position using ParticleConverterBlock (X, Y, Z coordinates)",
-    "Set the attractor strength (higher values = stronger pull)",
-    "Connect the attractor position to UpdateAttractorBlock's attractor input",
-    "Connect the strength value to UpdateAttractorBlock's strength input",
-    "Add UpdatePositionBlock after UpdateAttractorBlock for basic movement",
-    "The attractor modifies particle direction first, then position is updated based on the modified direction"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>UpdateAttractor</filter-value> block to modify particle direction and connect between BoxShape and System blocks",
+    "Add a <filter-value>Converter</filter-value> block to create an attractor position vector (X, Y, Z coordinates)",
+    "Add <filter-value>Float</filter-value> blocks with values for X, Y, Z coordinates (e.g., 0, 5, 0 for position above origin)",
+    "Connect the Float blocks to Converter block's X, Y, and Z inputs respectively",
+    "Add a <filter-value>Float</filter-value> block and set its value for attractor strength (e.g., 1.0)",
+    "Connect the Converter block's Vector3 output to UpdateAttractor block's attractor input",
+    "Connect the strength Float block's output to UpdateAttractor block's strength input",
+    "Add an <filter-value>UpdatePosition</filter-value> block after UpdateAttractor block and connect between UpdateAttractor and System blocks",
+    "Add an <filter-value>UpdateColor</filter-value> block after UpdatePosition block and connect between UpdatePosition and System blocks",
+    "Add an <filter-value>UpdateSize</filter-value> block after UpdateColor block and connect between UpdateColor and System blocks"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "UpdateAttractorBlock",
-      "description": "Creates an attractor effect that pulls particles toward a specific point in 3D space. The force decreases with distance squared, creating realistic physics behavior.",
+      "name": "Update Attractor Block",
+      "description": "Creates an attractor effect that pulls particles toward a specific point in 3D space. The force decreases with distance squared, creating realistic physics behavior. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
+          "name": "Name",
           "value": "'Attractor'",
-          "description": "The display name of the block"
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
-          "name": "attractor",
+          "name": "Attractor",
           "value": "Vector3 input",
-          "description": "The position of the attractor in 3D space (X, Y, Z coordinates)"
+          "description": "The position of the attractor in 3D space (X, Y, Z coordinates). Connect a Vector3 output to this input."
         },
         {
-          "name": "strength",
+          "name": "Strength",
           "value": "Float input",
-          "description": "The strength of the attraction force. Higher values create stronger pull. The force is inversely proportional to distance squared."
+          "description": "The strength of the attraction force. Higher values create stronger pull. The force is inversely proportional to distance squared. Connect a Float block to this input."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock (Vector3)",
-      "description": "Creates a Vector3 from individual X, Y, Z float values. Used to define the attractor position.",
+      "name": "Converter Block",
+      "description": "Creates a Vector3 from individual X, Y, Z float values. Used to define the attractor position. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn",
+          "name": "Inputs (X, Y, Z)",
           "value": "Float inputs",
-          "description": "Individual float inputs for X, Y, Z components"
+          "description": "Individual float inputs for X, Y, Z components. Connect Float blocks to these inputs."
         },
         {
-          "name": "xyzOut",
+          "name": "Vector3 Output",
           "value": "Vector3 output",
-          "description": "The combined Vector3 output"
+          "description": "The combined Vector3 output. Use this output when creating 3D vectors."
         }
       ]
     }
@@ -62,7 +70,7 @@
   "codeCopy": "This lesson demonstrates attractor physics. An attractor creates a force that pulls particles toward a target point. The formula for the force is: force = (strength / distance²) * direction, where direction is the normalized vector from particle to attractor. This creates realistic behavior where particles close to the attractor experience strong pull, while distant particles experience weaker pull. Attractors are useful for creating effects like particles orbiting a center, being drawn to a target, or creating vortex-like patterns.",
   "objectivesTitle": "Learning Objectives",
   "objectives": [
-    "Understand how UpdateAttractorBlock creates attractive forces",
+    "Understand how UpdateAttractor block creates attractive forces",
     "Set attractor position using Vector3 coordinates",
     "Control attractor strength to adjust pull intensity",
     "Understand inverse square law for distance-based force",
@@ -73,7 +81,7 @@
     {
       "mistake": "Using wrong coordinate system for attractor position",
       "explanation": "Attractor position uses 3D coordinates (X, Y, Z). Using 2D coordinates or wrong axis orientation places the attractor in the wrong location.",
-      "solution": "Use ParticleConverterBlock with xIn, yIn, zIn to create Vector3 for attractor position. Remember: Y is typically up in 3D space, X is right, Z is forward/backward."
+      "solution": "Use Converter block with X, Y, Z Float inputs to create Vector3 for attractor position. Remember: Y is typically up in 3D space, X is right, Z is forward/backward."
     },
     {
       "mistake": "Using strength values that are too high or too low",
@@ -81,16 +89,16 @@
       "solution": "Start with moderate strength values (0.5 to 2.0) and adjust based on desired effect. Higher values for strong pull, lower values for subtle attraction."
     },
     {
-      "mistake": "Placing UpdateAttractorBlock in wrong position in the chain",
-      "explanation": "UpdateAttractorBlock modifies particle direction, so it should come before UpdatePositionBlock. Placing it after position updates won't affect movement correctly.",
-      "solution": "Chain blocks in order: UpdateAttractorBlock → UpdatePositionBlock → UpdateColorBlock → SystemBlock. Attractor modifies direction, then position uses that direction."
+      "mistake": "Placing UpdateAttractor block in wrong position in the chain",
+      "explanation": "UpdateAttractor block modifies particle direction, so it should come before UpdatePosition block. Placing it after position updates won't affect movement correctly.",
+      "solution": "Chain blocks in order: UpdateAttractor → UpdatePosition → UpdateColor → System. Attractor modifies direction, then position uses that direction. Connect blocks in this order in the editor."
     }
   ],
   "homeworkTitle": "Practice Exercises",
   "homework": [
     "Try different attractor positions (above, below, to the side)",
     "Experiment with different strength values (0.1 to 10.0)",
-    "Create multiple attractors by chaining multiple UpdateAttractorBlocks",
+    "Create multiple attractors by chaining multiple <filter-value>UpdateAttractor</filter-value> blocks",
     "Combine attractors with gravity for complex motion patterns",
     "Try creating a repeller by using negative strength values (if supported)"
   ]

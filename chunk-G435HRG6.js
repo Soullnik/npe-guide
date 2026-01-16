@@ -1,0 +1,2 @@
+import{a as o,b as l}from"./chunk-RR3YIVG4.js";import{e as i}from"./chunk-FAF55DAL.js";var r,e,n,t=i(()=>{l();r="oitFinalSimpleBlendPixelShader",e=`precision highp float;uniform sampler2D uFrontColor;void main() {ivec2 fragCoord=ivec2(gl_FragCoord.xy);vec4 frontColor=texelFetch(uFrontColor,fragCoord,0);glFragColor=frontColor;}
+`;o.ShadersStore[r]||(o.ShadersStore[r]=e);n={name:r,shader:e}});t();export{n as oitFinalSimpleBlendPixelShader};

@@ -1,0 +1,1 @@
+import{a as e,b as s}from"./chunk-Q2YQIZTI.js";import{e as r}from"./chunk-FAF55DAL.js";var i,o=r(()=>{"use strict";s();i=class extends e{constructor(){super(...arguments),this.initPriority=0,this.type="NoTrigger"}_execute(t){t._notifyExecuteNode(this),this.done._activateSignal(t)}}});export{i as a,o as b};
