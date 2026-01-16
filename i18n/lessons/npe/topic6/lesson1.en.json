@@ -5,60 +5,65 @@
   "intro": "In this lesson, you'll learn how to control particle rotation and angle. You'll use UpdateAngleBlock to set particle rotation based on calculations (like time-based rotation), and learn about AlignAngleBlock which automatically aligns particles to their direction. Rotation is essential for creating effects like spinning particles, directional sprites, and animated textures.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume",
-    "Get the system time using ParticleInputBlock with Time system source",
-    "Create a rotation speed value (rotations per second)",
-    "Calculate rotation angle: time * rotationSpeed",
-    "Add UpdateAngleBlock to update particle angle",
-    "Connect the rotation angle to UpdateAngleBlock's angle input",
-    "Optionally use AlignAngleBlock to align particles to their direction",
-    "Observe how particles rotate continuously based on time"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a texture <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>SphereShape</filter-value> block to emit particles from a sphere volume and connect between CreateParticle and System blocks",
+    "Add a <filter-value>Time</filter-value> block to get the system time (set systemSource to Time in properties)",
+    "Add a <filter-value>Float</filter-value> block for rotation speed and set its value (e.g., 2.0 for 2 rotations per second, which is 2 * Math.PI radians per second)",
+    "Add a math <filter-value>Multiply</filter-value> block to calculate rotation angle (time * rotationSpeed)",
+    "Connect Time block to Multiply block's left input and rotation speed Float to right input",
+    "Add <filter-value>UpdateAngle</filter-value> block after SphereShape and connect Multiply block's output to UpdateAngle block's angle input",
+    "Add <filter-value>UpdatePosition</filter-value> block after UpdateAngle and connect to System block",
+    "Optionally add <filter-value>AlignAngle</filter-value> block to align particles to their direction (use instead of or after UpdateAngle)"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
       "name": "UpdateAngleBlock",
-      "description": "Updates the rotation angle of particles. The angle is specified in radians and determines how particles are rotated.",
+      "description": "Updates the rotation angle of particles. The angle is specified in radians and determines how particles are rotated. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "name",
           "value": "'Update Angle'",
-          "description": "The display name of the block"
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
           "name": "angle",
           "value": "Float input",
-          "description": "The rotation angle in radians"
+          "description": "The rotation angle in radians. Connect a Float output to this input."
         }
       ]
     },
     {
       "name": "AlignAngleBlock",
-      "description": "Automatically aligns particle angle to its direction vector. Useful for creating particles that face their movement direction.",
+      "description": "Automatically aligns particle angle to its direction vector. Useful for creating particles that face their movement direction. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "name",
           "value": "'Align Angle'",
-          "description": "The display name of the block"
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
           "name": "alignment",
           "value": "Float (default: Math.PI / 2)",
-          "description": "The alignment offset in radians"
+          "description": "The alignment offset in radians. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
       "name": "ParticleInputBlock (Time)",
-      "description": "Retrieves the system time for time-based rotation calculations.",
+      "description": "Retrieves the system time for time-based rotation calculations. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "systemSource",
           "value": "NodeParticleSystemSources.Time",
-          "description": "The system source - Time for system time"
+          "description": "The system source - Time for system time. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
