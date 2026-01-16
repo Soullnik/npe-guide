@@ -5,61 +5,70 @@
   "intro": "In this lesson, you'll learn how to use multiple mathematical functions together to create complex effects. You'll use ParticleTrigonometryBlock with different operations (Sin, Cos, Sqrt, Abs) and combine them to create rich, animated color effects. Each function creates a different pattern - sine waves oscillate, cosine waves are phase-shifted, square root creates smooth curves, and absolute value removes negative values.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume",
-    "Get the system time using ParticleInputBlock with Time system source",
-    "Scale time using ParticleMathBlock (Multiply) to control animation speed",
-    "PART 1 - Sin: Use ParticleTrigonometryBlock with Sin operation for red component",
-    "PART 2 - Cos: Use ParticleTrigonometryBlock with Cos operation for green component",
-    "PART 3 - Sqrt: Use Abs then Sqrt for blue component (smooth curve)",
-    "Normalize all values to 0-1 range: (value + 1) / 2 for Sin/Cos",
-    "Create Color4 using ParticleConverterBlock with all three components",
-    "Connect the animated color to UpdateColorBlock"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a texture <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>CylinderShape</filter-value> block to emit particles from a cylinder volume and connect between CreateParticle and System blocks",
+    "Add a <filter-value>Time</filter-value> block to get the system time (set systemSource to Time in properties)",
+    "Add a <filter-value>Float</filter-value> block for time scale factor and set its value (e.g., 0.5)",
+    "Add a math <filter-value>Multiply</filter-value> block to scale time and connect Time block to left input and scale factor Float to right input",
+    "PART 1 - Sin: Add a <filter-value>Sin</filter-value> block (ParticleTrigonometryBlock with Sin operation) and connect scaled time to its input",
+    "Normalize Sin output: Add a <filter-value>Float</filter-value> block with value 1.0 and a math <filter-value>Add</filter-value> block",
+    "Connect Sin output to Add block's left input and Float(1.0) to right input, then add another <filter-value>Float</filter-value> block with value 2.0 and a <filter-value>Divide</filter-value> block",
+    "Connect Add output to Divide block's left input and Float(2.0) to right input to normalize Sin to 0-1 range",
+    "PART 2 - Cos: Add a <filter-value>Cos</filter-value> block and connect scaled time to its input, then normalize using same method as Sin",
+    "PART 3 - Sqrt: Add an <filter-value>Abs</filter-value> block and connect scaled time to its input, then add a <filter-value>Sqrt</filter-value> block and connect Abs output to it",
+    "Create Color4: Add a <filter-value>Converter</filter-value> block and connect normalized Sin to X input, normalized Cos to Y input, Sqrt output to Z input, and Float(1.0) to W input",
+    "Add <filter-value>UpdateColor</filter-value> block after CylinderShape and connect Converter's Color4 output to UpdateColor block's color input",
+    "Add <filter-value>UpdatePosition</filter-value> block after UpdateColor and connect to System block"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
       "name": "ParticleTrigonometryBlock",
-      "description": "Performs trigonometric and advanced mathematical operations on float values. Supports Sin, Cos, Tan, Sqrt, Log, Abs, and many more operations.",
+      "description": "Performs trigonometric and advanced mathematical operations on float values. Supports Sin, Cos, Tan, Sqrt, Log, Abs, and many more operations. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "name",
           "value": "'Sin Time' / 'Cos Time' / 'Sqrt Time'",
-          "description": "The display name of the block"
+          "description": "The display name of the block. Set this in the properties panel on the right side of the editor."
         },
         {
           "name": "operation",
           "value": "ParticleTrigonometryBlockOperations.Sin / Cos / Sqrt / Abs",
-          "description": "The mathematical operation - Sin, Cos, Sqrt, or Abs"
+          "description": "The mathematical operation - Sin, Cos, Sqrt, or Abs. Set this in the properties panel on the right side of the editor."
         },
         {
           "name": "input",
           "value": "Float input",
-          "description": "The input value (e.g., time for sine wave)"
+          "description": "The input value (e.g., time for sine wave). Connect a Float output to this input."
         }
       ]
     },
     {
       "name": "ParticleInputBlock (Time)",
-      "description": "Retrieves the system time. Time increases continuously, making it perfect for creating animated effects that change over time.",
+      "description": "Retrieves the system time. Time increases continuously, making it perfect for creating animated effects that change over time. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "systemSource",
           "value": "NodeParticleSystemSources.Time",
-          "description": "The system source - Time for system time"
+          "description": "The system source - Time for system time. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
       "name": "ParticleMathBlock (Multiply/Add)",
-      "description": "Multiplies or adds values. Used to scale and normalize trigonometric function outputs.",
+      "description": "Multiplies or adds values. Used to scale and normalize trigonometric function outputs. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
           "name": "operation",
           "value": "ParticleMathBlockOperations.Multiply / Add",
-          "description": "The mathematical operation - Multiply or Add"
+          "description": "The mathematical operation - Multiply or Add. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
