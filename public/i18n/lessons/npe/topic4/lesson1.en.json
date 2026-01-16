@@ -2,96 +2,104 @@
   "title": "4.1: Advanced Color Management",
   "summary": "Learn to create smooth color transitions and gradients using ParticleLerpBlock",
   "introTitle": "Introduction",
-  "intro": "In this lesson, you'll learn how to create smooth color transitions over a particle's lifetime. We'll use ParticleLerpBlock to interpolate between two colors based on the particle's age, creating beautiful fading effects and color animations.",
+  "intro": "In this lesson, you'll learn how to create smooth color transitions over a particle's lifetime. We'll use Lerp block to interpolate between two colors based on the particle's age, creating beautiful fading effects and color animations.",
   "stepsTitle": "Step-by-Step Instructions",
   "steps": [
-    "Create a SystemBlock - this is the root of your particle system",
-    "Create a CreateParticleBlock to emit particles",
-    "Set an initial color and size using ParticleInputBlock",
-    "Add a BoxShapeBlock to emit particles from a box volume",
-    "Add UpdateColorBlock to modify particle color",
-    "Get the particle's age and lifetime using ParticleInputBlock",
-    "Calculate the age ratio (age / lifetime) to get a value from 0 to 1",
-    "Create a start color using ParticleConverterBlock (e.g., bright red)",
-    "Create an end color using ParticleConverterBlock (e.g., blue with transparency)",
-    "Use ParticleLerpBlock to interpolate between start and end colors",
-    "Connect the age ratio to ParticleLerpBlock's gradient input",
-    "Connect the lerped color to UpdateColorBlock's color input"
+    "Create a <filter-value>System</filter-value> block - this is the root of your particle system",
+    "Add a <filter-value>Texture</filter-value> block to provide a texture for the particles and connect to System block",
+    "Load a <textures>flare.png</textures> by load button in the Texture block properties",
+    "Add a <filter-value>CreateParticle</filter-value> block to emit particles and connect to System block",
+    "Add a <filter-value>Color4</filter-value> block and set its value to a base color",
+    "Connect the Color4 block's output to CreateParticle block's color input",
+    "Add a <filter-value>Float</filter-value> block and set its value for base size",
+    "Connect the Float block's output to CreateParticle block's size input",
+    "Add a <filter-value>BoxShape</filter-value> block to emit particles from a box volume and connect between CreateParticle and System blocks",
+    "Add an <filter-value>Age</filter-value> block to get the particle's current age",
+    "Add a <filter-value>Lifetime</filter-value> block to get the particle's total lifetime",
+    "Add a math <filter-value>Divide</filter-value> block to calculate age ratio (age / lifetime)",
+    "Connect Age block to Divide block's left input and Lifetime block to right input",
+    "Add a <filter-value>Converter</filter-value> block to create a start color (e.g., bright red: R=1.0, G=0.0, B=0.0, A=1.0)",
+    "Add <filter-value>Float</filter-value> blocks with values for R, G, B, A components of start color",
+    "Connect the Float blocks to Converter block's X, Y, Z, W inputs respectively (X=R, Y=G, Z=B, W=A)",
+    "Add another <filter-value>Converter</filter-value> block to create an end color (e.g., blue with transparency: R=0.0, G=0.0, B=1.0, A=0.5)",
+    "Add <filter-value>Float</filter-value> blocks with values for R, G, B, A components of end color",
+    "Connect the Float blocks to the second Converter block's X, Y, Z, W inputs respectively",
+    "Add a <filter-value>Lerp</filter-value> block to interpolate between start and end colors",
+    "Connect the first Converter block's Color4 output to Lerp block's min input",
+    "Connect the second Converter block's Color4 output to Lerp block's max input",
+    "Connect the age ratio from Divide block to Lerp block's factor input",
+    "Add an <filter-value>UpdateColor</filter-value> block and connect between BoxShape and System blocks",
+    "Connect the Lerp block's Color4 output to UpdateColor block's color input"
   ],
   "blocksTitle": "Blocks Used in This Lesson",
   "blocks": [
     {
-      "name": "ParticleLerpBlock",
-      "description": "Linearly interpolates (lerps) between two values based on a gradient factor (0 to 1). Works with Float, Vector2, Vector3, and Color4 types. Perfect for creating smooth transitions.",
+      "name": "Lerp Block",
+      "description": "Linearly interpolates (lerps) between two values based on a gradient factor (0 to 1). Works with Float, Vector2, Vector3, and Color4 types. Perfect for creating smooth transitions. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "name",
-          "value": "'Color Lerp'",
-          "description": "The display name of the block"
+          "name": "Min",
+          "value": "Color4 input (start color)",
+          "description": "The starting value (when gradient = 0). Connect a Color4 block to this input."
         },
         {
-          "name": "left",
-          "value": "Color4 input",
-          "description": "The starting value (when gradient = 0)"
+          "name": "Max",
+          "value": "Color4 input (end color)",
+          "description": "The ending value (when gradient = 1). Connect a Color4 block to this input."
         },
         {
-          "name": "right",
-          "value": "Color4 input",
-          "description": "The ending value (when gradient = 1)"
-        },
-        {
-          "name": "gradient",
+          "name": "Gradient",
           "value": "Float input (0 to 1)",
-          "description": "The interpolation factor. 0 = left value, 1 = right value, 0.5 = halfway between"
+          "description": "The interpolation factor. 0 = min value, 1 = max value, 0.5 = halfway between. Connect age ratio to this input."
         }
       ]
     },
     {
-      "name": "ParticleConverterBlock (Color4)",
-      "description": "Creates a Color4 from individual R, G, B, A float values. Used to define custom colors for the start and end of color transitions.",
+      "name": "Converter Block",
+      "description": "Creates a Color4 from individual R, G, B, A float values. Used to define custom colors for the start and end of color transitions. In the visual editor, you can find this block in the block list and configure its properties in the properties panel on the right.",
       "properties": [
         {
-          "name": "xIn, yIn, zIn, wIn",
+          "name": "Inputs (X, Y, Z, W)",
           "value": "Float inputs",
-          "description": "Individual float inputs for R, G, B, A components (xIn = R, yIn = G, zIn = B, wIn = A)"
+          "description": "Individual float inputs for R, G, B, A components (X = R, Y = G, Z = B, W = A). Connect Float blocks to these inputs."
         },
         {
-          "name": "colorOut",
+          "name": "Color4 Output",
           "value": "Color4 output",
-          "description": "The combined Color4 output"
+          "description": "The combined Color4 output. Use this output when creating colors."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Age)",
-      "description": "Retrieves the current age of a particle. Age increases from 0 to lifetime as the particle lives.",
+      "name": "Input Block (Age)",
+      "description": "Retrieves the current age of a particle. Age increases from 0 to lifetime as the particle lives. In the visual editor, you can find this block in the block list and set its contextual value to Age in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Age",
-          "description": "The type of contextual data - Age in this case"
+          "name": "Contextual Value",
+          "value": "Age",
+          "description": "The type of contextual data - Age in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleInputBlock (Lifetime)",
-      "description": "Retrieves the total lifetime of a particle. This is the maximum age a particle can reach before it dies.",
+      "name": "Input Block (Lifetime)",
+      "description": "Retrieves the total lifetime of a particle. This is the maximum age a particle can reach before it dies. In the visual editor, you can find this block in the block list and set its contextual value to Lifetime in the properties panel on the right.",
       "properties": [
         {
-          "name": "contextualValue",
-          "value": "NodeParticleContextualSources.Lifetime",
-          "description": "The type of contextual data - Lifetime in this case"
+          "name": "Contextual Value",
+          "value": "Lifetime",
+          "description": "The type of contextual data - Lifetime in this case. Set this in the properties panel on the right side of the editor."
         }
       ]
     },
     {
-      "name": "ParticleMathBlock (Divide)",
-      "description": "Divides two values. Used to calculate age ratio: age / lifetime, which gives a value from 0 (birth) to 1 (death).",
+      "name": "Math Block (Divide)",
+      "description": "Divides two values. Used to calculate age ratio: age / lifetime, which gives a value from 0 (birth) to 1 (death). In the visual editor, you can find this block in the block list and set its operation to Divide in the properties panel on the right.",
       "properties": [
         {
-          "name": "operation",
-          "value": "ParticleMathBlockOperations.Divide",
-          "description": "The mathematical operation - Divide"
+          "name": "Operation",
+          "value": "Divide",
+          "description": "The mathematical operation - Divide. Set this in the properties panel on the right side of the editor."
         }
       ]
     }
@@ -102,17 +110,17 @@
   "objectivesTitle": "Learning Objectives",
   "objectives": [
     "Understand linear interpolation (lerp) for smooth color transitions",
-    "Use ParticleLerpBlock to interpolate between two colors",
+    "Use Lerp block to interpolate between two colors",
     "Calculate age ratio for time-based color transitions",
-    "Create Color4 values using ParticleConverterBlock",
+    "Create Color4 values using Converter block",
     "Apply smooth color gradients over particle lifetime"
   ],
   "commonMistakesTitle": "Common Mistakes",
   "commonMistakes": [
     {
-      "mistake": "Using wrong gradient value for ParticleLerpBlock",
+      "mistake": "Using wrong gradient value for Lerp block",
       "explanation": "The gradient input should be a value from 0 to 1. Using values outside this range or using age directly instead of age ratio causes incorrect interpolation.",
-      "solution": "Always calculate age ratio first: ageRatio = Age / Lifetime. Then use this value (0 to 1) as the gradient input to ParticleLerpBlock."
+      "solution": "Always calculate age ratio first: ageRatio = Age / Lifetime. Then use this value (0 to 1) as the gradient input to Lerp block."
     },
     {
       "mistake": "Swapping left and right colors",
@@ -122,7 +130,7 @@
     {
       "mistake": "Not normalizing color components",
       "explanation": "Color4 components should be in range 0-1. Using values outside this range (like 0-255) causes incorrect colors or errors.",
-      "solution": "When creating Color4 with ParticleConverterBlock, use values from 0.0 to 1.0 for R, G, B, A components. For example: red = 1.0, not 255."
+      "solution": "When creating Color4 with Converter block, use values from 0.0 to 1.0 for R, G, B, A components. For example: red = 1.0, not 255."
     }
   ],
   "homeworkTitle": "Practice Exercises",
@@ -130,7 +138,7 @@
     "Try different color combinations (e.g., yellow to purple, green to cyan)",
     "Create a color transition that fades to transparent (set end alpha to 0)",
     "Experiment with non-linear transitions by modifying the age ratio with math operations",
-    "Try creating a color cycle by using multiple ParticleLerpBlocks",
+    "Try creating a color cycle by using multiple <filter-value>Lerp</filter-value> blocks",
     "Combine color transitions with size changes for more dynamic effects"
   ]
 }
